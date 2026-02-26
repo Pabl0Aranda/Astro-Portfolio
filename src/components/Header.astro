@@ -1,12 +1,10 @@
 <header
   class="w-full border-b border-white/10 sticky top-0 bg-black/80 backdrop-blur-md z-50"
 >
-  <div
-    class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center relative"
-  >
+  <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
     <a
       href="/"
-      class="text-xl font-bold tracking-tighter text-white hover:text-albero transition-colors duration-300 relative z-50"
+      class="text-xl font-bold tracking-tighter text-white hover:text-albero transition-colors duration-300"
     >
       Pablo<span class="text-albero">.</span>
     </a>
@@ -55,13 +53,12 @@
     </nav>
 
     <button
-      id="menu-toggle"
-      class="lg:hidden text-white focus:outline-none relative z-50 p-2"
+      id="menu-open"
+      class="lg:hidden text-white p-2 focus:outline-none"
       aria-label="Abrir menú"
     >
       <svg
-        id="menu-icon"
-        class="w-6 h-6 transition-transform duration-300"
+        class="w-6 h-6"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -74,106 +71,112 @@
       </svg>
     </button>
   </div>
-
-  <div
-    id="mobile-menu"
-    class="fixed inset-0 bg-black flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 z-40 lg:hidden"
-  >
-    <nav>
-      <ul class="flex flex-col gap-6 text-center text-2xl font-semibold">
-        <li>
-          <a
-            href="/#"
-            class="mobile-link hover:text-albero transition-colors duration-300"
-            >Home</a>
-        </li>
-        <li>
-          <a
-            href="/#formacion"
-            class="mobile-link hover:text-albero transition-colors duration-300"
-            >Formación</a>
-        </li>
-        <li>
-          <a
-            href="/#habilidades"
-            class="mobile-link hover:text-albero transition-colors duration-300"
-            >Habilidades</a>
-        </li>
-        <li>
-          <a
-            href="/#proyectos"
-            class="mobile-link hover:text-albero transition-colors duration-300"
-            >Proyectos</a>
-        </li>
-        <li>
-          <a
-            href="/#experiencia"
-            class="mobile-link hover:text-albero transition-colors duration-300"
-            >Experiencia</a>
-        </li>
-        <li>
-          <a
-            href="/#contacto"
-            class="mobile-link hover:text-albero transition-colors duration-300"
-            >Contacto</a>
-        </li>
-        <li>
-          <a href="/blog" class="mobile-link text-albero mt-2 block">Blog</a>
-        </li>
-      </ul>
-    </nav>
-  </div>
 </header>
+
+<div
+  id="mobile-menu"
+  class="fixed inset-0 bg-black z-[100] flex flex-col opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden"
+>
+  <div
+    class="px-6 py-4 flex justify-between items-center border-b border-white/10"
+  >
+    <a href="/" class="text-xl font-bold tracking-tighter text-white">
+      Pablo<span class="text-albero">.</span>
+    </a>
+    <button
+      id="menu-close"
+      class="text-white p-2 focus:outline-none"
+      aria-label="Cerrar menú"
+    >
+      <svg
+        class="w-7 h-7 hover:text-albero transition-colors"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+  </div>
+
+  <nav class="flex-grow flex flex-col items-center justify-center pb-20">
+    <ul class="flex flex-col gap-8 text-center text-2xl font-semibold">
+      <li>
+        <a
+          href="/#"
+          class="mobile-link hover:text-albero transition-colors duration-300"
+          >Home</a>
+      </li>
+      <li>
+        <a
+          href="/#formacion"
+          class="mobile-link hover:text-albero transition-colors duration-300"
+          >Formación</a>
+      </li>
+      <li>
+        <a
+          href="/#habilidades"
+          class="mobile-link hover:text-albero transition-colors duration-300"
+          >Habilidades</a>
+      </li>
+      <li>
+        <a
+          href="/#proyectos"
+          class="mobile-link hover:text-albero transition-colors duration-300"
+          >Proyectos</a>
+      </li>
+      <li>
+        <a
+          href="/#experiencia"
+          class="mobile-link hover:text-albero transition-colors duration-300"
+          >Experiencia</a>
+      </li>
+      <li>
+        <a
+          href="/#contacto"
+          class="mobile-link hover:text-albero transition-colors duration-300"
+          >Contacto</a>
+      </li>
+      <li>
+        <a href="/blog" class="mobile-link text-albero mt-4 block">Blog</a>
+      </li>
+    </ul>
+  </nav>
+</div>
 
 <script>
   // Obtenemos los elementos
-  const menuToggle = document.getElementById("menu-toggle");
+  const btnOpen = document.getElementById("menu-open");
+  const btnClose = document.getElementById("menu-close");
   const mobileMenu = document.getElementById("mobile-menu");
-  const menuIcon = document.getElementById("menu-icon");
   const mobileLinks = document.querySelectorAll(".mobile-link");
 
-  let isMenuOpen = false;
-
-  function toggleMenu() {
-    // COMPROBACIÓN DE SEGURIDAD:
-    // Si mobileMenu o menuIcon no existen, detenemos la función aquí mismo.
-    // Esto elimina el error 'possibly null' de tu editor.
-    if (!mobileMenu || !menuIcon) return;
-
-    isMenuOpen = !isMenuOpen;
-
-    if (isMenuOpen) {
-      mobileMenu.classList.remove("opacity-0", "pointer-events-none");
-      mobileMenu.classList.add("opacity-100", "pointer-events-auto");
-
-      // Icono X
-      menuIcon.innerHTML =
-        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>';
-      menuIcon.classList.add("rotate-90");
-
-      document.body.style.overflow = "hidden";
-    } else {
-      mobileMenu.classList.remove("opacity-100", "pointer-events-auto");
-      mobileMenu.classList.add("opacity-0", "pointer-events-none");
-
-      // Icono Hamburguesa
-      menuIcon.innerHTML =
-        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>';
-      menuIcon.classList.remove("rotate-90");
-
-      document.body.style.overflow = "auto";
-    }
+  // Función para abrir el menú
+  function openMenu() {
+    if (!mobileMenu) return;
+    mobileMenu.classList.remove("opacity-0", "pointer-events-none");
+    mobileMenu.classList.add("opacity-100", "pointer-events-auto");
+    document.body.style.overflow = "hidden"; // Bloquear scroll de fondo
   }
 
-  // Comprobamos que el botón existe antes de añadirle el evento
-  if (menuToggle) {
-    menuToggle.addEventListener("click", toggleMenu);
+  // Función para cerrar el menú
+  function closeMenu() {
+    if (!mobileMenu) return;
+    mobileMenu.classList.remove("opacity-100", "pointer-events-auto");
+    mobileMenu.classList.add("opacity-0", "pointer-events-none");
+    document.body.style.overflow = "auto"; // Restaurar scroll
   }
 
-  // querySelectorAll devuelve una lista (vacía si no hay nada), por lo que forEach es siempre seguro
+  // Asignar eventos si los botones existen
+  if (btnOpen) btnOpen.addEventListener("click", openMenu);
+  if (btnClose) btnClose.addEventListener("click", closeMenu);
+
+  // Cerrar el menú al hacer clic en cualquier enlace
   mobileLinks.forEach((link) => {
-    link.addEventListener("click", () => {
-      if (isMenuOpen) toggleMenu();
-    });
+    link.addEventListener("click", closeMenu);
   });
 </script>
