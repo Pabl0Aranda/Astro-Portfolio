@@ -13,41 +13,47 @@
       <ul class="flex gap-5 text-sm font-medium">
         <li>
           <a href="/#" class="hover:text-albero transition-colors duration-300"
-            >Home</a>
+            >Home</a
+          >
         </li>
         <li>
           <a
             href="/#formacion"
             class="hover:text-albero transition-colors duration-300"
-            >Formación</a>
+            >Formación</a
+          >
         </li>
         <li>
           <a
             href="/#habilidades"
             class="hover:text-albero transition-colors duration-300"
-            >Habilidades</a>
+            >Habilidades</a
+          >
         </li>
         <li>
           <a
             href="/#proyectos"
             class="hover:text-albero transition-colors duration-300"
-            >Proyectos</a>
+            >Proyectos</a
+          >
         </li>
         <li>
           <a
             href="/#experiencia"
             class="hover:text-albero transition-colors duration-300"
-            >Experiencia</a>
+            >Experiencia</a
+          >
         </li>
         <li>
           <a
             href="/#contacto"
-            class="hover:text-albero transition-colors duration-300"
-            >Contacto</a>
+            class="hover:text-albero transition-colors duration-300">Contacto</a
+          >
         </li>
         <li>
           <a href="/blog" class="text-albero transition-colors duration-300"
-            >Blog</a>
+            >Blog</a
+          >
         </li>
       </ul>
     </nav>
@@ -75,7 +81,7 @@
 
 <div
   id="mobile-menu"
-  class="fixed inset-0 bg-black z-[100] flex flex-col opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden"
+  class="fixed inset-0 bg-black z-100 flex flex-col opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden"
 >
   <div
     class="px-6 py-4 flex justify-between items-center border-b border-white/10"
@@ -109,37 +115,43 @@
         <a
           href="/#"
           class="mobile-link hover:text-albero transition-colors duration-300"
-          >Home</a>
+          >Home</a
+        >
       </li>
       <li>
         <a
           href="/#formacion"
           class="mobile-link hover:text-albero transition-colors duration-300"
-          >Formación</a>
+          >Formación</a
+        >
       </li>
       <li>
         <a
           href="/#habilidades"
           class="mobile-link hover:text-albero transition-colors duration-300"
-          >Habilidades</a>
+          >Habilidades</a
+        >
       </li>
       <li>
         <a
           href="/#proyectos"
           class="mobile-link hover:text-albero transition-colors duration-300"
-          >Proyectos</a>
+          >Proyectos</a
+        >
       </li>
       <li>
         <a
           href="/#experiencia"
           class="mobile-link hover:text-albero transition-colors duration-300"
-          >Experiencia</a>
+          >Experiencia</a
+        >
       </li>
       <li>
         <a
           href="/#contacto"
           class="mobile-link hover:text-albero transition-colors duration-300"
-          >Contacto</a>
+          >Contacto</a
+        >
       </li>
       <li>
         <a href="/blog" class="mobile-link text-albero mt-4 block">Blog</a>
@@ -149,34 +161,32 @@
 </div>
 
 <script>
-  // Obtenemos los elementos
-  const btnOpen = document.getElementById("menu-open");
-  const btnClose = document.getElementById("menu-close");
-  const mobileMenu = document.getElementById("mobile-menu");
-  const mobileLinks = document.querySelectorAll(".mobile-link");
+  // Envolvemos el código del menú en el evento de Astro
+  document.addEventListener("astro:page-load", () => {
+    const btnOpen = document.getElementById("menu-open");
+    const btnClose = document.getElementById("menu-close");
+    const mobileMenu = document.getElementById("mobile-menu");
+    const mobileLinks = document.querySelectorAll(".mobile-link");
 
-  // Función para abrir el menú
-  function openMenu() {
-    if (!mobileMenu) return;
-    mobileMenu.classList.remove("opacity-0", "pointer-events-none");
-    mobileMenu.classList.add("opacity-100", "pointer-events-auto");
-    document.body.style.overflow = "hidden"; // Bloquear scroll de fondo
-  }
+    function openMenu() {
+      if (!mobileMenu) return;
+      mobileMenu.classList.remove("opacity-0", "pointer-events-none");
+      mobileMenu.classList.add("opacity-100", "pointer-events-auto");
+      document.body.style.overflow = "hidden";
+    }
 
-  // Función para cerrar el menú
-  function closeMenu() {
-    if (!mobileMenu) return;
-    mobileMenu.classList.remove("opacity-100", "pointer-events-auto");
-    mobileMenu.classList.add("opacity-0", "pointer-events-none");
-    document.body.style.overflow = "auto"; // Restaurar scroll
-  }
+    function closeMenu() {
+      if (!mobileMenu) return;
+      mobileMenu.classList.remove("opacity-100", "pointer-events-auto");
+      mobileMenu.classList.add("opacity-0", "pointer-events-none");
+      document.body.style.overflow = "auto";
+    }
 
-  // Asignar eventos si los botones existen
-  if (btnOpen) btnOpen.addEventListener("click", openMenu);
-  if (btnClose) btnClose.addEventListener("click", closeMenu);
+    if (btnOpen) btnOpen.addEventListener("click", openMenu);
+    if (btnClose) btnClose.addEventListener("click", closeMenu);
 
-  // Cerrar el menú al hacer clic en cualquier enlace
-  mobileLinks.forEach((link) => {
-    link.addEventListener("click", closeMenu);
+    mobileLinks.forEach((link) => {
+      link.addEventListener("click", closeMenu);
+    });
   });
 </script>
