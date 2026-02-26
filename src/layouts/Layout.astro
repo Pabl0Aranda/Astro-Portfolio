@@ -42,16 +42,10 @@ const { title, description } = Astro.props;
     <main class="grow max-w-5xl mx-auto px-6 w-full relative z-10">
       <slot />
     </main>
-
-    <footer class="py-6 text-center text-sm text-neutral-500 border-t border-white/10 mt-20 relative z-10">
-      © {new Date().getFullYear()} Pablo. Todos los derechos reservados.
-    </footer>
-
+    
     <script>
-      // 3. Envolvemos todo en astro:page-load para que se ejecute en cada navegación suave
       document.addEventListener('astro:page-load', () => {
         
-        // --- LÓGICA DEL CURSOR ---
         const body = document.body;
         const customCursor = document.getElementById("custom-cursor");
 
@@ -79,7 +73,7 @@ const { title, description } = Astro.props;
             }
           });
         }
-        
+
         const observerOptions = {
           root: null,
           rootMargin: "0px",
