@@ -2,7 +2,7 @@
 title: "Test"
 date: 2026-02-26
 description: "Test en Producción"
-draft: true
+draft: false
 ---
 
 ¡Hola mundo! Este es mi primer artículo. 
