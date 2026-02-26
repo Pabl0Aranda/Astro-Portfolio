@@ -1,7 +1,7 @@
 ---
-title: "Por qué elegí Astro y Netlify para mi portafolio"
+title: "Test"
 date: 2026-02-26
-description: "Un repaso a las ventajas del Jamstack, rendimiento extremo y cómo estructuré mi web."
+description: "Test en Producción"
 draft: true
 ---
 
