@@ -12,6 +12,8 @@ Para entenderlo de forma visual, imagina unas muñecas matrioskas: la Inteligenc
 
 En este post se detalla qué hace exactamente cada uno y cuándo deberíamos utilizar uno u otro.
 
+![Gráfico de disciplinas](./img/DL-vs-ML.png)
+
 ## Machine Learning
 
 El Machine Learning, o Aprendizaje Automático, es una rama de la IA en la que **diseñamos algoritmos que permiten a los ordenadores aprender de los datos** sin ser programados explícitamente para cada regla.
