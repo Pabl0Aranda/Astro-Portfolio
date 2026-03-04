@@ -1,8 +1,8 @@
 ---
 title: "Machine Learning vs Deep Learning: Entendiendo las diferencias"
-date: 2026-03-07
+date: 2026-03-02
 description: "Desmitificamos la Inteligencia Artificial. Descubre qué diferencia al Machine Learning clásico de las Redes Neuronales Profundas (Deep Learning)."
-draft: true
+draft: false
 category: Inteligencia Artificial
 ---
 
@@ -22,19 +22,17 @@ Por ejemplo, si queremos que un algoritmo de ML distinga entre manzanas y naranj
 
 * **Casos de uso ideales:** Detección de spam en correos, predicción de precios de viviendas, sistemas de recomendación sencillos...
 
-![Inteligencia Artificial](./img/artificial-intelligence.png)
-
 ## Deep Learning
 
 El Deep Learning (Aprendizaje Profundo) es una subdisciplina del Machine Learning que se basa en las **Redes Neuronales Artificiales** (inspiradas en la estructura del cerebro humano). El término "profundo" se refiere a que estas redes tienen múltiples capas ocultas de neuronas procesando la información.
 
 La gran revolución del DL es que **elimina casi por completo la necesidad del *Feature Engineering***.
 
-[Image of Machine Learning vs Deep Learning feature extraction process]
-
 Si queremos que una red de Deep Learning distinga manzanas de naranjas, no le damos una tabla con pesos y colores. Le pasamos miles de fotos en crudo (píxeles). La primera capa de la red detectará bordes, la segunda detectará formas, la tercera texturas... hasta que la red descubra por sí misma qué hace que una manzana sea una manzana.
 
 * **Casos de uso ideales:** Generación de texto (como ChatGPT), reconocimiento de voz (Siri, Alexa), conducción autónoma (Tesla) y diagnóstico de imágenes médicas.
+
+![Inteligencia Artificial](./img/artificial-intelligence.png)
 
 ## Las 4 diferencias fundamentales
 
@@ -47,7 +45,7 @@ Para resumir, aquí tienes las diferencias clave que determinan cuándo usar cad
 | **Intervención Humana** | Alta. Requiere estructurar los datos e indicar las características clave (*Feature Engineering*). | Baja. Extrae las características automáticamente a partir de datos en crudo (imágenes, audio, texto). |
 | **Explicabilidad** | Alta. Puedes trazar matemáticamente por qué el algoritmo tomó una decisión. | Baja. Es una "Caja Negra" (*Black Box*). A veces ni los ingenieros saben exactamente por qué la red tomó cierta decisión. |
 
-## Conclusión: No mates moscas a cañonazos
+## Conclusión
 
 Como desarrolladores o arquitectos de software, a veces nos dejamos llevar por la tecnología más brillante. El Deep Learning es fascinante, pero computacionalmente es extremadamente caro y complejo.
 
