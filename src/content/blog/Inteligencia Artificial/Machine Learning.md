@@ -1,7 +1,7 @@
 ---
-title: "Machine Learning vs Deep Learning: Entendiendo las diferencias"
+title: "Machine Learning vs Deep Learning: Diferencias"
 date: 2026-03-02
-description: "Desmitificamos la Inteligencia Artificial. Descubre qué diferencia al Machine Learning clásico de las Redes Neuronales Profundas (Deep Learning)."
+description: "Inteligencia Artificial. Qué diferencia al Machine Learning clásico de las Redes Neuronales Profundas (Deep Learning)."
 draft: false
 category: Inteligencia Artificial
 ---
