@@ -1,11 +1,11 @@
 ---
 title: "Por qué elegí Astro y Netlify para mi portafolio"
-date: 2026-03-04
+date: 2026-03-01
 description: "Ventajas del Jamstack, rendimiento extremo y cómo estructuré mi web."
 draft: false
 ---
 
-Cuando decidí construir mi portafolio personal, tenía claro un objetivo: quería una web extremadamente rápida, fácil de mantener y con un SEO impecable. Tras evaluar varias opciones en el ecosistema actual, la combinación de **Astro** y **Netlify** fue la elección perfecta. 
+Cuando decidí construir mi portafolio personal, tenía claro un objetivo: quería una web extremadamente rápida, fácil de mantener y con un SEO impecable. Tras evaluar varias opciones en el ecosistema actual, la combinación de **Astro** y **Netlify** fue la elección perfecta.
 
 Aquí te explico por qué considero que es el *stack* definitivo para este tipo de proyectos.
 
@@ -17,8 +17,7 @@ Su **arquitectura basada en componentes** me ha permitido estructurar la web de 
 
 ## "Zero JS" y la Arquitectura de Islas
 
-
-Una de las características más potentes de Astro es que, por defecto, **envía cero JavaScript al lado del cliente**. 
+Una de las características más potentes de Astro es que, por defecto, **envía cero JavaScript al lado del cliente**.
 
 Esto no significa que no programes en JS. De hecho, toda la lógica, el enrutado y el tipado estricto con TypeScript ocurren en el servidor durante el tiempo de compilación (*build time*). El resultado que recibe el navegador es HTML y CSS puro, ultraligero y rapidísimo de renderizar.
 
@@ -26,10 +25,11 @@ Si en algún momento necesito interactividad real (como un botón complejo o un 
 
 ## Netlify y Jamstack
 
-De nada sirve tener una web rápida y escalable si el proceso de subirla a internet es todo lo contrario. 
+De nada sirve tener una web rápida y escalable si el proceso de subirla a internet es todo lo contrario.
 Aquí es donde entra **Netlify**.
 
 Al integrar mi repositorio de GitHub con Netlify, he configurado un flujo de trabajo **CI/CD (Integración y Despliegue Continuo)** de primer nivel. Ahora, mi enfoque es puramente Jamstack:
+
 * Escribo un nuevo artículo en formato Markdown.
 * Hago un `git push` a la rama principal.
 * Netlify detecta el cambio, compila la web entera en segundos y la publica globalmente en su CDN.
