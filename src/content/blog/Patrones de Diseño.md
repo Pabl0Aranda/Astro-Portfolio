@@ -2,7 +2,7 @@
 title: "Patrones de Diseño y su importancia en el software"
 date: 2026-03-04
 description: "Qué son los patrones de diseño, por qué estructuran mejor tu código y cuáles son los más utilizados en la industria."
-draft: true
+draft: false
 ---
 
 Cuando pasas de escribir código que "simplemente funciona" a escribir aplicaciones que deben ser mantenidas durante años por diferentes desarrolladores, te das cuenta de una realidad absoluta: **programar es, en gran medida, comunicación**.
