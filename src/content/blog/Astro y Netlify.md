@@ -3,6 +3,7 @@ title: "Por qué elegí Astro y Netlify para mi portafolio"
 date: 2026-03-01
 description: "Ventajas del Jamstack, rendimiento extremo y cómo estructuré mi web."
 draft: false
+category: Desarrollo Web
 ---
 
 Cuando decidí construir mi portafolio personal, tenía claro un objetivo: quería una web extremadamente rápida, fácil de mantener y con un SEO impecable. Tras evaluar varias opciones en el ecosistema actual, la combinación de **Astro** y **Netlify** fue la elección perfecta.
