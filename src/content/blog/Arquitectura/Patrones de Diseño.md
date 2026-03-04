@@ -34,6 +34,8 @@ Los patrones clásicos se dividen en tres grandes categorías:
 | **Estructurales** | Se encargan de cómo se componen las clases y objetos para formar estructuras grandes. | Adapter, Decorator |
 | **Comportamiento** | Definen cómo se comunican y asignan responsabilidades entre los objetos. | Observer, Strategy |
 
+![Patron de bugs](./img/patron-bugs.png)
+
 ## Patrones de Diseño más utilizados
 
 Aunque existen docenas de patrones, en el desarrollo moderno estos son algunos de los más habituales:
@@ -52,6 +54,8 @@ Proporciona una interfaz para crear objetos en una superclase, pero permite que 
 Existe una regla de oro fundamental: **no uses un patrón de diseño si no tienes el problema que este resuelve.**
 
 Cuando descubrimos los patrones por primera vez, es tentador querer aplicarlos a todo, convirtiendo un simple script de 50 líneas en un laberinto de 15 archivos y clases abstractas. Mantén siempre el pragmatismo; el código más limpio es el más simple que resuelve el problema actual mientras deja la puerta abierta a la escalabilidad.
+
+![Sobre ingeniería](./img/sobre-ingenieria.png)
 
 ---
 

@@ -37,6 +37,8 @@ Al integrar mi repositorio de GitHub con Netlify, he configurado un flujo de tra
 
 Además, Netlify Forms me ha permitido integrar un formulario de contacto 100% funcional sin tener que escribir ni mantener una sola línea de código *backend* o configurar bases de datos.
 
+![Logos de Astro y Netlify](./img/astro-netlify-logo.png)
+
 ## Conclusión
 
 Construir esta web no solo me ha servido para tener una presencia en internet, sino como un ejercicio práctico para entender la web moderna. Si estás pensando en crear tu propio portafolio, te recomiendo que le des una oportunidad a Astro; la experiencia de desarrollo es bastante satisfactoria.

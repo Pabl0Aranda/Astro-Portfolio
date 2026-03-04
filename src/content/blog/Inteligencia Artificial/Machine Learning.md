@@ -10,7 +10,7 @@ Hoy en día es imposible navegar por internet sin toparse con el término "Intel
 
 Para entenderlo de forma visual, imagina unas muñecas matrioskas: la Inteligencia Artificial es la muñeca más grande que engloba todo. Dentro de ella está el Machine Learning, y dentro de este, una muñeca aún más específica llamada Deep Learning.
 
-Vamos a desglosar qué hace exactamente cada uno y cuándo deberíamos utilizar uno u otro.
+En este post se detalla qué hace exactamente cada uno y cuándo deberíamos utilizar uno u otro.
 
 ## Machine Learning
 
@@ -18,15 +18,17 @@ El Machine Learning, o Aprendizaje Automático, es una rama de la IA en la que *
 
 La clave del ML clásico es lo que llamamos **Feature Engineering** (Ingeniería de Características). En el ML, un humano (el científico de datos) tiene que procesar los datos y decirle al algoritmo en qué debe fijarse.
 
-Por ejemplo, si queremos que un algoritmo de ML distinga entre manzanas y naranjas, primero tenemos que extraer características como el peso, el color (RGB) y la textura, y dárselas al algoritmo en una tabla bien estructurada. Con esos datos masticados, algoritmos como los *Árboles de Decisión* o la *Regresión Lineal* hacen su magia.
+Por ejemplo, si queremos que un algoritmo de ML distinga entre manzanas y naranjas, primero tenemos que extraer características como el peso, el color (RGB) y la textura, y dárselas al algoritmo en una tabla bien estructurada. Con esos datos masticados, algoritmos como los *Árboles de Decisión* o la *Regresión Lineal* actuan como buenos predictores o clasificadores.
 
-* **Casos de uso ideales:** Detección de spam en correos, predicción de precios de viviendas, sistemas de recomendación sencillos.
+* **Casos de uso ideales:** Detección de spam en correos, predicción de precios de viviendas, sistemas de recomendación sencillos...
+
+![Inteligencia Artificial](./img/artificial-intelligence.png)
 
 ## Deep Learning
 
 El Deep Learning (Aprendizaje Profundo) es una subdisciplina del Machine Learning que se basa en las **Redes Neuronales Artificiales** (inspiradas en la estructura del cerebro humano). El término "profundo" se refiere a que estas redes tienen múltiples capas ocultas de neuronas procesando la información.
 
-¿La gran revolución del DL? **Elimina casi por completo la necesidad del *Feature Engineering***.
+La gran revolución del DL es que **elimina casi por completo la necesidad del *Feature Engineering***.
 
 [Image of Machine Learning vs Deep Learning feature extraction process]
 
