@@ -59,7 +59,7 @@ Cuando descubrimos los patrones por primera vez, es tentador querer aplicarlos a
 
 ---
 
-## Patrones en acción: Ejemplos prácticos
+## Patrones: Ejemplos prácticos
 
 Como desarrolladores, la mejor forma de entender los conceptos es leyendo código real.
 
