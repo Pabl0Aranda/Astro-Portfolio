@@ -1,20 +1,31 @@
 ---
 import { getCollection } from "astro:content";
 import ProjectCard from "../ProjectCard.astro";
+import { getLangFromUrl } from "../../i18n/ui";
 
+// 1. Obtenemos el idioma actual
+const lang = getLangFromUrl(Astro.url);
+
+// 2. Cargamos y ordenamos los proyectos
 const proyectos = await getCollection("proyectos");
 const proyectosOrdenados = proyectos.sort(
   (a, b) => (a.data.orden || 0) - (b.data.orden || 0),
 );
 ---
 
-<section id="proyectos" class="py-20 border-t border-white/10">
-  <h2 class="text-3xl font-bold mb-10 reveal-text">Proyectos Destacados</h2>
+<section
+  id="proyectos"
+  class="py-20 border-t border-neutral-200 dark:border-white/10"
+>
+  <h2
+    class="text-3xl font-bold mb-10 text-neutral-900 dark:text-white reveal-text"
+  >
+    {lang === "es" ? "Proyectos Destacados" : "Featured Projects"}
+  </h2>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
     {
       proyectosOrdenados.map((proyecto, index) => (
-        /* Envolvemos la tarjeta en un div con reveal-card y le calculamos un delay dinámico */
         <div class={`reveal-card delay-${((index % 3) + 1) * 100}`}>
           <ProjectCard
             title={proyecto.data.title}

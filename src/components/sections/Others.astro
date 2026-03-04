@@ -1,42 +1,80 @@
-<section id="otros" class="py-20 border-t border-white/10">
-  <h2 class="text-3xl font-bold mb-10 reveal-text">Más sobre mí</h2>
+---
+import { getLangFromUrl } from "../../i18n/ui";
+
+const lang = getLangFromUrl(Astro.url);
+---
+
+<section
+  id="otros"
+  class="py-20 border-t border-neutral-200 dark:border-white/10"
+>
+  <h2
+    class="text-3xl font-bold mb-10 text-neutral-900 dark:text-white reveal-text"
+  >
+    {lang === "es" ? "Más sobre mí" : "More about me"}
+  </h2>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <div
-      class="p-8 border border-white/10 rounded-2xl bg-white/5 hover:border-albero/50 transition-colors duration-300 reveal-card"
+      class="p-8 border border-neutral-200 dark:border-white/10 rounded-2xl bg-neutral-50 dark:bg-white/5 hover:border-albero/50 transition-colors duration-300 reveal-card"
     >
-      <h3 class="text-xl font-semibold mb-4 text-albero">Idiomas</h3>
-      <ul class="space-y-3 text-neutral-400">
+      <h3 class="text-xl font-semibold mb-4 text-albero">
+        {lang === "es" ? "Idiomas" : "Languages"}
+      </h3>
+      <ul class="space-y-3 text-neutral-600 dark:text-neutral-400">
         <li class="flex justify-between items-center">
-          <span class="text-white">Español</span>
-          <span class="text-sm px-2 py-1 bg-white/10 rounded">Nativo</span>
+          <span class="text-neutral-900 dark:text-white">
+            {lang === "es" ? "Español" : "Spanish"}
+          </span>
+          <span
+            class="text-sm px-2 py-1 bg-neutral-200 dark:bg-white/10 text-neutral-800 dark:text-neutral-200 rounded font-medium"
+          >
+            {lang === "es" ? "Nativo" : "Native"}
+          </span>
         </li>
         <li class="flex justify-between items-center">
-          <span class="text-white">Inglés</span>
-          <span class="text-sm px-2 py-1 bg-white/10 rounded">B1 Cambridge</span
+          <span class="text-neutral-900 dark:text-white">
+            {lang === "es" ? "Inglés" : "English"}
+          </span>
+          <span
+            class="text-sm px-2 py-1 bg-neutral-200 dark:bg-white/10 text-neutral-800 dark:text-neutral-200 rounded font-medium"
           >
+            B1 Cambridge
+          </span>
         </li>
       </ul>
     </div>
 
     <div
-      class="p-8 border border-white/10 rounded-2xl bg-white/5 hover:border-albero/50 transition-colors duration-300 reveal-card"
+      class="p-8 border border-neutral-200 dark:border-white/10 rounded-2xl bg-neutral-50 dark:bg-white/5 hover:border-albero/50 transition-colors duration-300 reveal-card"
     >
-      <h3 class="text-xl font-semibold mb-4 text-albero">Intereses</h3>
-      <p class="text-neutral-400 leading-relaxed mb-4">
-        Fuera del código, me encanta la fotografía de calle, el diseño gráfico
-        minimalista en 3D y aprender sobre arquitectura.
+      <h3 class="text-xl font-semibold mb-4 text-albero">
+        {lang === "es" ? "Intereses" : "Interests"}
+      </h3>
+      <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed mb-4">
+        {
+          lang === "es"
+            ? "Fuera del código, me encanta la fotografía de calle, el diseño gráfico minimalista en 3D y aprender sobre arquitectura."
+            : "Outside of code, I love street photography, minimalist 3D graphic design, and learning about architecture."
+        }
       </p>
+
       <div class="flex gap-2 flex-wrap">
-        <span class="text-xs px-3 py-1 border border-white/20 rounded-full"
-          >Fotografía</span
+        <span
+          class="text-xs px-3 py-1 border border-neutral-300 dark:border-white/20 text-neutral-700 dark:text-neutral-300 rounded-full"
         >
-        <span class="text-xs px-3 py-1 border border-white/20 rounded-full"
-          >Diseño 3D</span
+          {lang === "es" ? "Fotografía" : "Photography"}
+        </span>
+        <span
+          class="text-xs px-3 py-1 border border-neutral-300 dark:border-white/20 text-neutral-700 dark:text-neutral-300 rounded-full"
         >
-        <span class="text-xs px-3 py-1 border border-white/20 rounded-full"
-          >Arquitectura</span
+          {lang === "es" ? "Diseño 3D" : "3D Design"}
+        </span>
+        <span
+          class="text-xs px-3 py-1 border border-neutral-300 dark:border-white/20 text-neutral-700 dark:text-neutral-300 rounded-full"
         >
+          {lang === "es" ? "Arquitectura" : "Architecture"}
+        </span>
       </div>
     </div>
   </div>

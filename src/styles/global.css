@@ -7,16 +7,17 @@
 }
 
 @keyframes float {
+
   0%,
   100% {
     transform: translateY(0) scale(1);
   }
+
   50% {
     transform: translateY(30px) scale(1.05);
   }
 }
 
-/* Personalizamos el plugin de tipografía para usar el color albero */
 @utility prose-albero {
   --tw-prose-links: var(--color-albero);
   --tw-prose-quotes: var(--color-albero);
@@ -24,23 +25,25 @@
   --tw-prose-bullets: var(--color-albero);
 }
 
-/* --- 1. BARRA DE SCROLL ESTILIZADA --- */
+@variant dark (&:where(.dark, .dark *));
+
 ::-webkit-scrollbar {
-  width: 8px; /* Más fina y elegante */
-}
-::-webkit-scrollbar-track {
-  background: #050505; /* Fondo casi negro */
-}
-::-webkit-scrollbar-thumb {
-  background: #222; /* Gris muy oscuro por defecto */
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-albero); /* Brilla en albero al hacer hover */
+  width: 8px;
 }
 
-/* --- 2. ANIMACIONES DE SCROLL (REVEAL) --- */
-/* Animación para textos: Aparecen desde abajo suavemente */
+::-webkit-scrollbar-track {
+  background: #050505;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #222;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-albero);
+}
+
 .reveal-text {
   opacity: 0;
   transform: translateY(30px);
@@ -49,7 +52,6 @@
     transform 0.8s cubic-bezier(0.5, 0, 0, 1);
 }
 
-/* Animación para tarjetas: Aparecen con un ligero zoom y fade */
 .reveal-card {
   opacity: 0;
   transform: scale(0.95) translateY(20px);
@@ -58,29 +60,29 @@
     transform 0.8s cubic-bezier(0.5, 0, 0, 1);
 }
 
-/* El estado "activo" que inyectará nuestro JavaScript */
 .reveal-text.is-visible,
 .reveal-card.is-visible {
   opacity: 1;
   transform: translateY(0) scale(1);
 }
 
-/* Clases de utilidad para crear efecto "cascada" (stagger) */
 .delay-100 {
   transition-delay: 100ms;
 }
+
 .delay-200 {
   transition-delay: 200ms;
 }
+
 .delay-300 {
   transition-delay: 300ms;
 }
 
 @media (min-width: 768px) {
+
   *,
   *::before,
   *::after {
-    /* El !important es clave aquí para sobrescribir los estilos del navegador para <a> y <button> */
     cursor: none !important;
   }
 }

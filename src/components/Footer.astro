@@ -1,5 +1,13 @@
+---
+import { getLangFromUrl } from "../i18n/ui";
+
+const lang = getLangFromUrl(Astro.url);
+---
+
 <footer
-  class="py-6 text-center text-sm text-neutral-500 border-t border-white/10 mt-20 relative z-10"
+  class="py-6 text-center text-sm text-neutral-600 dark:text-neutral-400 border-t border-neutral-200 dark:border-white/10 mt-20 relative z-10"
 >
-  © {new Date().getFullYear()} Pablo Aranda. Todos los derechos reservados.
+  © {new Date().getFullYear()} Pablo Aranda. {
+    lang === "es" ? "Todos los derechos reservados." : "All rights reserved."
+  }
 </footer>

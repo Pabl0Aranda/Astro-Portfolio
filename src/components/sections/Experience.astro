@@ -1,25 +1,52 @@
-<section id="experiencia" class="py-20 border-t border-white/10">
-  <h2 class="text-3xl font-bold mb-10 reveal-text">Experiencia</h2>
+---
+import { getLangFromUrl } from "../../i18n/ui";
 
-  <div class="border-l border-white/20 ml-3 md:ml-4 space-y-12">
+const lang = getLangFromUrl(Astro.url);
+---
+
+<section
+  id="experiencia"
+  class="py-20 border-t border-neutral-200 dark:border-white/10"
+>
+  <h2
+    class="text-3xl font-bold mb-10 text-neutral-900 dark:text-white reveal-text"
+  >
+    {lang === "es" ? "Experiencia" : "Experience"}
+  </h2>
+
+  <div
+    class="border-l border-neutral-300 dark:border-white/20 ml-3 md:ml-4 space-y-12"
+  >
     <div class="relative pl-8 md:pl-12">
       <div
-        class="absolute w-3 h-3 bg-white/20 rounded-full -left-[6.5px] top-2"
+        class="absolute w-3 h-3 bg-neutral-300 dark:bg-white/20 rounded-full -left-[6.5px] top-2"
       >
       </div>
-      <h3 class="text-xl font-semibold text-white/80 reveal-text">
-        Socorrista
+
+      <h3
+        class="text-xl font-semibold text-neutral-900 dark:text-white reveal-text"
+      >
+        {lang === "es" ? "Socorrista" : "Lifeguard"}
       </h3>
+
       <p class="text-neutral-500 text-sm font-medium mb-3 reveal-text">
         Cambia la Dinámica SL • 2023 - 2025
       </p>
+
       <p
-        class="text-neutral-400 leading-relaxed text-sm md:text-base reveal-text"
+        class="text-neutral-600 dark:text-neutral-400 leading-relaxed text-sm md:text-base reveal-text"
       >
-        Desarrollo de habilidades de atención al detalle, responsabilidad
-        individual y resolución rápida de problemas.<br />
-        Cumplimiento de estrictos protocolos de seguridad y prevención en instalaciones
-        de alta concurrencia.
+        {
+          lang === "es"
+            ? "Desarrollo de habilidades de atención al detalle, responsabilidad individual y resolución rápida de problemas."
+            : "Developed strong attention to detail, individual responsibility, and quick problem-solving skills."
+        }
+        <br />
+        {
+          lang === "es"
+            ? "Cumplimiento de estrictos protocolos de seguridad y prevención en instalaciones de alta concurrencia."
+            : "Ensured compliance with strict safety and prevention protocols in high-traffic facilities."
+        }
       </p>
     </div>
   </div>

@@ -1,24 +1,84 @@
-<section class="py-32 flex flex-col items-start gap-6">
-  <h1 class="text-5xl md:text-7xl font-bold tracking-tight">
-    Hola, soy <span class="text-albero">Pablo</span>.
+---
+import { getLangFromUrl } from "../../i18n/ui";
+
+const lang = getLangFromUrl(Astro.url);
+---
+
+<section id="home" class="py-32 flex flex-col items-start gap-6">
+  <h1
+    class="text-5xl md:text-7xl font-bold tracking-tight text-neutral-900 dark:text-white"
+  >
+    {lang === "es" ? "Hola, soy" : "Hi, I am"}
+    <span class="text-albero">Pablo</span>.
   </h1>
+
   <p
-    class="text-lg md:text-xl text-neutral-400 max-w-1xl leading-relaxed reveal-text"
+    class="text-lg md:text-xl text-neutral-600 dark:text-neutral-400 max-w-2xl leading-relaxed reveal-text"
   >
-    Estudiante de último año de <b
-      >Ingeniería Informática en Sistemas de Información</b
-    >, enfocado en el desarrollo de software y la optimización de procesos
-    tecnológicos. Con sólidos conocimientos en algoritmia, Machine Learning y
-    gestión de proyectos entre otros, busco aportar soluciones técnicas
-    innovadoras que promuevan el crecimiento de la organización. Comprometido
-    con la excelencia y el aprendizaje continuo, busco integrar mis competencias
-    en el sector de la ingeniería para generar un impacto positivo y medible en
-    los resultados del equipo.
+    {
+      lang === "es" ? (
+        <>
+          Estudiante de último año de{" "}
+          <b class="text-neutral-900 dark:text-white font-semibold">
+            Ingeniería Informática en Sistemas de Información
+          </b>
+          , enfocado en el desarrollo de software y la optimización de procesos
+          tecnológicos. Con sólidos conocimientos en algoritmia, Machine
+          Learning y gestión de proyectos entre otros, busco aportar soluciones
+          técnicas innovadoras que promuevan el crecimiento de la organización.
+          Comprometido con la excelencia y el aprendizaje continuo, busco
+          integrar mis competencias en el sector de la ingeniería para generar
+          un impacto positivo y medible en los resultados del equipo.
+        </>
+      ) : (
+        <>
+          Senior student in{" "}
+          <b class="text-neutral-900 dark:text-white font-semibold">
+            Computer Engineering & Information Systems
+          </b>
+          , focused on software development and the optimization of
+          technological processes. With solid knowledge in algorithms, Machine
+          Learning, and project management among others, I seek to provide
+          innovative technical solutions that drive organizational growth.
+          Committed to excellence and continuous learning, I aim to integrate my
+          skills in the engineering sector to generate a positive and measurable
+          impact on team results.
+        </>
+      )
+    }
   </p>
-  <a
-    href="#contacto"
-    class="mt-4 px-6 py-3 bg-white text-black font-semibold rounded-full hover:bg-albero transition-colors duration-300 reveal-card"
-  >
-    Contactar
-  </a>
+
+  <div class="flex flex-wrap items-center gap-4 mt-4 reveal-card">
+    <a
+      href="#contacto"
+      class="px-8 py-3 bg-neutral-900 text-white dark:bg-white dark:text-black font-semibold rounded-full hover:bg-albero dark:hover:bg-albero hover:text-black transition-colors duration-300"
+    >
+      {lang === "es" ? "Contactar" : "Contact me"}
+    </a>
+
+    <a
+      href={lang === "es"
+        ? "/CV_Pablo_Aranda_Ingeniero_Informatica.pdf"
+        : "/Resume_Pablo_Aranda_Computer_Engineer.pdf"}
+      download={lang === "es"
+        ? "CV_Pablo_Aranda_Ingeniero_Informatica.pdf"
+        : "Resume_Pablo_Aranda_Computer_Engineer.pdf"}
+      class="px-8 py-3 bg-transparent border border-neutral-300 dark:border-white/20 text-neutral-900 dark:text-white font-semibold rounded-full hover:border-albero hover:text-albero dark:hover:border-albero dark:hover:text-albero transition-colors duration-300 flex items-center gap-2 group"
+    >
+      {lang === "es" ? "Descargar CV" : "Download Resume"}
+      <svg
+        class="w-5 h-5 group-hover:translate-y-1 transition-transform duration-300"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+        ></path>
+      </svg>
+    </a>
+  </div>
 </section>
