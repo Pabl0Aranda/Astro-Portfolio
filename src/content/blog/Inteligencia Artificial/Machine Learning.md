@@ -42,7 +42,7 @@ Para resumir, aquí tienes las diferencias clave que determinan cuándo usar cad
 
 | Característica | Machine Learning (Clásico) | Deep Learning |
 | :--- | :--- | :--- |
-| **Volumen de Datos** | Funciona bien con conjuntos de datos pequeños o medianos. | Es un monstruo hambriento. Requiere cantidades masivas de datos para ser preciso. |
+| **Volumen de Datos** | Funciona bien con conjuntos de datos pequeños o medianos. | Requiere cantidades masivas de datos para ser preciso. |
 | **Hardware Requerido** | Puede ejecutarse y entrenarse en CPUs estándar de cualquier servidor. | Necesita GPUs (Tarjetas Gráficas) muy potentes para hacer millones de cálculos matriciales. |
 | **Intervención Humana** | Alta. Requiere estructurar los datos e indicar las características clave (*Feature Engineering*). | Baja. Extrae las características automáticamente a partir de datos en crudo (imágenes, audio, texto). |
 | **Explicabilidad** | Alta. Puedes trazar matemáticamente por qué el algoritmo tomó una decisión. | Baja. Es una "Caja Negra" (*Black Box*). A veces ni los ingenieros saben exactamente por qué la red tomó cierta decisión. |
