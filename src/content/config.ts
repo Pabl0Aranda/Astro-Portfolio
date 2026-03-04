@@ -18,6 +18,7 @@ const blogCollection = defineCollection({
     date: z.date(), // Zod validará que sea una fecha correcta (ej: 2026-02-26)
     description: z.string(),
     draft: z.boolean().default(false), // Útil para que Netlify no publique posts a medias
+    category: z.string().default('General'),
   })
 });
 
