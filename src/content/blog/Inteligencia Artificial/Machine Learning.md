@@ -6,7 +6,7 @@ draft: true
 category: Inteligencia Artificial
 ---
 
-Hoy en día es imposible navegar por internet sin toparse con el término "Inteligencia Artificial" (IA). Sin embargo, a menudo vemos que términos como IA, *Machine Learning* (ML) y *Deep Learning* (DL) se utilizan como si fueran sinónimos, lo cual genera un confuso entendimiento sobre lo que son y si son siquiera diferentes.
+Hoy en día es imposible navegar por internet sin toparse con el término "Inteligencia Artificial" (IA). Sin embargo, a menudo vemos que términos como IA, *Machine Learning* (ML) y *Deep Learning* (DL) se utilizan como si fueran sinónimos, lo cual genera un confuso entendimiento sobre sus diferencias.
 
 Para entenderlo de forma visual, imagina unas muñecas matrioskas: la Inteligencia Artificial es la muñeca más grande que engloba todo. Dentro de ella está el Machine Learning, y dentro de este, una muñeca aún más específica llamada Deep Learning.
 
