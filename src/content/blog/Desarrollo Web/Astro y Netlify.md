@@ -10,6 +10,8 @@ Cuando decidí construir mi portafolio personal, tenía claro un objetivo: quer�
 
 Aquí te explico por qué considero que es el *stack* definitivo para este tipo de proyectos.
 
+![Logos de Astro y Netlify](./img/astro-netlify-logo.png)
+
 ## Astro
 
 Astro es mucho más que un framework; es un motor diseñado específicamente para destacar el contenido. Mientras que herramientas como React o Vue (SPAs) nacieron para crear aplicaciones web complejas (como paneles de control o redes sociales), Astro brilla en portafolios, blogs y *landing pages*.
@@ -36,8 +38,6 @@ Al integrar mi repositorio de GitHub con Netlify, he configurado un flujo de tra
 * Netlify detecta el cambio, compila la web entera en segundos y la publica globalmente en su CDN.
 
 Además, Netlify Forms me ha permitido integrar un formulario de contacto 100% funcional sin tener que escribir ni mantener una sola línea de código *backend* o configurar bases de datos.
-
-![Logos de Astro y Netlify](./img/astro-netlify-logo.png)
 
 ## Conclusión
 
