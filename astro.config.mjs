@@ -16,5 +16,11 @@ export default defineConfig({
     routing: {
       prefixDefaultLocale: false, 
     }
+  },
+  
+  // Configuración de Markdown
+  markdown: {
+    remarkPlugins: [remarkMath],
+    rehypePlugins: [rehypeKatex],
   }
 });
