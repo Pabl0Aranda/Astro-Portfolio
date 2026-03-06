@@ -34,8 +34,10 @@ $$O(V^{2})$$
 Donde V es el número de vértices.
 
 Sin embargo, en aplicaciones de ingeniería de software modernas, solemos utilizar una **Cola de Prioridad** (típicamente implementada con un *Min-Heap*) para extraer el nodo con la distancia mínima de forma mucho más eficiente. Esto reduce drásticamente la complejidad temporal a:
+
 $$O(E + V \log (V))$$
-Donde $E$ representa el número de aristas (conexiones). Esta optimización es crucial cuando trabajamos con redes masivas donde los nodos tienen pocas conexiones relativas a la inmensidad de la red (grafos dispersos).
+
+Donde E representa el número de aristas (conexiones). Esta optimización es crucial cuando trabajamos con redes masivas donde los nodos tienen pocas conexiones relativas a la inmensidad de la red (grafos dispersos).
 
 ## Ejemplo Práctico del Algoritmo
 
