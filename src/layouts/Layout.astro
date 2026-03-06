@@ -2,6 +2,7 @@
 import { ViewTransitions } from "astro:transitions"; // 1. Importamos la magia
 import "../styles/global.css";
 import Header from "../components/Header.astro";
+import 'katex/dist/katex.min.css';
 
 // 1. Añadimos 'image' como propiedad opcional
 interface Props {
@@ -30,8 +31,7 @@ const socialImageURL = new URL(image, canonicalURL);
     <meta name="title" content={title} />
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsRQf17N/2Z76wZ/XyI/D4yA4L2tM/m8n2T+B2bBfu1zJq0E1oA1K8LzO1" crossorigin="anonymous">
-
+    
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />

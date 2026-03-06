@@ -86,3 +86,7 @@
     cursor: none !important;
   }
 }
+
+.katex-mathml {
+  display: none !important;
+}
