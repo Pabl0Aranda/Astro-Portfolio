@@ -28,8 +28,10 @@ El algoritmo sigue una lógica voraz (*greedy approach*):
 El rendimiento de este algoritmo depende en gran medida de las estructuras de datos que utilicemos para implementarlo.
 
 Si implementamos la lista de nodos no visitados como un array simple (o lista), el tiempo de búsqueda del nodo con la distancia mínima toma $O(V)$, lo que nos da una complejidad temporal total de:
-$$O(V^2)$$
-Donde $V$ es el número de vértices.
+
+$$O(V^{2})$$
+
+Donde V es el número de vértices.
 
 Sin embargo, en aplicaciones de ingeniería de software modernas, solemos utilizar una **Cola de Prioridad** (típicamente implementada con un *Min-Heap*) para extraer el nodo con la distancia mínima de forma mucho más eficiente. Esto reduce drásticamente la complejidad temporal a:
 $$O(E + V \log (V))$$
