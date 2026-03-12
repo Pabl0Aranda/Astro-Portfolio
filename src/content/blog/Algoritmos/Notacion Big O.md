@@ -1,7 +1,7 @@
 ---
 title: "Notación Big O"
 date: 2026-03-12
-description: "Qué es y para que nos sirve en el mundo de la Algoritmia la notación Big O."
+description: "Qué es, para que nos sirve en el mundo de la Algoritmia la notación Big O y sus tipos de notación."
 draft: false
 category: Algoritmia
 ---
