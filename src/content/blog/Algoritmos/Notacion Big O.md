@@ -56,6 +56,8 @@ Aquí es donde debemos empezar a tener cuidado. El tiempo crece al cuadrado de l
 
 ![Gráfica de Complejidad Big O](./img/Big%20O.jpg)
 
+---
+
 ## Visualización de jerarquía de complejidad
 
 No todas las complejidades son iguales. Para un desarrollador, es vital saber cuándo un algoritmo escala y cuándo explota. Podemos clasificar las notaciones de la más eficiente a la menos eficiente de la siguiente manera:
@@ -80,6 +82,8 @@ A menudo nos centramos solo en cuánto tarda un algoritmo (Complejidad Temporal)
 *Ejemplo*: Si para ordenar una lista de $n$ elementos creas una copia nueva de esa lista, tu complejidad espacial es $O(n)$. Si ordenas la lista sobre el mismo array original, tu complejidad espacial es $O(1)$.
 
 ![Complejidad Temporal vs Complejidad Espacial](./img/Complejidad%20Temporal%20vs%20Espacial.jpg)
+
+---
 
 ## Reglas para calcular Big O
 
