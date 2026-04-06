@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import Layout from "../../layouts/Layout.astro";
+import { getLangFromUrl } from "../../i18n/ui";
 
 // Generamos las rutas dinámicas para cada post
 export async function getStaticPaths() {
@@ -13,6 +14,8 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await entry.render();
+
+const lang = getLangFromUrl(Astro.url);
 ---
 
 <Layout
@@ -40,24 +43,52 @@ const { Content } = await entry.render();
     </a>
 
     <header class="mb-14">
-      <div class="flex items-center gap-3 mb-6">
-        <span
-          class="text-xs font-bold px-3 py-1 bg-neutral-50 dark:bg-white/10 text-albero rounded-full"
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-3">
+          <span
+            class="text-xs font-bold px-3 py-1 bg-neutral-100 dark:bg-white/10 text-albero rounded-full"
+          >
+            {entry.data.category}
+          </span>
+          <time class="text-sm text-neutral-500">
+            {
+              entry.data.date.toLocaleDateString(
+                lang === "es" ? "es-ES" : "en-US",
+                {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                },
+              )
+            }
+          </time>
+        </div>
+
+        <button
+          id="btn-download-paper"
+          class="print:hidden flex items-center justify-center p-2.5 rounded-full bg-neutral-100 dark:bg-white/10 text-neutral-600 dark:text-neutral-300 hover:bg-albero hover:text-black dark:hover:bg-albero dark:hover:text-black transition-colors duration-300 group"
+          title={lang === "es"
+            ? "Descargar como Paper (PDF)"
+            : "Download as Paper (PDF)"}
         >
-          {entry.data.category}
-        </span>
-        <time class="text-sm text-neutral-500">
-          {
-            entry.data.date.toLocaleDateString("es-ES", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })
-          }
-        </time>
+          <svg
+            class="w-5 h-5 group-hover:-translate-y-0.5 transition-transform duration-300"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+            ></path>
+          </svg>
+        </button>
       </div>
+
       <h1
-        class="text-3xl md:text-5xl font-bold tracking-tight mb-6 leading-tight"
+        class="text-3xl md:text-5xl font-bold tracking-tight mb-6 leading-tight text-neutral-900 dark:text-white"
       >
         {entry.data.title}
       </h1>
@@ -68,6 +99,18 @@ const { Content } = await entry.render();
     </article>
   </div>
 </Layout>
+
+<script>
+  // Usamos astro:page-load para que funcione bien con las View Transitions de Astro
+  document.addEventListener("astro:page-load", () => {
+    const btn = document.getElementById("btn-download-paper");
+    if (btn) {
+      btn.addEventListener("click", () => {
+        window.print();
+      });
+    }
+  });
+</script>
 
 <style is:global>
   @reference "../../styles/global.css";
@@ -157,5 +200,76 @@ const { Content } = await entry.render();
   }
   .prose-custom th {
     @apply bg-neutral-50 dark:bg-white/5 font-bold text-neutral-900 dark:text-white;
+  }
+
+  /* =========================================
+     ESTILOS DE IMPRESIÓN (FORMATO PAPER PDF)
+     ========================================= */
+  @media print {
+    /* 1. Ocultar todo lo que no sea el artículo (navbar, footer, botón de volver, etc) */
+    nav,
+    footer,
+    #btn-download-paper,
+    a[href^="/blog"],
+    a[href^="/en/blog"] {
+      display: none !important;
+    }
+
+    /* 2. Forzar colores de papel (fondo blanco, texto negro) ignorando el dark mode */
+    body,
+    html,
+    .prose-custom {
+      background-color: white !important;
+      color: black !important;
+    }
+
+    /* 3. Tipografía académica para el texto */
+    .prose-custom,
+    .prose-custom p,
+    .prose-custom li {
+      font-family: "Times New Roman", Times, serif !important;
+      font-size: 12pt !important;
+      line-height: 1.5 !important;
+      text-align: justify !important;
+    }
+
+    /* 4. Títulos estilo académico */
+    h1 {
+      font-family: "Times New Roman", Times, serif !important;
+      font-size: 24pt !important;
+      text-align: center !important;
+      margin-bottom: 24px !important;
+      color: black !important;
+    }
+    .prose-custom h2 {
+      font-family: "Times New Roman", Times, serif !important;
+      font-size: 16pt !important;
+      border-bottom: 1px solid black;
+      padding-bottom: 4px;
+      margin-top: 24px !important;
+      color: black !important;
+    }
+
+    /* 5. Ajustar bloques de código para impresión */
+    .prose-custom pre {
+      background-color: #f5f5f5 !important;
+      color: black !important;
+      border: 1px solid #ccc !important;
+      white-space: pre-wrap !important; /* Para que el código no se corte por la derecha */
+      page-break-inside: avoid !important; /* Evita que un bloque de código se parta a la mitad de dos páginas */
+    }
+
+    /* 6. Enlaces legibles en papel */
+    .prose-custom a {
+      color: black !important;
+      text-decoration: underline !important;
+    }
+
+    /* 7. Evitar saltos de página feos en imágenes o tablas */
+    img,
+    table,
+    blockquote {
+      page-break-inside: avoid !important;
+    }
   }
 </style>
