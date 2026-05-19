@@ -10,7 +10,7 @@ const proyectosCollection = defineCollection({
   })
 });
 
-// NUEVO: Definimos la colección del blog
+// Definimos la colección del blog
 const blogCollection = defineCollection({
   type: 'content',
   schema: z.object({
