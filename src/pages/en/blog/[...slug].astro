@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import Layout from "../../../layouts/Layout.astro";
 import { getLangFromUrl } from "../../../i18n/ui";
+import TableOfContents from "../../../components/TableOfContents.astro";
 
 // Generamos las rutas dinámicas para cada post
 export async function getStaticPaths() {
@@ -13,19 +14,36 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const { Content, remarkPluginFrontmatter } = await entry.render();
+const { Content, remarkPluginFrontmatter, headings } = await entry.render();
 
 // Obtener el idioma de la URL
 const lang = getLangFromUrl(Astro.url);
+
+// Generar JSON-LD
+const schema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": entry.data.title,
+  "description": entry.data.description,
+  "datePublished": entry.data.date.toISOString(),
+  "author": {
+    "@type": "Person",
+    "name": "Pablo Aranda"
+  }
+});
 ---
 
 <Layout
   title={`${entry.data.title} | Pablo.`}
   description={entry.data.description}
+  structuredData={schema}
 >
-  <div
-    class="mx-auto w-full max-w-3xl px-6 py-20 text-neutral-900 md:px-0 md:py-32 dark:text-white"
-  >
+  <div id="progress-container" class="fixed top-0 left-0 w-full h-1 z-50 bg-transparent print:hidden">
+    <div id="progress-bar" class="h-full bg-albero w-0 transition-all duration-150 ease-out"></div>
+  </div>
+
+  <div class="mx-auto w-full max-w-5xl px-6 py-20 text-neutral-900 md:px-0 md:py-32 dark:text-white flex justify-between items-start gap-12 relative">
+    <div class="w-full max-w-3xl shrink-0">
     <a
       href={lang === "es" ? "/blog" : "/en/blog"}
       class="text-albero mb-10 inline-flex items-center font-medium transition-colors duration-300 hover:text-neutral-900 dark:hover:text-white"
@@ -107,18 +125,63 @@ const lang = getLangFromUrl(Astro.url);
     <article class="prose-custom w-full max-w-full break-words">
       <Content />
     </article>
+    </div>
+
+    {headings && headings.length > 0 && <TableOfContents headings={headings} lang={lang} />}
   </div>
 </Layout>
 
 <script>
   // Usamos astro:page-load para que funcione bien con las View Transitions de Astro
   document.addEventListener("astro:page-load", () => {
+    // 1. Lógica del botón de imprimir
     const btn = document.getElementById("btn-download-paper");
     if (btn) {
       btn.addEventListener("click", () => {
         window.print();
       });
     }
+
+    // 2. Barra de progreso de lectura
+    const progressBar = document.getElementById("progress-bar");
+    if (progressBar) {
+      window.addEventListener("scroll", () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercent = (scrollTop / docHeight) * 100;
+        progressBar.style.width = scrollPercent + "%";
+      }, { passive: true });
+    }
+
+    // 3. Botón de Copiar al portapapeles
+    const copyButtonIcon = `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>`;
+    const copiedIcon = `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-4 h-4 text-green-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
+
+    document.querySelectorAll(".prose-custom pre").forEach((block) => {
+      // Create copy button
+      const copyButton = document.createElement("button");
+      copyButton.innerHTML = copyButtonIcon;
+      copyButton.className = "absolute top-2 right-2 p-1.5 rounded-md bg-white/10 hover:bg-white/20 text-neutral-400 hover:text-white transition-colors print:hidden";
+      copyButton.title = "Copy code";
+
+      // Wrap the pre in a relative div if it isn't already
+      const wrapper = document.createElement("div");
+      wrapper.className = "relative group";
+      block.parentNode?.insertBefore(wrapper, block);
+      wrapper.appendChild(block);
+      wrapper.appendChild(copyButton);
+
+      copyButton.addEventListener("click", async () => {
+        const code = block.querySelector("code");
+        if (code) {
+          await navigator.clipboard.writeText(code.innerText);
+          copyButton.innerHTML = copiedIcon;
+          setTimeout(() => {
+            copyButton.innerHTML = copyButtonIcon;
+          }, 2000);
+        }
+      });
+    });
   });
 </script>
 

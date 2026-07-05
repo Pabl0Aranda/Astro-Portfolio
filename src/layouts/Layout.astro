@@ -9,10 +9,11 @@ interface Props {
   title: string;
   description: string;
   image?: string;
+  structuredData?: string;
 }
 
 // 2. Definimos una imagen por defecto (/og-image.jpg) si no le pasamos ninguna
-const { title, description, image = "/og-image.jpg" } = Astro.props;
+const { title, description, image = "/og-image.jpg", structuredData } = Astro.props;
 
 // 3. Construimos las URLs absolutas necesarias para el SEO
 const canonicalURL = new URL(Astro.url.pathname, Astro.site || Astro.url);
@@ -43,6 +44,10 @@ const socialImageURL = new URL(image, canonicalURL);
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content={socialImageURL} />
+
+    {structuredData && (
+      <script type="application/ld+json" set:html={structuredData} />
+    )}
 
     <ViewTransitions />
 
