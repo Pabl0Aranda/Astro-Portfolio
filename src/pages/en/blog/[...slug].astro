@@ -14,6 +14,16 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
+
+const allPosts = await getCollection("blog", ({ data }) => data.draft !== true);
+const sortedPosts = allPosts.sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+const currentIndex = sortedPosts.findIndex((p) => p.slug === entry.slug);
+const nextPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
+const prevPost = currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null;
+const suggestedPost = nextPost || prevPost;
+
 const { Content, remarkPluginFrontmatter, headings } = await entry.render();
 
 // Obtener el idioma de la URL
@@ -125,6 +135,26 @@ const schema = JSON.stringify({
     <article class="prose-custom w-full max-w-full break-words">
       <Content />
     </article>
+
+    {suggestedPost && (
+      <div class="mt-20 border-t border-neutral-200 pt-10 dark:border-white/10 print:hidden">
+        <h3 class="mb-6 text-2xl font-bold text-neutral-900 dark:text-white">Continue reading</h3>
+        <a
+          href={`/en/blog/${suggestedPost.slug}`}
+          class="group block rounded-2xl border border-neutral-200 bg-neutral-50 p-8 transition-all duration-300 hover:border-albero hover:-translate-y-1 hover:shadow-lg dark:border-white/10 dark:bg-[#151515] dark:hover:border-albero/50"
+        >
+          <span class="text-albero mb-3 inline-block rounded-full bg-black/5 px-3 py-1 text-xs font-bold dark:bg-white/10">
+            {suggestedPost.data.category}
+          </span>
+          <h4 class="mb-2 text-xl font-bold text-neutral-900 transition-colors duration-300 group-hover:text-albero dark:text-white dark:group-hover:text-albero">
+            {suggestedPost.data.title}
+          </h4>
+          <p class="text-sm text-neutral-600 dark:text-neutral-400">
+            {suggestedPost.data.description}
+          </p>
+        </a>
+      </div>
+    )}
     </div>
 
     {headings && headings.length > 0 && <TableOfContents headings={headings} lang={lang} />}

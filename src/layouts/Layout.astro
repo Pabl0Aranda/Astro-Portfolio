@@ -2,6 +2,7 @@
 import { ViewTransitions } from "astro:transitions"; // 1. Importamos la magia
 import "../styles/global.css";
 import Header from "../components/Header.astro";
+import CommandPalette from "../components/CommandPalette.astro";
 import "katex/dist/katex.min.css";
 
 // 1. Añadimos 'image' como propiedad opcional
@@ -95,6 +96,8 @@ const socialImageURL = new URL(image, canonicalURL);
   </div>
 
   <Header />
+
+  <CommandPalette />
 
   <main class="relative z-10 mx-auto w-full max-w-5xl grow px-6">
     <slot />

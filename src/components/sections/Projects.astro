@@ -12,6 +12,16 @@ const proyectos = await getCollection("proyectos");
 const proyectosOrdenados = proyectos.sort(
   (a, b) => (a.data.orden || 0) - (b.data.orden || 0),
 );
+
+const getBentoConfig = (index: number) => {
+  const configs = [
+    { class: "md:col-span-2 md:row-span-2 min-h-[320px]", size: "large" as const },
+    { class: "md:col-span-2 md:row-span-1 min-h-[160px]", size: "medium" as const },
+    { class: "md:col-span-2 md:row-span-1 min-h-[160px]", size: "medium" as const },
+    { class: "md:col-span-4 md:row-span-1 min-h-[220px]", size: "wide" as const }
+  ];
+  return configs[index % 4];
+};
 ---
 
 <section
@@ -24,17 +34,23 @@ const proyectosOrdenados = proyectos.sort(
     {t("projects.title")}
   </h2>
 
-  <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+  <div class="grid grid-cols-1 gap-6 md:grid-cols-4 auto-rows-fr">
     {
-      proyectosOrdenados.map((proyecto, index) => (
-        <div class={`reveal-card delay-${((index % 3) + 1) * 100}`}>
-          <ProjectCard
-            title={proyecto.data.title}
-            tech={proyecto.data.tech}
-            link={proyecto.data.link}
-          />
-        </div>
-      ))
+      proyectosOrdenados.map((proyecto, index) => {
+        const config = getBentoConfig(index);
+        return (
+          <div class={`reveal-card ${config.class} h-full delay-${((index % 3) + 1) * 100}`}>
+            <ProjectCard
+              title={proyecto.data.title}
+              description={proyecto.data.description}
+              tech={proyecto.data.tech}
+              link={proyecto.data.link}
+              size={config.size}
+              class="h-full"
+            />
+          </div>
+        );
+      })
     }
   </div>
 </section>

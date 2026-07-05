@@ -13,6 +13,19 @@ const sortedPosts = allPosts.sort(
 );
 
 const categories = [...new Set(sortedPosts.map((post) => post.data.category))];
+
+const getRelativeDate = (date: Date) => {
+  const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+  const daysDifference = Math.round(
+    (date.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+  );
+  if (Math.abs(daysDifference) > 30) {
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric', month: 'short', day: 'numeric'
+    });
+  }
+  return rtf.format(daysDifference, 'day');
+};
 ---
 
 <Layout
@@ -64,39 +77,34 @@ const categories = [...new Set(sortedPosts.map((post) => post.data.category))];
       {
         sortedPosts.map((post) => (
           <article
-            class="post-card group hover:border-albero/50 flex h-full flex-col rounded-2xl border border-neutral-200 bg-neutral-50 p-6 transition-all duration-300 hover:bg-neutral-100 dark:border-white/10 dark:bg-white/5 dark:hover:bg-white/10"
+            class="post-card group flex h-full min-h-[220px] flex-col rounded-2xl border border-neutral-200 bg-neutral-50 p-6 transition-all duration-500 hover:bg-neutral-100 hover:shadow-xl dark:border-white/10 dark:bg-white/5 dark:hover:bg-[#151515] hover:-translate-y-1 dark:hover:border-albero/30"
             data-category={post.data.category}
           >
             <div class="mb-4 flex items-center justify-between">
               <span class="text-albero rounded-full bg-black/5 px-3 py-1 text-xs font-bold dark:bg-white/10">
                 {post.data.category}
               </span>
-              <time class="text-sm text-neutral-500">
-                {post.data.date.toLocaleDateString(
-                  lang === "es" ? "es-ES" : "en-US",
-                  {
-                    year: "numeric",
-                    month: "short",
-                    day: "numeric",
-                  },
-                )}
+              <time class="text-sm text-neutral-500 capitalize">
+                {getRelativeDate(post.data.date)}
               </time>
             </div>
 
-            <h2 class="mb-3 text-xl font-bold text-neutral-900 transition-colors duration-300 dark:text-white">
+            <h2 class="mb-1 text-xl font-bold text-neutral-900 transition-colors duration-300 dark:text-white">
               <a
-                href={
-                  lang === "es" ? `/blog/${post.slug}` : `/en/blog/${post.slug}`
-                }
+                href={`/en/blog/${post.slug}`}
                 class="hover:text-albero dark:hover:text-albero transition-colors duration-300 focus:outline-none"
               >
                 {post.data.title}
               </a>
             </h2>
 
-            <p class="mb-6 grow text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
-              {post.data.description}
-            </p>
+            <div class="grid grid-rows-[0fr] opacity-0 transition-all duration-500 ease-in-out group-hover:grid-rows-[1fr] group-hover:mt-3 group-hover:opacity-100">
+              <div class="overflow-hidden">
+                <p class="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400 line-clamp-2">
+                  {post.data.description}
+                </p>
+              </div>
+            </div>
 
             <a
               href={
