@@ -1,8 +1,8 @@
 ---
-title: "Arquitectura Híbrida: Gestionando +150k Libros con FastAPI y Telegram"
+title: "Arquitectura Híbrida: FastAPI, Uvicorn y Docker"
 date: 2026-05-19
 description: "Diseño e implementación de un microservicio asíncrono para indexar, buscar y distribuir más de 150.000 volúmenes digitales superando cuellos de botella I/O."
-draft: false
+draft: true
 category: Software
 ---
 
