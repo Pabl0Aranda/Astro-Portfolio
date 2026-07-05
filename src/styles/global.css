@@ -7,7 +7,6 @@
 }
 
 @keyframes float {
-
   0%,
   100% {
     transform: translateY(0) scale(1);
@@ -79,7 +78,6 @@
 }
 
 @media (min-width: 768px) {
-
   *,
   *::before,
   *::after {

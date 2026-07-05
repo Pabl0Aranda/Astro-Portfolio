@@ -1,10 +1,11 @@
 ---
 import { getCollection } from "astro:content";
 import ProjectCard from "../ProjectCard.astro";
-import { getLangFromUrl } from "../../i18n/ui";
+import { getLangFromUrl, useTranslations } from "../../i18n/ui";
 
 // 1. Obtenemos el idioma actual
 const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 // 2. Cargamos y ordenamos los proyectos
 const proyectos = await getCollection("proyectos");
@@ -15,15 +16,15 @@ const proyectosOrdenados = proyectos.sort(
 
 <section
   id="proyectos"
-  class="py-20 border-t border-neutral-200 dark:border-white/10"
+  class="border-t border-neutral-200 py-20 dark:border-white/10"
 >
   <h2
-    class="text-3xl font-bold mb-10 text-neutral-900 dark:text-white reveal-text"
+    class="reveal-text mb-10 text-3xl font-bold text-neutral-900 dark:text-white"
   >
-    {lang === "es" ? "Proyectos Destacados" : "Featured Projects"}
+    {t("projects.title")}
   </h2>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+  <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
     {
       proyectosOrdenados.map((proyecto, index) => (
         <div class={`reveal-card delay-${((index % 3) + 1) * 100}`}>

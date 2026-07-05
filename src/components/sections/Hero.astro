@@ -1,73 +1,44 @@
 ---
-import { getLangFromUrl } from "../../i18n/ui";
+import { getLangFromUrl, useTranslations } from "../../i18n/ui";
 
 const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
 
-<section id="home" class="py-32 flex flex-col items-start gap-6">
+<section id="home" class="flex flex-col items-start gap-6 py-32">
   <h1
-    class="text-5xl md:text-7xl font-bold tracking-tight text-neutral-900 dark:text-white"
+    class="text-5xl font-bold tracking-tight text-neutral-900 md:text-7xl dark:text-white"
   >
-    {lang === "es" ? "Hola, soy" : "Hi, I am"}
+    {t("hero.greeting")}
     <span class="text-albero">Pablo</span>.
   </h1>
 
   <p
-    class="text-lg md:text-xl text-neutral-600 dark:text-neutral-400 max-w-2xl leading-relaxed reveal-text"
+    class="reveal-text max-w-2xl text-lg leading-relaxed text-neutral-600 md:text-xl dark:text-neutral-400"
   >
-    {
-      lang === "es" ? (
-        <>
-          Estudiante de último año de{" "}
-          <b class="text-neutral-900 dark:text-white font-semibold">
-            Ingeniería Informática en Sistemas de Información
-          </b>
-          , enfocado en el desarrollo de software y la optimización de procesos
-          tecnológicos. Con sólidos conocimientos en algoritmia, Machine
-          Learning y gestión de proyectos entre otros, busco aportar soluciones
-          técnicas innovadoras que promuevan el crecimiento de la organización.
-          Comprometido con la excelencia y el aprendizaje continuo, busco
-          integrar mis competencias en el sector de la ingeniería para generar
-          un impacto positivo y medible en los resultados del equipo.
-        </>
-      ) : (
-        <>
-          Senior student in{" "}
-          <b class="text-neutral-900 dark:text-white font-semibold">
-            Computer Engineering & Information Systems
-          </b>
-          , focused on software development and the optimization of
-          technological processes. With solid knowledge in algorithms, Machine
-          Learning, and project management among others, I seek to provide
-          innovative technical solutions that drive organizational growth.
-          Committed to excellence and continuous learning, I aim to integrate my
-          skills in the engineering sector to generate a positive and measurable
-          impact on team results.
-        </>
-      )
-    }
+    {t("hero.description1")}
+    <b class="font-semibold text-neutral-900 dark:text-white">
+      {t("hero.degree")}
+    </b>
+    {t("hero.description2")}
   </p>
 
-  <div class="flex flex-wrap items-center gap-4 mt-4 reveal-card">
+  <div class="reveal-card mt-4 flex flex-wrap items-center gap-4">
     <a
       href="#contacto"
-      class="px-8 py-3 bg-neutral-900 text-white dark:bg-white dark:text-black font-semibold rounded-full hover:bg-albero dark:hover:bg-albero hover:text-black transition-colors duration-300"
+      class="hover:bg-albero dark:hover:bg-albero rounded-full bg-neutral-900 px-8 py-3 font-semibold text-white transition-colors duration-300 hover:text-black dark:bg-white dark:text-black"
     >
-      {lang === "es" ? "Contactar" : "Contact me"}
+      {t("hero.contact")}
     </a>
 
     <a
-      href={lang === "es"
-        ? "/CV_Pablo_Aranda_Ingeniero_Informatica.pdf"
-        : "/Resume_Pablo_Aranda_Computer_Engineer.pdf"}
-      download={lang === "es"
-        ? "CV_Pablo_Aranda_Ingeniero_Informatica.pdf"
-        : "Resume_Pablo_Aranda_Computer_Engineer.pdf"}
-      class="px-8 py-3 bg-transparent border border-neutral-300 dark:border-white/20 text-neutral-900 dark:text-white font-semibold rounded-full hover:border-albero hover:text-albero dark:hover:border-albero dark:hover:text-albero transition-colors duration-300 flex items-center gap-2 group"
+      href={t("hero.cv_link")}
+      download={t("hero.cv_name")}
+      class="hover:border-albero hover:text-albero dark:hover:border-albero dark:hover:text-albero group flex items-center gap-2 rounded-full border border-neutral-300 bg-transparent px-8 py-3 font-semibold text-neutral-900 transition-colors duration-300 dark:border-white/20 dark:text-white"
     >
-      {lang === "es" ? "Descargar CV" : "Download Resume"}
+      {t("hero.download_cv")}
       <svg
-        class="w-5 h-5 group-hover:translate-y-1 transition-transform duration-300"
+        class="h-5 w-5 transition-transform duration-300 group-hover:translate-y-1"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"

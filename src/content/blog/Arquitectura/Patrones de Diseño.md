@@ -22,17 +22,17 @@ Piensa en ellos como los planos de un arquitecto. Si quieres construir una puert
 
 Aplicar patrones de diseño no es una moda, es una necesidad cuando el proyecto escala. Sus ventajas principales a futuro son las siguientes:
 
-* **Mantenibilidad:** El código estructurado bajo un patrón es predecible. Si un nuevo desarrollador entra al equipo, sabrá exactamente dónde encontrar la lógica de creación de usuarios o la gestión de la base de datos.
-* **Escalabilidad:** Los patrones fomentan el Bajo Acoplamiento y la Alta Cohesión. Esto significa que puedes cambiar una pieza del sistema sin que este explote y de fallos por todos lado.
-* **Ahorro de tiempo:** Al usar soluciones estandarizadas para problemas comunes, reduces drásticamente la cantidad de *bugs* lógicos en producción.
+- **Mantenibilidad:** El código estructurado bajo un patrón es predecible. Si un nuevo desarrollador entra al equipo, sabrá exactamente dónde encontrar la lógica de creación de usuarios o la gestión de la base de datos.
+- **Escalabilidad:** Los patrones fomentan el Bajo Acoplamiento y la Alta Cohesión. Esto significa que puedes cambiar una pieza del sistema sin que este explote y de fallos por todos lado.
+- **Ahorro de tiempo:** Al usar soluciones estandarizadas para problemas comunes, reduces drásticamente la cantidad de _bugs_ lógicos en producción.
 
 Los patrones clásicos se dividen en tres grandes categorías:
 
-| Categoría | Propósito Principal | Ejemplo |
-| :--- | :--- | :--- |
-| **Creacionales** | Resuelven problemas relacionados con la creación de objetos y clases. | Factory, Singleton |
-| **Estructurales** | Se encargan de cómo se componen las clases y objetos para formar estructuras grandes. | Adapter, Decorator |
-| **Comportamiento** | Definen cómo se comunican y asignan responsabilidades entre los objetos. | Observer, Strategy |
+| Categoría          | Propósito Principal                                                                   | Ejemplo            |
+| :----------------- | :------------------------------------------------------------------------------------ | :----------------- |
+| **Creacionales**   | Resuelven problemas relacionados con la creación de objetos y clases.                 | Factory, Singleton |
+| **Estructurales**  | Se encargan de cómo se componen las clases y objetos para formar estructuras grandes. | Adapter, Decorator |
+| **Comportamiento** | Definen cómo se comunican y asignan responsabilidades entre los objetos.              | Observer, Strategy |
 
 ![Patron de bugs](./img/patron-bugs.png)
 
@@ -67,10 +67,12 @@ He preparado un repositorio donde documento y aplico varios de estos patrones de
 
 También dejo un enlace a una web que detalla a la perfección cómo funciona y los problemas que resuelve cada Patrón de Diseño.
 
-### Patrones de Diseño explicados
+## Referencias
 
-🔗 **[Web explicativa de todos los Patrones de Diseño](https://refactoring.guru/es/design-patterns)**
+🔗 **[Refactoring.guru - Patrones de Diseño](https://refactoring.guru/es/design-patterns)**
 
-### Repositorio con ejemplos en Java de uso y documentación
+🔗 **[Repositorio con ejemplos en Java](https://github.com/Pabl0Aranda/Proyecto-ISII)**
 
-🔗 **[Ver ejemplos de Patrones de Diseño](https://github.com/Pabl0Aranda/Proyecto-ISII)**
+Design Patterns: Elements of Reusable Object-Oriented Software (Erich Gamma, Richard Helm, Ralph Johnson, John Vlissides)
+
+Head First Design Patterns (Eric Freeman, Elisabeth Robson)

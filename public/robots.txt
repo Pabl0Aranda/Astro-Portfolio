@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://pabloaranda.netlify.app/sitemap-index.xml

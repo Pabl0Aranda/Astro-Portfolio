@@ -14,7 +14,7 @@ Creado en 1956 y publicado en 1959, el algoritmo de Dijkstra es la solución per
 
 Para entender a Dijkstra, primero debemos imaginar el problema como un mapa. Las ciudades son los **nodos** (o vértices) y las carreteras que las unen son las **aristas**. Cada carretera tiene un coste asociado (distancia, tiempo, peaje o latencia), al que llamamos **peso**.
 
-El algoritmo sigue una lógica voraz (*greedy approach*):
+El algoritmo sigue una lógica voraz (_greedy approach_):
 
 1. **Inicialización:** Asigna una distancia tentativa de `0` al nodo de inicio y de `infinito` a todos los demás. Marca todos los nodos como "no visitados".
 2. **Evaluación:** Desde el nodo actual, calcula la distancia a todos sus vecinos no visitados sumando el peso de la arista que los conecta. Si esta nueva distancia es menor que la distancia tentativa guardada previamente, actualiza el valor.
@@ -33,7 +33,7 @@ $$O(V^{2})$$
 
 Donde V es el número de vértices.
 
-Sin embargo, en aplicaciones de ingeniería de software modernas, solemos utilizar una **Cola de Prioridad** (típicamente implementada con un *Min-Heap*) para extraer el nodo con la distancia mínima de forma mucho más eficiente. Esto reduce drásticamente la complejidad temporal a:
+Sin embargo, en aplicaciones de ingeniería de software modernas, solemos utilizar una **Cola de Prioridad** (típicamente implementada con un _Min-Heap_) para extraer el nodo con la distancia mínima de forma mucho más eficiente. Esto reduce drásticamente la complejidad temporal a:
 
 $$O(E + V \log (V))$$
 
@@ -48,36 +48,36 @@ import heapq
 
 def dijkstra(grafo, nodo_origen):
     """
-    Calcula el camino más corto desde un nodo origen a todos los demás 
+    Calcula el camino más corto desde un nodo origen a todos los demás
     nodos en un grafo con pesos no negativos.
     """
     # 1. Inicialización: Todas las distancias a infinito, excepto el origen a 0
     distancias = {nodo: float('infinity') for nodo in grafo}
     distancias[nodo_origen] = 0
-    
+
     # Nuestra cola de prioridad almacenará tuplas de (distancia_acumulada, nodo)
     # Empezamos insertando el nodo origen
     cola_prioridad = [(0, nodo_origen)]
-    
+
     while cola_prioridad:
         # 2. Extracción: Obtenemos el nodo con la menor distancia registrada hasta ahora
         distancia_actual, nodo_actual = heapq.heappop(cola_prioridad)
-        
+
         # Si sacamos un nodo que ya habíamos visitado con una distancia menor, lo ignoramos
         if distancia_actual > distancias[nodo_actual]:
             continue
-            
+
         # 3. Evaluación de vecinos: Revisamos todas las conexiones del nodo actual
         for vecino, peso in grafo[nodo_actual].items():
             # Calculamos la distancia tentativa sumando el peso de la arista
             distancia_tentativa = distancia_actual + peso
-            
+
             # 4. Relajación: Si encontramos un camino más corto, actualizamos
             if distancia_tentativa < distancias[vecino]:
                 distancias[vecino] = distancia_tentativa
                 # Añadimos el vecino actualizado a la cola para evaluarlo más adelante
                 heapq.heappush(cola_prioridad, (distancia_tentativa, vecino))
-                
+
     return distancias
 
 # --- Ejemplo práctico de uso ---
@@ -102,9 +102,9 @@ for destino, distancia in resultados.items():
 
 Como Ingeniero en Sistemas de Información, la magia de Dijkstra no se queda en la pizarra; es el motor que mantiene viva la infraestructura tecnológica global. Sus usos más críticos incluyen:
 
-* **Protocolos de Enrutamiento (OSPF):** El protocolo *Open Shortest Path First* es el estándar en las redes corporativas y en gran parte de la columna vertebral de Internet. Cada router construye una base de datos topológica de la red y ejecuta Dijkstra para calcular el "Árbol de Caminos Más Cortos". Así deciden instantáneamente por qué cable de fibra óptica enviar tu paquete de datos.
-* **Redes de Telecomunicaciones:** Al establecer circuitos virtuales o enrutar llamadas en infraestructuras VoIP, el algoritmo ayuda a minimizar la latencia (el "peso" de la arista) para evitar que el audio se corte o llegue con retraso.
-* **Sistemas de Información Geográfica (GPS):** Aunque hoy en día aplicaciones como Waze o Google Maps utilizan heurísticas más complejas (como el algoritmo $A^*$ o jerarquías de contracción), el algoritmo de Dijkstra sigue siendo la base teórica subyacente sobre la que se construyen los motores de navegación modernos.
+- **Protocolos de Enrutamiento (OSPF):** El protocolo _Open Shortest Path First_ es el estándar en las redes corporativas y en gran parte de la columna vertebral de Internet. Cada router construye una base de datos topológica de la red y ejecuta Dijkstra para calcular el "Árbol de Caminos Más Cortos". Así deciden instantáneamente por qué cable de fibra óptica enviar tu paquete de datos.
+- **Redes de Telecomunicaciones:** Al establecer circuitos virtuales o enrutar llamadas en infraestructuras VoIP, el algoritmo ayuda a minimizar la latencia (el "peso" de la arista) para evitar que el audio se corte o llegue con retraso.
+- **Sistemas de Información Geográfica (GPS):** Aunque hoy en día aplicaciones como Waze o Google Maps utilizan heurísticas más complejas (como el algoritmo $A^*$ o jerarquías de contracción), el algoritmo de Dijkstra sigue siendo la base teórica subyacente sobre la que se construyen los motores de navegación modernos.
 
 ## Actualidad sobre el algoritmo de Dijkstra
 
@@ -134,3 +134,11 @@ Durante las últimas décadas, algunos investigadores lograron mejoras parciales
 ## Conclusión
 
 El algoritmo de Dijkstra es uno de los ejemplos más claros de cómo una idea abstracta y matemática nacida en los años 50 sigue siendo el motor principal de las conexiones modernas. Que hoy en día sigamos investigando y optimizando este algoritmo demuestra que en la informática y en la ciencia de datos, siempre se sigue avanzando.
+
+## Referencias
+
+🔗 **[Algoritmo de Dijkstra en Wikipedia](https://es.wikipedia.org/wiki/Algoritmo_de_Dijkstra)**
+
+Introduction to Algorithms (Thomas H. Cormen)
+
+Grokking Algorithms (Aditya Bhargava)

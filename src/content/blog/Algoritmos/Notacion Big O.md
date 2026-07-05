@@ -26,33 +26,33 @@ Aquí detallamos los tipos de complejidad más comunes, ordenados de mayor a men
 
 Es el escenario ideal. El algoritmo tarda lo mismo sin importar si le das 10 elementos o 1 millón.
 
-   *Ejemplo*: Acceder a un elemento de un array mediante su índice.
+_Ejemplo_: Acceder a un elemento de un array mediante su índice.
 
 2. **Tiempo logarítmico**: $O(\log n)$
 
 Este tiempo es característico de algoritmos que "dividen el problema a la mitad" en cada paso. Es extremadamente rápido.
 
-   *Ejemplo*: La búsqueda binaria. Si buscas un nombre en una agenda telefónica de 1000 páginas, no vas una por una; abres por la mitad y descartas la parte que no necesitas.
+_Ejemplo_: La búsqueda binaria. Si buscas un nombre en una agenda telefónica de 1000 páginas, no vas una por una; abres por la mitad y descartas la parte que no necesitas.
 
-   *Nota*: Como bien señala FreeCodeCamp, mientras que una búsqueda lineal en 100 elementos tarda 100 pasos, una búsqueda binaria solo tardaría unos 7 pasos ($2^7 = 128$).
+_Nota_: Como bien señala FreeCodeCamp, mientras que una búsqueda lineal en 100 elementos tarda 100 pasos, una búsqueda binaria solo tardaría unos 7 pasos ($2^7 = 128$).
 
 3. **Tiempo lineal**: $O(n)$
 
 El tiempo de ejecución crece en proporción directa al tamaño de la entrada. Si duplicas los datos, duplicas el tiempo.
 
-   *Ejemplo*: Un bucle for simple que recorre una lista para encontrar el valor máximo.
+_Ejemplo_: Un bucle for simple que recorre una lista para encontrar el valor máximo.
 
 4. **Tiempo log-lineal**: $O(n \log n)$
 
 Es la complejidad común de los algoritmos de ordenación eficientes.
 
-   *Ejemplo*: Merge Sort o Quick Sort. Son algoritmos que dividen el problema (log n) y en cada división realizan una comparación lineal (n).
+_Ejemplo_: Merge Sort o Quick Sort. Son algoritmos que dividen el problema (log n) y en cada división realizan una comparación lineal (n).
 
 5. **Tiempo cuadrático**: $O(n^2)$
 
 Aquí es donde debemos empezar a tener cuidado. El tiempo crece al cuadrado de la entrada. Si tienes 10 elementos, realizas 100 operaciones.
 
-   *Ejemplo*: Bucles anidados (un for dentro de otro for). Es típico de algoritmos de ordenación lentos como el Bubble Sort (ordenación de burbuja).
+_Ejemplo_: Bucles anidados (un for dentro de otro for). Es típico de algoritmos de ordenación lentos como el Bubble Sort (ordenación de burbuja).
 
 ![Gráfica de Complejidad Big O](./img/Big%20O.jpg)
 
@@ -66,7 +66,7 @@ $$O(1) < O(\log n) < O(n) < O(n \log n) < O(n^2) < O(2^n) < O(n!)$$
 
 Como se describe en el libro "Introduction to Algorithms" (CLRS), la diferencia es abismal cuando $n$ crece.
 
-*Ejemplo*: si $n=100$
+_Ejemplo_: si $n=100$
 
 - Un algoritmo $O(n)$ hace 100 operaciones.
 - Un algoritmo $O(n^2)$ hace 10,000 operaciones.
@@ -79,7 +79,7 @@ A menudo nos centramos solo en cuánto tarda un algoritmo (Complejidad Temporal)
 - **Complejidad Temporal**: Se refiere al número de operaciones (lo que hemos visto hasta ahora).
 - **Complejidad Espacial**: Se refiere a la cantidad de memoria extra (RAM) que el algoritmo necesita para ejecutarse.
 
-*Ejemplo*: Si para ordenar una lista de $n$ elementos creas una copia nueva de esa lista, tu complejidad espacial es $O(n)$. Si ordenas la lista sobre el mismo array original, tu complejidad espacial es $O(1)$.
+_Ejemplo_: Si para ordenar una lista de $n$ elementos creas una copia nueva de esa lista, tu complejidad espacial es $O(n)$. Si ordenas la lista sobre el mismo array original, tu complejidad espacial es $O(1)$.
 
 ![Complejidad Temporal vs Complejidad Espacial](./img/Complejidad%20Temporal%20vs%20Espacial.jpg)
 
@@ -125,8 +125,10 @@ Este algoritmo recorre la lista una sola vez. Si la lista crece, el tiempo crece
 ```javascript
 // Buscar duplicados en una lista (forma ineficiente)
 function tieneDuplicados(lista) {
-  for (let i = 0; i < lista.length; i++) { // Bucle externo
-    for (let j = 0; j < lista.length; j++) { // Bucle interno
+  for (let i = 0; i < lista.length; i++) {
+    // Bucle externo
+    for (let j = 0; j < lista.length; j++) {
+      // Bucle interno
       if (i !== j && lista[i] === lista[j]) {
         return true; // Duplicado encontrado
       }

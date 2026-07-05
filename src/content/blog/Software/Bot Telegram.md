@@ -10,7 +10,7 @@ category: Software
 
 Crear un bot de Telegram que envíe un par de archivos es un ejercicio sencillo. Sin embargo, cuando el catálogo físico real supera los **150.000 volúmenes** (eBooks en EPUB, PDF y MOBI), la arquitectura monolítica tradicional colapsa y queda obsoleta por su tiempo de respuesta.
 
-El objetivo de este proyecto fue diseñar un microservicio híbrido asíncrono optimizado que garantizara una latencia de búsqueda inferior a 5 milisegundos, un consumo de CPU casi nulo en reposo y una transferencia de archivos sin bloqueos. Para lograrlo, tuve que resolver cuellos de botella críticos a nivel de red, concurrencia y operaciones de entrada/salida (*I/O Bound*) en discos físicos.
+El objetivo de este proyecto fue diseñar un microservicio híbrido asíncrono optimizado que garantizara una latencia de búsqueda inferior a 5 milisegundos, un consumo de CPU casi nulo en reposo y una transferencia de archivos sin bloqueos. Para lograrlo, tuve que resolver cuellos de botella críticos a nivel de red, concurrencia y operaciones de entrada/salida (_I/O Bound_) en discos físicos.
 
 ![Imagen de Telegram](./img/telegram.png)
 
@@ -18,11 +18,11 @@ El objetivo de este proyecto fue diseñar un microservicio híbrido asíncrono o
 
 El núcleo del sistema se construyó seleccionando herramientas de alto rendimiento:
 
-* **Servidor ASGI:** FastAPI + Uvicorn. Elegido por su concurrencia nativa y validación con Pydantic.
-* **Cliente Bot:** pyTelegramBotAPI (TeleBot), controlado dentro del ciclo de vida de FastAPI.
-* **Motor de Datos:** SQLite3 con el módulo de índice invertido **FTS5** (Full-Text Search 5).
-* **Contenedores:** Docker & Docker Compose para un aislamiento absoluto y portabilidad.
-* **Túnel de Red:** Ngrok para exponer el puerto mediante un túnel seguro TLS/SSL (requerido por los webhooks de Telegram).
+- **Servidor ASGI:** FastAPI + Uvicorn. Elegido por su concurrencia nativa y validación con Pydantic.
+- **Cliente Bot:** pyTelegramBotAPI (TeleBot), controlado dentro del ciclo de vida de FastAPI.
+- **Motor de Datos:** SQLite3 con el módulo de índice invertido **FTS5** (Full-Text Search 5).
+- **Contenedores:** Docker & Docker Compose para un aislamiento absoluto y portabilidad.
+- **Túnel de Red:** Ngrok para exponer el puerto mediante un túnel seguro TLS/SSL (requerido por los webhooks de Telegram).
 
 ## Arquitectura Asíncrona y Patrones de Diseño
 
@@ -30,15 +30,15 @@ Para mantener el sistema fluido bajo estrés, el sistema usa varios patrones arq
 
 ### 1. Inversión de Control (IoC)
 
-Utilizando el decorador `@asynccontextmanager` de FastAPI, el microservicio controla la inicialización y parada limpia del sistema. Durante el arranque, se inyectan las conexiones a la base de datos, se sincroniza el sistema de archivos y se configura el webhook. En el apagado, se invoca un *shutdown* que espera a que los hilos de trabajo terminen, garantizando que ninguna descarga en curso se corrompa si el contenedor se detiene.
+Utilizando el decorador `@asynccontextmanager` de FastAPI, el microservicio controla la inicialización y parada limpia del sistema. Durante el arranque, se inyectan las conexiones a la base de datos, se sincroniza el sistema de archivos y se configura el webhook. En el apagado, se invoca un _shutdown_ que espera a que los hilos de trabajo terminen, garantizando que ninguna descarga en curso se corrompa si el contenedor se detiene.
 
 ### 2. Arquitectura Webhook
 
-Al principio, comencé usando `infinity_polling()`, lo que saturaba la CPU con peticiones HTTP GET recurrentes y causaba errores de conflicto (409) al escalar. La solución fue invertir el flujo: Telegram actúa ahora como un cliente web que dispara peticiones HTTP POST asíncronas hacia nuestro *endpoint* `/webhook` solo cuando ocurre un evento, reduciendo el consumo del procesador a ~1% en reposo.
+Al principio, comencé usando `infinity_polling()`, lo que saturaba la CPU con peticiones HTTP GET recurrentes y causaba errores de conflicto (409) al escalar. La solución fue invertir el flujo: Telegram actúa ahora como un cliente web que dispara peticiones HTTP POST asíncronas hacia nuestro _endpoint_ `/webhook` solo cuando ocurre un evento, reduciendo el consumo del procesador a ~1% en reposo.
 
 ### 3. Productor-Consumidor (I/O Offloading)
 
-Leer un PDF de 50MB desde el disco es una operación bloqueante. Si el hilo principal de FastAPI lo procesara, el servidor entero se congelaría. Para solucionarlo, desplegamos las descargas a un `ThreadPoolExecutor` (Pool de Hilos). La API web actúa como **productor** de tareas y devuelve un HTTP 200 inmediatamente, mientras que los *Workers* operan en *background* como **consumidores**, enviando el archivo sin interrumpir el bucle de eventos principal.
+Leer un PDF de 50MB desde el disco es una operación bloqueante. Si el hilo principal de FastAPI lo procesara, el servidor entero se congelaría. Para solucionarlo, desplegamos las descargas a un `ThreadPoolExecutor` (Pool de Hilos). La API web actúa como **productor** de tareas y devuelve un HTTP 200 inmediatamente, mientras que los _Workers_ operan en _background_ como **consumidores**, enviando el archivo sin interrumpir el bucle de eventos principal.
 
 En este caso, es una simple adaptación del problema Productor-Consumidor conocido en el desarrollo de la programación paralela.
 
@@ -85,9 +85,7 @@ En este caso, es una simple adaptación del problema Productor-Consumidor conoci
 
 Con más de 150.000 registros, el uso de sentencias `LIKE %query%` en SQL generaba una complejidad temporal $O(n)$ que afectava gravemente el rendimiento y tiempo de respuesta.
 
-Implementación de un esquema híbrido:
-1.**Tabla Relacional (`libros`)**: Almacena las rutas físicas, UUIDs y metadatos extraídos dinámicamente de los esquemas XML (Dublin Core) de Calibre.
-2.**Tabla Virtual (`libros_fts`)**: Emplea el motor FTS5 (*Full-Text Search*) de SQLite. En lugar de escanear filas, FTS5 tokeniza el contenido (título, autor, sinopsis) en un **índice invertido**, asociando palabras a punteros (`rowid`).
+Implementación de un esquema híbrido: 1.**Tabla Relacional (`libros`)**: Almacena las rutas físicas, UUIDs y metadatos extraídos dinámicamente de los esquemas XML (Dublin Core) de Calibre. 2.**Tabla Virtual (`libros_fts`)**: Emplea el motor FTS5 (_Full-Text Search_) de SQLite. En lugar de escanear filas, FTS5 tokeniza el contenido (título, autor, sinopsis) en un **índice invertido**, asociando palabras a punteros (`rowid`).
 
 Para mantener ambos mundos sincronizados sin intervención en el código Python, usamos **Triggers SQL** (`INSERT`, `DELETE`, `UPDATE`) los cuales propagan cualquier cambio en el disco físico directamente al índice de búsqueda. Finalmente, las búsquedas complejas utilizan el algoritmo de ranking **BM25** para ordenar los resultados por relevancia instantáneamente.
 
@@ -97,7 +95,7 @@ Escanear columnas de texto largas (como las sinopsis de miles de archivos XML) r
 
 El mayor reto del proyecto no fue el software, sino el hardware. Durante la migración masiva de datos, el escaneo del disco colapsó el sistema.
 
-Monitoreando las métricas del sistema operativo, detecté que el disco duro magnético (un Seagate SATA) reportaba un Tiempo Activo del 100% con tasas de transferencia minúsculas (~524 KB/s). El motivo principal de este problema es la **latencia física por el salto de la aguja (*Seek Time*)** al intentar leer más de 150.000 archivos `metadata.opf` esparcidos aleatoriamente por los sectores físicos del disco.
+Monitoreando las métricas del sistema operativo, detecté que el disco duro magnético (un Seagate SATA) reportaba un Tiempo Activo del 100% con tasas de transferencia minúsculas (~524 KB/s). El motivo principal de este problema es la **latencia física por el salto de la aguja (_Seek Time_)** al intentar leer más de 150.000 archivos `metadata.opf` esparcidos aleatoriamente por los sectores físicos del disco.
 
 **La solución** fue encapsular la sincronización con un condicional de control (`SELECT COUNT(*)`) en el evento de inicio. Así, la penalización de lectura masiva de I/O se sufre exclusivamente durante el primer despliegue del contenedor. En reinicios posteriores, el sistema arranca en menos de 0.5 segundos leyendo directamente la caché indexada.
 
@@ -115,4 +113,12 @@ Cuando otro usuario solicita el mismo libro, el sistema detecta el `file_id` y l
 
 Construir esta biblioteca asíncrona demuestra que la escalabilidad no siempre requiere añadir clústeres de Redis o migrar a microservicios complejos en AWS. Aplicando fundamentos sólidos de ingeniería de software —como la inversión de dependencias I/O, el uso de índices invertidos para búsquedas de texto completo y la gestión de cachés en red— es posible lograr rendimientos de grado empresarial utilizando infraestructuras locales ligeras.
 
-*Todas las métricas han sido comprobadas y obtenidas mediante el uso de `docker stats` y CrystalDiskInfo*.
+_Todas las métricas han sido comprobadas y obtenidas mediante el uso de `docker stats` y CrystalDiskInfo_.
+
+## Referencias
+
+🔗 **[API Oficial de Telegram Bots](https://core.telegram.org/bots/api)**
+
+🔗 **[Node.js Telegram Bot API](https://github.com/yagop/node-telegram-bot-api)**
+
+Clean Architecture (Robert C. Martin)

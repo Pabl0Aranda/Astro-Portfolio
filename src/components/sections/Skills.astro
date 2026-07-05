@@ -1,187 +1,188 @@
 ---
-import { getLangFromUrl } from "../../i18n/ui";
+import { getLangFromUrl, useTranslations } from "../../i18n/ui";
 
 const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
 
 <section
   id="habilidades"
-  class="py-20 border-t border-neutral-200 dark:border-white/10"
+  class="border-t border-neutral-200 py-20 dark:border-white/10"
 >
   <h2
-    class="text-3xl font-bold mb-10 text-neutral-900 dark:text-white reveal-text"
+    class="reveal-text mb-10 text-3xl font-bold text-neutral-900 dark:text-white"
   >
-    {lang === "es" ? "Habilidades" : "Skills"}
+    {t("skills.title")}
   </h2>
 
-  <h4 class="text-2xl font-bold mb-5 text-albero reveal-text">
-    {lang === "es" ? "Desarrollo Web" : "Web Development"}
+  <h4 class="text-albero reveal-text mb-5 text-2xl font-bold">
+    {t("skills.web")}
   </h4>
-  <div class="flex flex-wrap gap-4 m-3 mb-10">
+  <div class="m-3 mb-10 flex flex-wrap gap-4">
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >HTML5 & CSS3</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >JavaScript</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >JQuery</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >PHP</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >Angular</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >Astro & Tailwind CSS</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >Node JS & Express.js</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >Django</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >Java | Spring Boot [MVC, Data, Security]</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >Hibernate</span
     >
   </div>
 
-  <h4 class="text-2xl font-bold mb-5 text-albero reveal-text">
+  <h4 class="text-albero reveal-text mb-5 text-2xl font-bold">
     Machine Learning
   </h4>
-  <div class="flex flex-wrap gap-3 m-3 mb-10">
+  <div class="m-3 mb-10 flex flex-wrap gap-3">
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >Python | Jupyter</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >Pytorch</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >Tensorflow</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >Seaborn</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >Pandas</span
     >
   </div>
 
-  <h4 class="text-2xl font-bold mb-5 text-albero reveal-text">
-    {lang === "es" ? "Bases de Datos y Software" : "Databases & Software"}
+  <h4 class="text-albero reveal-text mb-5 text-2xl font-bold">
+    {t("skills.db")}
   </h4>
-  <div class="flex flex-wrap gap-3 m-3 mb-10">
+  <div class="m-3 mb-10 flex flex-wrap gap-3">
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >Odoo 19 Dev</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >Java & Swing</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >PostgreSQL</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >MySQL</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >MariaDB</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >MongoDB</span
     >
   </div>
 
-  <h4 class="text-2xl font-bold mb-5 text-albero reveal-text">
-    {lang === "es" ? "Arquitecturas" : "Architectures"}
+  <h4 class="text-albero reveal-text mb-5 text-2xl font-bold">
+    {t("skills.arch")}
   </h4>
-  <div class="flex flex-wrap gap-3 m-3 mb-10">
+  <div class="m-3 mb-10 flex flex-wrap gap-3">
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >MVC</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >EDA</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >MVVM</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >MVT</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >Cliente - Servidor</span
     >
   </div>
 
-  <h4 class="text-2xl font-bold mb-5 text-albero reveal-text">
-    {lang === "es" ? "Herramientas" : "Tools"}
+  <h4 class="text-albero reveal-text mb-5 text-2xl font-bold">
+    {t("skills.tools")}
   </h4>
-  <div class="flex flex-wrap gap-3 m-3 mb-10">
+  <div class="m-3 mb-10 flex flex-wrap gap-3">
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >Git | GitHub</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >Docker</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >VS Code</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >SQL Developer</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >Entornos Linux</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >Oracle Cloud | APEX</span
     >
   </div>
 
-  <h4 class="text-2xl font-bold mb-5 text-albero reveal-text">
-    {lang === "es" ? "Metodologías" : "Methodologies"}
+  <h4 class="text-albero reveal-text mb-5 text-2xl font-bold">
+    {t("skills.methodologies")}
   </h4>
-  <div class="flex flex-wrap gap-3 m-3">
+  <div class="m-3 flex flex-wrap gap-3">
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >Agile | Kanban & SCRUM</span
     >
     <span
-      class="px-5 py-2 border border-neutral-300 dark:border-white/10 rounded-full text-sm font-medium text-neutral-900 dark:text-white hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 transition-all duration-300 cursor-default reveal-text"
+      class="hover:border-albero hover:text-albero dark:hover:text-albero hover:bg-albero/5 dark:hover:bg-albero/5 reveal-text cursor-default rounded-full border border-neutral-300 px-5 py-2 text-sm font-medium text-neutral-900 transition-all duration-300 dark:border-white/10 dark:text-white"
       >Métrica V3</span
     >
   </div>
