@@ -2,17 +2,19 @@
 import { ViewTransitions } from "astro:transitions"; // 1. Importamos la magia
 import "../styles/global.css";
 import Header from "../components/Header.astro";
-import 'katex/dist/katex.min.css';
+import CommandPalette from "../components/CommandPalette.astro";
+import "katex/dist/katex.min.css";
 
 // 1. Añadimos 'image' como propiedad opcional
 interface Props {
   title: string;
   description: string;
   image?: string;
+  structuredData?: string;
 }
 
 // 2. Definimos una imagen por defecto (/og-image.jpg) si no le pasamos ninguna
-const { title, description, image = "/og-image.jpg" } = Astro.props;
+const { title, description, image = "/og-image.jpg", structuredData } = Astro.props;
 
 // 3. Construimos las URLs absolutas necesarias para el SEO
 const canonicalURL = new URL(Astro.url.pathname, Astro.site || Astro.url);
@@ -31,7 +33,7 @@ const socialImageURL = new URL(image, canonicalURL);
     <meta name="title" content={title} />
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalURL} />
-    
+
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:title" content={title} />
@@ -43,6 +45,10 @@ const socialImageURL = new URL(image, canonicalURL);
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content={socialImageURL} />
+
+    {structuredData && (
+      <script type="application/ld+json" set:html={structuredData} />
+    )}
 
     <ViewTransitions />
 
@@ -67,18 +73,19 @@ const socialImageURL = new URL(image, canonicalURL);
   </head>
 </html>
 <body
-  class="bg-white text-neutral-900 dark:bg-black dark:text-white selection:bg-albero selection:text-black antialiased min-h-screen flex flex-col relative overflow-x-hidden group transition-colors duration-300"
+  class="selection:bg-albero group relative flex min-h-screen flex-col overflow-x-hidden bg-white text-neutral-900 antialiased transition-colors duration-300 selection:text-black dark:bg-black dark:text-white"
 >
   <div
     id="custom-cursor"
-    class="fixed top-0 left-0 w-3 h-3 bg-albero rounded-full pointer-events-none z-100 hidden md:block opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out"
+    aria-hidden="true"
+    class="bg-albero pointer-events-none fixed top-0 left-0 z-100 hidden h-3 w-3 rounded-full opacity-0 transition-all duration-300 ease-out group-hover:opacity-100 md:block"
     style="transform: translate(calc(var(--x) - 50%), calc(var(--y) - 50%));"
   >
   </div>
 
-  <div class="fixed inset-0 z-[-1] pointer-events-none">
+  <div class="pointer-events-none fixed inset-0 z-[-1]">
     <div
-      class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-size:4rem_4rem mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)"
+      class="bg-size:4rem_4rem mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%) absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)]"
     >
     </div>
     <div
@@ -90,7 +97,9 @@ const socialImageURL = new URL(image, canonicalURL);
 
   <Header />
 
-  <main class="grow max-w-5xl mx-auto px-6 w-full relative z-10">
+  <CommandPalette />
+
+  <main class="relative z-10 mx-auto w-full max-w-5xl grow px-6">
     <slot />
   </main>
 

@@ -18,12 +18,12 @@ const prefix = lang === "es" ? "" : "/en";
 ---
 
 <header
-  class="w-full border-b border-neutral-200 dark:border-white/10 sticky top-0 bg-white/80 dark:bg-black/80 backdrop-blur-md z-50 transition-colors duration-300"
+  class="sticky top-0 z-50 w-full border-b border-neutral-200 bg-white/80 backdrop-blur-md transition-colors duration-300 dark:border-white/10 dark:bg-black/80"
 >
-  <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
+  <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
     <a
       href={`${prefix}/`}
-      class="text-xl font-bold tracking-tighter text-neutral-900 dark:text-white hover:text-albero dark:hover:text-albero transition-colors duration-300"
+      class="hover:text-albero dark:hover:text-albero text-xl font-bold tracking-tighter text-neutral-900 transition-colors duration-300 dark:text-white"
     >
       Pablo<span class="text-albero">.</span>
     </a>
@@ -33,42 +33,42 @@ const prefix = lang === "es" ? "" : "/en";
         <li>
           <a
             href={`${prefix}/#home`}
-            class="text-neutral-600 dark:text-neutral-300 hover:text-albero dark:hover:text-albero transition-colors duration-300"
+            class="hover:text-albero dark:hover:text-albero text-neutral-600 transition-colors duration-300 dark:text-neutral-300"
             >{t("nav.home")}</a
           >
         </li>
         <li>
           <a
             href={`${prefix}/#formacion`}
-            class="text-neutral-600 dark:text-neutral-300 hover:text-albero dark:hover:text-albero transition-colors duration-300"
+            class="hover:text-albero dark:hover:text-albero text-neutral-600 transition-colors duration-300 dark:text-neutral-300"
             >{t("nav.formacion")}</a
           >
         </li>
         <li>
           <a
             href={`${prefix}/#habilidades`}
-            class="text-neutral-600 dark:text-neutral-300 hover:text-albero dark:hover:text-albero transition-colors duration-300"
+            class="hover:text-albero dark:hover:text-albero text-neutral-600 transition-colors duration-300 dark:text-neutral-300"
             >{t("nav.habilidades")}</a
           >
         </li>
         <li>
           <a
             href={`${prefix}/#proyectos`}
-            class="text-neutral-600 dark:text-neutral-300 hover:text-albero dark:hover:text-albero transition-colors duration-300"
+            class="hover:text-albero dark:hover:text-albero text-neutral-600 transition-colors duration-300 dark:text-neutral-300"
             >{t("nav.proyectos")}</a
           >
         </li>
         <li>
           <a
             href={`${prefix}/#experiencia`}
-            class="text-neutral-600 dark:text-neutral-300 hover:text-albero dark:hover:text-albero transition-colors duration-300"
+            class="hover:text-albero dark:hover:text-albero text-neutral-600 transition-colors duration-300 dark:text-neutral-300"
             >{t("nav.experiencia")}</a
           >
         </li>
         <li>
           <a
             href={`${prefix}/#contacto`}
-            class="text-neutral-600 dark:text-neutral-300 hover:text-albero dark:hover:text-albero transition-colors duration-300"
+            class="hover:text-albero dark:hover:text-albero text-neutral-600 transition-colors duration-300 dark:text-neutral-300"
             >{t("nav.contacto")}</a
           >
         </li>
@@ -85,7 +85,7 @@ const prefix = lang === "es" ? "" : "/en";
     <div class="flex items-center gap-3">
       <a
         href={switchLangUrl}
-        class="w-9 h-9 flex items-center justify-center rounded-full bg-neutral-100 dark:bg-white/10 text-xs font-bold text-neutral-600 dark:text-neutral-400 hover:text-albero dark:hover:text-albero hover:scale-110 transition-all"
+        class="hover:text-albero dark:hover:text-albero flex h-9 w-9 items-center justify-center rounded-full bg-neutral-100 text-xs font-bold text-neutral-600 transition-all hover:scale-110 dark:bg-white/10 dark:text-neutral-400"
         aria-label="Cambiar idioma"
       >
         {lang === "es" ? "EN" : "ES"}
@@ -93,12 +93,12 @@ const prefix = lang === "es" ? "" : "/en";
 
       <button
         id="theme-toggle"
-        class="p-2 rounded-full bg-neutral-100 dark:bg-white/10 text-neutral-600 dark:text-neutral-400 hover:text-albero dark:hover:text-albero transition-all hover:scale-110"
+        class="hover:text-albero dark:hover:text-albero rounded-full bg-neutral-100 p-2 text-neutral-600 transition-all hover:scale-110 dark:bg-white/10 dark:text-neutral-400"
         aria-label="Cambiar tema"
       >
         <svg
           id="theme-toggle-light-icon"
-          class="w-5 h-5 hidden dark:block"
+          class="hidden h-5 w-5 dark:block"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -112,7 +112,7 @@ const prefix = lang === "es" ? "" : "/en";
         </svg>
         <svg
           id="theme-toggle-dark-icon"
-          class="w-5 h-5 block dark:hidden"
+          class="block h-5 w-5 dark:hidden"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -128,11 +128,11 @@ const prefix = lang === "es" ? "" : "/en";
 
       <button
         id="menu-open"
-        class="lg:hidden text-neutral-900 dark:text-white p-2 focus:outline-none hover:text-albero dark:hover:text-albero transition-colors"
+        class="hover:text-albero dark:hover:text-albero p-2 text-neutral-900 transition-colors focus:outline-none lg:hidden dark:text-white"
         aria-label="Abrir menú"
       >
         <svg
-          class="w-6 h-6"
+          class="h-6 w-6"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -146,14 +146,23 @@ const prefix = lang === "es" ? "" : "/en";
       </button>
     </div>
   </div>
+
+  <!-- Barra de progreso de lectura -->
+  <div class="absolute bottom-0 left-0 h-[3px] w-full bg-transparent">
+    <div
+      id="progress-bar"
+      class="bg-albero h-full w-0 transition-all duration-150 ease-out"
+    >
+    </div>
+  </div>
 </header>
 
 <div
   id="mobile-menu"
-  class="fixed inset-0 bg-white dark:bg-black z-100 flex flex-col opacity-0 pointer-events-none transition-all duration-300 lg:hidden"
+  class="pointer-events-none fixed inset-0 z-100 flex flex-col bg-white opacity-0 transition-all duration-300 lg:hidden dark:bg-black"
 >
   <div
-    class="px-6 py-4 flex justify-between items-center border-b border-neutral-200 dark:border-white/10"
+    class="flex items-center justify-between border-b border-neutral-200 px-6 py-4 dark:border-white/10"
   >
     <a
       href={`${prefix}/`}
@@ -163,11 +172,11 @@ const prefix = lang === "es" ? "" : "/en";
     </a>
     <button
       id="menu-close"
-      class="text-neutral-900 dark:text-white p-2 focus:outline-none"
+      class="p-2 text-neutral-900 focus:outline-none dark:text-white"
       aria-label="Cerrar menú"
     >
       <svg
-        class="w-7 h-7 hover:text-albero transition-colors"
+        class="hover:text-albero h-7 w-7 transition-colors"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -181,47 +190,47 @@ const prefix = lang === "es" ? "" : "/en";
     </button>
   </div>
 
-  <nav class="grow flex flex-col items-center justify-center pb-20">
+  <nav class="flex grow flex-col items-center justify-center pb-20">
     <ul class="flex flex-col gap-8 text-center text-2xl font-semibold">
       <li>
         <a
           href={`${prefix}/#`}
-          class="mobile-link text-neutral-900 dark:text-white hover:text-albero transition-colors duration-300"
+          class="mobile-link hover:text-albero text-neutral-900 transition-colors duration-300 dark:text-white"
           >{t("nav.home")}</a
         >
       </li>
       <li>
         <a
           href={`${prefix}/#formacion`}
-          class="mobile-link text-neutral-900 dark:text-white hover:text-albero transition-colors duration-300"
+          class="mobile-link hover:text-albero text-neutral-900 transition-colors duration-300 dark:text-white"
           >{t("nav.formacion")}</a
         >
       </li>
       <li>
         <a
           href={`${prefix}/#habilidades`}
-          class="mobile-link text-neutral-900 dark:text-white hover:text-albero transition-colors duration-300"
+          class="mobile-link hover:text-albero text-neutral-900 transition-colors duration-300 dark:text-white"
           >{t("nav.habilidades")}</a
         >
       </li>
       <li>
         <a
           href={`${prefix}/#proyectos`}
-          class="mobile-link text-neutral-900 dark:text-white hover:text-albero transition-colors duration-300"
+          class="mobile-link hover:text-albero text-neutral-900 transition-colors duration-300 dark:text-white"
           >{t("nav.proyectos")}</a
         >
       </li>
       <li>
         <a
           href={`${prefix}/#experiencia`}
-          class="mobile-link text-neutral-900 dark:text-white hover:text-albero transition-colors duration-300"
+          class="mobile-link hover:text-albero text-neutral-900 transition-colors duration-300 dark:text-white"
           >{t("nav.experiencia")}</a
         >
       </li>
       <li>
         <a
           href={`${prefix}/#contacto`}
-          class="mobile-link text-neutral-900 dark:text-white hover:text-albero transition-colors duration-300"
+          class="mobile-link hover:text-albero text-neutral-900 transition-colors duration-300 dark:text-white"
           >{t("nav.contacto")}</a
         >
       </li>
@@ -269,5 +278,23 @@ const prefix = lang === "es" ? "" : "/en";
       localStorage.setItem("theme", isDark ? "dark" : "light");
     };
     if (themeToggle) themeToggle.onclick = handleToggleClick;
+
+    // 3. Barra de Progreso de Lectura
+    const progressBar = document.getElementById("progress-bar");
+    if (progressBar) {
+      const updateProgress = () => {
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const scrollHeight =
+          document.documentElement.scrollHeight -
+          document.documentElement.clientHeight;
+        const scrollPercentage =
+          scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+        progressBar.style.width = `${scrollPercentage}%`;
+      };
+
+      window.addEventListener("scroll", updateProgress);
+      // Llamar una vez al cargar por si no estamos arriba del todo
+      updateProgress();
+    }
   });
 </script>

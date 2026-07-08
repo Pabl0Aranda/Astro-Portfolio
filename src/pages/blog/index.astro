@@ -10,27 +10,40 @@ const sortedPosts = allPosts.sort(
 );
 
 const categories = [...new Set(sortedPosts.map((post) => post.data.category))];
+
+const getRelativeDate = (date: Date) => {
+  const rtf = new Intl.RelativeTimeFormat('es', { numeric: 'auto' });
+  const daysDifference = Math.round(
+    (date.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+  );
+  if (Math.abs(daysDifference) > 30) {
+    return date.toLocaleDateString('es-ES', {
+      year: 'numeric', month: 'short', day: 'numeric'
+    });
+  }
+  return rtf.format(daysDifference, 'day');
+};
 ---
 
 <Layout
   title="Blog | Pablo."
   description="Artículos sobre desarrollo e ingeniería."
 >
-  <section class="py-20 md:py-32 reveal-text">
+  <section class="reveal-text py-20 md:py-32">
     <header class="mb-16">
       <h1
-        class="text-4xl md:text-6xl font-bold tracking-tight mb-6 text-neutral-900 dark:text-white"
+        class="mb-6 text-4xl font-bold tracking-tight text-neutral-900 md:text-6xl dark:text-white"
       >
         Mi <span class="text-albero">Blog</span>.
       </h1>
-      <p class="text-lg text-neutral-600 dark:text-neutral-400 max-w-2xl">
+      <p class="max-w-2xl text-lg text-neutral-600 dark:text-neutral-400">
         Escribo sobre código, diseño y opiniones.
       </p>
     </header>
 
-    <div class="flex flex-wrap gap-3 mb-12">
+    <div class="mb-12 flex flex-wrap gap-3">
       <button
-        class="filter-btn active px-5 py-2 rounded-full text-sm transition-all duration-300 hover:scale-105 bg-albero text-black border border-albero font-semibold hover:bg-neutral-900 hover:text-white dark:hover:bg-white dark:hover:text-black"
+        class="filter-btn active bg-albero border-albero rounded-full border px-5 py-2 text-sm font-semibold text-black transition-all duration-300 hover:scale-105 hover:bg-neutral-900 hover:text-white dark:hover:bg-white dark:hover:text-black"
         data-filter="all"
       >
         Todos
@@ -39,7 +52,7 @@ const categories = [...new Set(sortedPosts.map((post) => post.data.category))];
       {
         categories.map((category) => (
           <button
-            class="filter-btn px-5 py-2 rounded-full text-sm transition-all duration-300 hover:scale-105 bg-transparent text-neutral-600 dark:text-white border border-neutral-300 dark:border-white/20 font-medium hover:border-albero hover:text-albero dark:hover:border-albero dark:hover:text-albero"
+            class="filter-btn hover:border-albero hover:text-albero dark:hover:border-albero dark:hover:text-albero rounded-full border border-neutral-300 bg-transparent px-5 py-2 text-sm font-medium text-neutral-600 transition-all duration-300 hover:scale-105 dark:border-white/20 dark:text-white"
             data-filter={category}
           >
             {category}
@@ -49,48 +62,48 @@ const categories = [...new Set(sortedPosts.map((post) => post.data.category))];
     </div>
 
     <div
-      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+      class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
       id="posts-grid"
     >
       {
         sortedPosts.map((post) => (
           <article
-            class="post-card group border border-neutral-200 dark:border-white/10 rounded-2xl p-6 bg-neutral-50 dark:bg-white/5 hover:border-albero/50 hover:bg-neutral-100 dark:hover:bg-white/10 transition-all duration-300 flex flex-col h-full"
+            class="post-card group flex h-full min-h-[220px] flex-col rounded-2xl border border-neutral-200 bg-neutral-50 p-6 transition-all duration-500 hover:bg-neutral-100 hover:shadow-xl dark:border-white/10 dark:bg-white/5 dark:hover:bg-[#151515] hover:-translate-y-1 dark:hover:border-albero/30"
             data-category={post.data.category}
           >
-            <div class="mb-4 flex justify-between items-center">
-              <span class="text-xs font-bold px-3 py-1 bg-black/5 dark:bg-white/10 text-albero rounded-full">
+            <div class="mb-4 flex items-center justify-between">
+              <span class="text-albero rounded-full bg-black/5 px-3 py-1 text-xs font-bold dark:bg-white/10">
                 {post.data.category}
               </span>
-              <time class="text-sm text-neutral-500">
-                {post.data.date.toLocaleDateString("es-ES", {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                })}
+              <time class="text-sm text-neutral-500 capitalize">
+                {getRelativeDate(post.data.date)}
               </time>
             </div>
 
-            <h2 class="text-xl font-bold mb-3 transition-colors duration-300 text-neutral-900 dark:text-white">
+            <h2 class="mb-1 text-xl font-bold text-neutral-900 transition-colors duration-300 dark:text-white">
               <a
                 href={`/blog/${post.slug}`}
-                class="hover:text-albero dark:hover:text-albero focus:outline-none transition-colors duration-300"
+                class="hover:text-albero dark:hover:text-albero transition-colors duration-300 focus:outline-none"
               >
                 {post.data.title}
               </a>
             </h2>
 
-            <p class="text-neutral-600 dark:text-neutral-400 text-sm leading-relaxed mb-6 grow">
-              {post.data.description}
-            </p>
+            <div class="grid grid-rows-[0fr] opacity-0 transition-all duration-500 ease-in-out group-hover:grid-rows-[1fr] group-hover:mt-3 group-hover:opacity-100">
+              <div class="overflow-hidden">
+                <p class="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400 line-clamp-2">
+                  {post.data.description}
+                </p>
+              </div>
+            </div>
 
             <a
               href={`/blog/${post.slug}`}
-              class="mt-auto flex items-center text-sm font-medium text-neutral-900 dark:text-white hover:text-albero dark:hover:text-albero transition-colors duration-300 w-fit"
+              class="hover:text-albero dark:hover:text-albero mt-auto flex w-fit items-center text-sm font-medium text-neutral-900 transition-colors duration-300 dark:text-white"
             >
               Leer artículo
               <svg
-                class="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform duration-300"
+                class="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-2"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"

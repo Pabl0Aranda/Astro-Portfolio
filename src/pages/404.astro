@@ -1,0 +1,51 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { getLangFromUrl } from "../i18n/ui";
+
+const lang = getLangFromUrl(Astro.url);
+---
+
+<Layout
+  title="404 - Not Found | Pablo."
+  description="Página no encontrada"
+>
+  <div class="mx-auto w-full max-w-3xl px-6 py-32 text-center text-neutral-900 md:px-0 dark:text-white min-h-[70vh] flex flex-col items-center justify-center">
+    <div class="relative mb-8">
+      <h1 class="text-9xl font-bold tracking-tighter text-neutral-100 dark:text-white/5">
+        404
+      </h1>
+      <div class="absolute inset-0 flex items-center justify-center">
+        <span class="text-3xl font-bold md:text-5xl text-neutral-900 dark:text-white">
+          Oops!
+        </span>
+      </div>
+    </div>
+    
+    <p class="mb-12 text-lg text-neutral-600 dark:text-neutral-400">
+      {lang === "es" ? "Parece que te has perdido. La página que buscas no existe o ha sido movida." : "Looks like you're lost. The page you are looking for doesn't exist or has been moved."}
+    </p>
+
+    <a
+      href={lang === "es" ? "/" : "/en/"}
+      class="group relative inline-flex items-center justify-center overflow-hidden rounded-full bg-neutral-900 px-8 py-4 font-medium text-white dark:bg-white dark:text-black transition-transform duration-300 hover:scale-105"
+    >
+      <span class="relative z-10 flex items-center group-hover:text-black">
+        <svg
+          class="mr-2 h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1 group-hover:text-black"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M10 19l-7-7m0 0l7-7m-7 7h18"
+          />
+        </svg>
+        {lang === "es" ? "Volver al inicio" : "Back to home"}
+      </span>
+      <div class="absolute inset-0 z-0 h-full w-full bg-albero opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+    </a>
+  </div>
+</Layout>

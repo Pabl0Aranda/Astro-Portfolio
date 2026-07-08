@@ -1,77 +1,62 @@
 ---
-import { getLangFromUrl } from "../../i18n/ui";
+import { getLangFromUrl, useTranslations } from "../../i18n/ui";
 
 const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
 
 <section
   id="formacion"
-  class="py-20 border-t border-neutral-200 dark:border-white/10"
+  class="border-t border-neutral-200 py-20 dark:border-white/10"
 >
   <h2
-    class="text-3xl font-bold mb-10 text-neutral-900 dark:text-white reveal-text"
+    class="reveal-text mb-10 text-3xl font-bold text-neutral-900 dark:text-white"
   >
-    {lang === "es" ? "Formación" : "Education"}
+    {t("education.title")}
   </h2>
 
   <div
-    class="border-l border-neutral-300 dark:border-white/20 ml-3 md:ml-4 space-y-12"
+    class="ml-3 space-y-12 border-l border-neutral-300 md:ml-4 dark:border-white/20"
   >
     <div class="relative pl-8 md:pl-12">
-      <div class="absolute w-3 h-3 bg-albero rounded-full -left-[6.5px] top-2">
+      <div class="bg-albero absolute top-2 -left-[6.5px] h-3 w-3 rounded-full">
       </div>
 
       <h3
-        class="text-xl font-semibold text-neutral-900 dark:text-white reveal-text"
+        class="reveal-text text-xl font-semibold text-neutral-900 dark:text-white"
       >
-        {
-          lang === "es"
-            ? "Ingeniería Informática en Sistemas de Información"
-            : "B.S. in Computer Engineering & Information Systems"
-        }
+        {t("education.degree")}
       </h3>
 
-      <p class="text-albero text-sm font-medium mb-3 reveal-text">
-        {
-          lang === "es"
-            ? "Universidad Pablo de Olavide • 2022 - Actualidad"
-            : "Universidad Pablo de Olavide • 2022 - Present"
-        }
+      <p class="text-albero reveal-text mb-3 text-sm font-medium">
+        {t("education.degree_date")}
       </p>
 
       <p
-        class="text-neutral-600 dark:text-neutral-400 leading-relaxed text-sm md:text-base reveal-text"
+        class="reveal-text text-sm leading-relaxed text-neutral-600 md:text-base dark:text-neutral-400"
       >
-        {
-          lang === "es"
-            ? "Diseño de Software, APIs, Algoritmia, Machine Learning, Análisis de Datos y Gestión de Sistemas y BBDD."
-            : "Software Design, APIs, Algorithms, Machine Learning, Data Analysis, and Systems & Database Management."
-        }
+        {t("education.degree_desc")}
       </p>
     </div>
 
     <div class="relative pl-8 md:pl-12">
       <div
-        class="absolute w-3 h-3 bg-neutral-300 dark:bg-white/20 rounded-full -left-[6.5px] top-2"
+        class="absolute top-2 -left-[6.5px] h-3 w-3 rounded-full bg-neutral-300 dark:bg-white/20"
       >
       </div>
 
       <h3
-        class="text-xl font-semibold text-neutral-900 dark:text-white reveal-text"
+        class="reveal-text text-xl font-semibold text-neutral-900 dark:text-white"
       >
-        {
-          lang === "es"
-            ? "Formación sobre ML & DL"
-            : "Machine & Deep Learning Training"
-        }
+        {t("education.ml_title")}
       </h3>
 
-      <p class="text-neutral-500 text-sm font-medium mb-3 reveal-text">
-        {lang === "es" ? "Autoaprendizaje • 2026" : "Self-taught • 2026"}
+      <p class="text-albero reveal-text mb-3 text-sm font-medium">
+        {t("education.ml_date")}
       </p>
 
       <p
-        class="text-neutral-600 dark:text-neutral-400 leading-relaxed text-sm md:text-base reveal-text"
+        class="reveal-text text-sm leading-relaxed text-neutral-600 md:text-base dark:text-neutral-400"
       >
       </p>
     </div>

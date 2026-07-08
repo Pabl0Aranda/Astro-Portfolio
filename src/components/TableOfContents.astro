@@ -1,0 +1,79 @@
+---
+interface Props {
+  headings: { depth: number; slug: string; text: string }[];
+  lang?: string;
+}
+
+const { headings, lang = "es" } = Astro.props;
+const tocTitle = lang === "es" ? "En esta página" : "On this page";
+---
+
+<nav class="toc-container hidden xl:block sticky top-32 max-h-[calc(100vh-8rem)] overflow-y-auto pl-8 w-64 shrink-0 border-l border-neutral-200 dark:border-white/10 print:hidden">
+  <h2 class="text-sm font-bold uppercase tracking-wider text-neutral-900 dark:text-white mb-4">
+    {tocTitle}
+  </h2>
+  <ul class="space-y-3 text-sm">
+    {
+      headings
+        .filter((heading) => heading.depth > 1 && heading.depth < 4) // Only h2 and h3
+        .map((heading) => (
+          <li class={`heading-link depth-${heading.depth}`}>
+            <a
+              href={`#${heading.slug}`}
+              class="block text-neutral-500 hover:text-albero dark:text-neutral-400 dark:hover:text-albero transition-colors duration-200"
+              style={`padding-left: ${(heading.depth - 2) * 1}rem;`}
+            >
+              {heading.text}
+            </a>
+          </li>
+        ))
+    }
+  </ul>
+</nav>
+
+<style is:global>
+  @reference "../styles/global.css";
+
+  .toc-container::-webkit-scrollbar {
+    width: 4px;
+  }
+  .toc-container::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .toc-container::-webkit-scrollbar-thumb {
+    @apply bg-neutral-300 dark:bg-white/20 rounded-full;
+  }
+  
+  .toc-container a.active {
+    @apply text-albero font-bold;
+  }
+</style>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const headings = Array.from(document.querySelectorAll("h2[id], h3[id]"));
+    if (headings.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.getAttribute("id");
+            document.querySelectorAll(".toc-container a").forEach((a) => {
+              a.classList.remove("active");
+            });
+            const activeLink = document.querySelector(`.toc-container a[href="#${id}"]`);
+            if (activeLink) {
+              activeLink.classList.add("active");
+            }
+          }
+        });
+      },
+      { rootMargin: "-100px 0px -66% 0px" }
+    );
+
+    headings.forEach((section) => {
+      observer.observe(section);
+    });
+  });
+</script>

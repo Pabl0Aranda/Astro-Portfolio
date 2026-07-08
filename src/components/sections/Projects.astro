@@ -1,39 +1,56 @@
 ---
 import { getCollection } from "astro:content";
 import ProjectCard from "../ProjectCard.astro";
-import { getLangFromUrl } from "../../i18n/ui";
+import { getLangFromUrl, useTranslations } from "../../i18n/ui";
 
 // 1. Obtenemos el idioma actual
 const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 // 2. Cargamos y ordenamos los proyectos
 const proyectos = await getCollection("proyectos");
 const proyectosOrdenados = proyectos.sort(
   (a, b) => (a.data.orden || 0) - (b.data.orden || 0),
 );
+
+const getBentoConfig = (index: number) => {
+  const configs = [
+    { class: "md:col-span-2 md:row-span-2 min-h-[320px]", size: "large" as const },
+    { class: "md:col-span-2 md:row-span-1 min-h-[160px]", size: "medium" as const },
+    { class: "md:col-span-2 md:row-span-1 min-h-[160px]", size: "medium" as const },
+    { class: "md:col-span-4 md:row-span-1 min-h-[220px]", size: "wide" as const }
+  ];
+  return configs[index % 4];
+};
 ---
 
 <section
   id="proyectos"
-  class="py-20 border-t border-neutral-200 dark:border-white/10"
+  class="border-t border-neutral-200 py-20 dark:border-white/10"
 >
   <h2
-    class="text-3xl font-bold mb-10 text-neutral-900 dark:text-white reveal-text"
+    class="reveal-text mb-10 text-3xl font-bold text-neutral-900 dark:text-white"
   >
-    {lang === "es" ? "Proyectos Destacados" : "Featured Projects"}
+    {t("projects.title")}
   </h2>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+  <div class="grid grid-cols-1 gap-6 md:grid-cols-4 auto-rows-fr">
     {
-      proyectosOrdenados.map((proyecto, index) => (
-        <div class={`reveal-card delay-${((index % 3) + 1) * 100}`}>
-          <ProjectCard
-            title={proyecto.data.title}
-            tech={proyecto.data.tech}
-            link={proyecto.data.link}
-          />
-        </div>
-      ))
+      proyectosOrdenados.map((proyecto, index) => {
+        const config = getBentoConfig(index);
+        return (
+          <div class={`reveal-card ${config.class} h-full delay-${((index % 3) + 1) * 100}`}>
+            <ProjectCard
+              title={proyecto.data.title}
+              description={proyecto.data.description}
+              tech={proyecto.data.tech}
+              link={proyecto.data.link}
+              size={config.size}
+              class="h-full"
+            />
+          </div>
+        );
+      })
     }
   </div>
 </section>
