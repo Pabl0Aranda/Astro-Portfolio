@@ -4,8 +4,10 @@ date: 2026-07-08
 description: "Análisis de los algoritmos de Machine Learning más utilizados, su complejidad computacional, optimización matemática y arquitectura de despliegue."
 draft: false
 category: "Inteligencia Artificial"
-heroImage: "/images/ai-machine-learning.png"
+heroImage: ""
 ---
+
+import KMeansVisualizer from "../../../components/interactive/KMeansVisualizer.astro";
 
 ## Introducción
 
@@ -119,7 +121,7 @@ El algoritmo no sabe cuántos grupos existen. Utilizamos técnicas como el **Mé
 - **Complejidad Computacional (Entrenamiento):** $O(n \cdot K \cdot p \cdot I)$, donde $I$ es el número de iteraciones.
 - **Caso de uso típico:** Segmentación automatizada de clientes por comportamiento de compra, o compresión de imágenes reduciendo millones de colores a una paleta de K colores representativos (Cuantificación de color).
 
-![K-Means Clustering](./img/K-Means.png)
+<KMeansVisualizer />
 
 ### B. Análisis de Componentes Principales (PCA)
 

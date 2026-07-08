@@ -1,0 +1,288 @@
+---
+// ObserverPatternVisualizer.astro
+---
+
+<div
+  class="observer-container my-8 w-full rounded-2xl border border-neutral-200 bg-white p-6 font-sans shadow-xl dark:border-white/10 dark:bg-[#151515]"
+>
+  <div class="flex flex-col gap-6">
+    <div>
+      <h3 class="mb-2 text-xl font-bold text-neutral-900 dark:text-white">
+        Playground: Patrón Observer
+      </h3>
+      <p class="text-sm text-neutral-600 dark:text-neutral-400">
+        Escribe un mensaje en la Agencia de Noticias (Subject) y pulsa Publicar.
+        Solo los módulos suscritos (Observers) recibirán la actualización.
+      </p>
+    </div>
+
+    <!-- Publisher / Subject -->
+    <div
+      class="relative z-10 rounded-xl border border-neutral-200 bg-neutral-50 p-4 text-center shadow-sm dark:border-white/10 dark:bg-black/30"
+    >
+      <h4 class="mb-3 font-bold text-neutral-800 dark:text-white">
+        📰 Agencia de Noticias (Subject)
+      </h4>
+      <div class="mx-auto flex max-w-md gap-2">
+        <input
+          type="text"
+          id="news-input"
+          placeholder="Titular de última hora..."
+          class="focus:border-albero flex-1 rounded border border-neutral-300 bg-white px-3 py-2 text-sm focus:outline-none dark:border-white/20 dark:bg-neutral-800 dark:text-white"
+          value="¡Astro 5.0 liberado!"
+        />
+        <button
+          id="btn-publish"
+          class="bg-albero rounded px-4 py-2 font-semibold text-black shadow transition-colors hover:bg-[#b3e600]"
+          >Publicar</button
+        >
+      </div>
+    </div>
+
+    <!-- Data Flow Arrows (Visual) -->
+    <div class="relative z-0 -my-2 flex h-8 justify-center">
+      <div
+        class="absolute left-1/4 h-full w-0.5 bg-neutral-200 dark:bg-neutral-700"
+      >
+      </div>
+      <div
+        class="absolute left-2/4 h-full w-0.5 bg-neutral-200 dark:bg-neutral-700"
+      >
+      </div>
+      <div
+        class="absolute left-3/4 h-full w-0.5 bg-neutral-200 dark:bg-neutral-700"
+      >
+      </div>
+    </div>
+
+    <!-- Subscribers / Observers -->
+    <div class="relative z-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <!-- Observer 1 -->
+      <div
+        class="subscriber-card flex flex-col items-center rounded-xl border border-neutral-200 bg-white p-4 text-center shadow-sm transition-all duration-300 dark:border-white/10 dark:bg-neutral-900"
+      >
+        <div class="mb-3 flex w-full items-center justify-between">
+          <span class="text-sm font-bold dark:text-white">📱 App Móvil</span>
+          <label class="flex cursor-pointer items-center">
+            <div class="relative">
+              <input
+                type="checkbox"
+                class="sub-toggle sr-only"
+                checked
+                data-id="obs1"
+              />
+              <div
+                class="toggle-bg block h-5 w-8 rounded-full bg-neutral-300 dark:bg-neutral-700"
+              >
+              </div>
+              <div
+                class="dot toggle-dot absolute top-1 left-1 h-3 w-3 translate-x-3 transform rounded-full bg-white transition"
+              >
+              </div>
+            </div>
+          </label>
+        </div>
+        <div
+          class="message-box flex min-h-[40px] w-full items-center justify-center rounded border border-neutral-200 bg-neutral-100 p-2 text-xs text-neutral-500 transition-colors dark:border-white/5 dark:bg-black/50"
+        >
+          <span class="obs-text">Sin noticias</span>
+        </div>
+      </div>
+
+      <!-- Observer 2 -->
+      <div
+        class="subscriber-card flex flex-col items-center rounded-xl border border-neutral-200 bg-white p-4 text-center shadow-sm transition-all duration-300 dark:border-white/10 dark:bg-neutral-900"
+      >
+        <div class="mb-3 flex w-full items-center justify-between">
+          <span class="text-sm font-bold dark:text-white">📧 Email Bot</span>
+          <label class="flex cursor-pointer items-center">
+            <div class="relative">
+              <input
+                type="checkbox"
+                class="sub-toggle sr-only"
+                checked
+                data-id="obs2"
+              />
+              <div
+                class="toggle-bg block h-5 w-8 rounded-full bg-neutral-300 dark:bg-neutral-700"
+              >
+              </div>
+              <div
+                class="dot toggle-dot absolute top-1 left-1 h-3 w-3 translate-x-3 transform rounded-full bg-white transition"
+              >
+              </div>
+            </div>
+          </label>
+        </div>
+        <div
+          class="message-box flex min-h-[40px] w-full items-center justify-center rounded border border-neutral-200 bg-neutral-100 p-2 text-xs text-neutral-500 transition-colors dark:border-white/5 dark:bg-black/50"
+        >
+          <span class="obs-text">Sin noticias</span>
+        </div>
+      </div>
+
+      <!-- Observer 3 -->
+      <div
+        class="subscriber-card flex flex-col items-center rounded-xl border border-neutral-200 bg-white p-4 text-center opacity-50 shadow-sm grayscale transition-all duration-300 dark:border-white/10 dark:bg-neutral-900"
+      >
+        <div class="mb-3 flex w-full items-center justify-between">
+          <span class="text-sm font-bold dark:text-white">🖥️ Portal Web</span>
+          <label class="flex cursor-pointer items-center">
+            <div class="relative">
+              <input
+                type="checkbox"
+                class="sub-toggle sr-only"
+                data-id="obs3"
+              />
+              <div
+                class="toggle-bg block h-5 w-8 rounded-full bg-neutral-300 dark:bg-neutral-700"
+              >
+              </div>
+              <div
+                class="dot toggle-dot absolute top-1 left-1 h-3 w-3 transform rounded-full bg-white transition"
+              >
+              </div>
+            </div>
+          </label>
+        </div>
+        <div
+          class="message-box flex min-h-[40px] w-full items-center justify-center rounded border border-neutral-200 bg-neutral-100 p-2 text-xs text-neutral-500 transition-colors dark:border-white/5 dark:bg-black/50"
+        >
+          <span class="obs-text">Desconectado</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  input:checked ~ .toggle-bg {
+    background-color: #10b981; /* Emerald 500 */
+  }
+
+  .message-update {
+    animation: pulse-green 1s ease-out;
+  }
+
+  @keyframes pulse-green {
+    0% {
+      background-color: rgba(16, 185, 129, 0.2);
+      border-color: #10b981;
+      transform: scale(0.95);
+    }
+    50% {
+      background-color: rgba(16, 185, 129, 0.5);
+      transform: scale(1.05);
+    }
+    100% {
+      background-color: transparent;
+      border-color: inherit;
+      transform: scale(1);
+    }
+  }
+</style>
+
+<script>
+  const container = document.querySelector(".observer-container");
+  if (container) {
+    const input = container.querySelector("#news-input");
+    const btnPublish = container.querySelector("#btn-publish");
+    const toggles = container.querySelectorAll(".sub-toggle");
+    const cards = container.querySelectorAll(".subscriber-card");
+
+    // UI Toggle logic
+    toggles.forEach((toggle, index) => {
+      toggle.addEventListener("change", (e) => {
+        const dot = e.target.nextElementSibling.nextElementSibling;
+        const card = cards[index];
+        const textBox = card.querySelector(".obs-text");
+
+        if (e.target.checked) {
+          dot.classList.add("translate-x-3");
+          card.classList.remove("opacity-50", "grayscale");
+          textBox.textContent = "Esperando noticias...";
+        } else {
+          dot.classList.remove("translate-x-3");
+          card.classList.add("opacity-50", "grayscale");
+          textBox.textContent = "Desconectado";
+        }
+      });
+    });
+
+    // Observer Pattern Logic
+    class NewsAgency {
+      constructor() {
+        this.subscribers = [];
+      }
+      subscribe(fn) {
+        this.subscribers.push(fn);
+      }
+      unsubscribe(fn) {
+        this.subscribers = this.subscribers.filter((sub) => sub !== fn);
+      }
+      publish(news) {
+        this.subscribers.forEach((sub) => sub(news));
+      }
+    }
+
+    const agency = new NewsAgency();
+
+    // Map of observers
+    const observers = [];
+    cards.forEach((card, index) => {
+      const observerFn = (news) => {
+        const box = card.querySelector(".message-box");
+        const text = card.querySelector(".obs-text");
+
+        text.textContent = news;
+        text.classList.remove("text-neutral-500");
+        text.classList.add(
+          "text-emerald-600",
+          "dark:text-emerald-400",
+          "font-bold",
+        );
+
+        // Retrigger animation
+        box.classList.remove("message-update");
+        void box.offsetWidth; // trigger reflow
+        box.classList.add("message-update");
+      };
+
+      observers.push(observerFn);
+
+      // Initially subscribe checked ones
+      if (toggles[index].checked) {
+        agency.subscribe(observerFn);
+      }
+
+      // Sync subscription with UI
+      toggles[index].addEventListener("change", (e) => {
+        if (e.target.checked) {
+          agency.subscribe(observerFn);
+        } else {
+          agency.unsubscribe(observerFn);
+        }
+      });
+    });
+
+    // Publish action
+    btnPublish.addEventListener("click", () => {
+      const news = input.value.trim() || "Noticia vacía";
+
+      // Visual feedback on button
+      const originalText = btnPublish.textContent;
+      btnPublish.textContent = "Enviando...";
+      btnPublish.classList.add("scale-95");
+
+      setTimeout(() => {
+        agency.publish(news);
+        btnPublish.textContent = originalText;
+        btnPublish.classList.remove("scale-95");
+      }, 300); // slight delay for dramatic effect
+    });
+
+    input.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") btnPublish.click();
+    });
+  }
+</script>

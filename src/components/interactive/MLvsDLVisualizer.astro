@@ -1,0 +1,255 @@
+---
+// MLvsDLVisualizer.astro
+---
+
+<div
+  class="ml-dl-container my-8 w-full rounded-2xl border border-neutral-200 bg-white p-6 font-sans shadow-xl dark:border-white/10 dark:bg-[#151515]"
+>
+  <div class="flex flex-col gap-6">
+    <div class="text-center">
+      <h3 class="mb-2 text-xl font-bold text-neutral-900 dark:text-white">
+        Flujo de Extracción de Características
+      </h3>
+      <p class="text-sm text-neutral-600 dark:text-neutral-400">
+        Compara cómo ambos enfoques procesan una misma imagen de entrada para
+        clasificarla.
+      </p>
+    </div>
+
+    <div class="relative grid grid-cols-1 gap-6 md:grid-cols-2">
+      <!-- Divider for desktop -->
+      <div
+        class="absolute top-0 bottom-0 left-1/2 hidden w-px -translate-x-1/2 transform bg-neutral-200 md:block dark:bg-white/10"
+      >
+      </div>
+
+      <!-- Machine Learning (Classic) -->
+      <div
+        class="flex flex-col gap-4 rounded-xl border border-neutral-100 bg-neutral-50 p-4 dark:border-white/5 dark:bg-black/20"
+      >
+        <h4 class="text-center font-bold text-neutral-800 dark:text-white">
+          Machine Learning Clásico
+        </h4>
+
+        <div class="flex justify-center">
+          <div
+            class="flex h-16 w-16 items-center justify-center rounded border border-blue-200 bg-blue-100 text-2xl dark:border-blue-700 dark:bg-blue-900/30"
+          >
+            🐶
+          </div>
+        </div>
+
+        <div
+          class="rounded border border-neutral-200 bg-white p-3 dark:border-white/10 dark:bg-neutral-800"
+        >
+          <p class="mb-2 text-xs font-bold text-neutral-500 uppercase">
+            1. Feature Engineering (Manual)
+          </p>
+          <div class="flex flex-col gap-2">
+            <label
+              class="flex cursor-pointer items-center gap-2 text-sm dark:text-neutral-300"
+            >
+              <input
+                type="checkbox"
+                class="ml-feature text-albero focus:ring-albero h-4 w-4 rounded border-neutral-300 bg-neutral-100"
+              /> Extraer Bordes
+            </label>
+            <label
+              class="flex cursor-pointer items-center gap-2 text-sm dark:text-neutral-300"
+            >
+              <input
+                type="checkbox"
+                class="ml-feature text-albero focus:ring-albero h-4 w-4 rounded border-neutral-300 bg-neutral-100"
+              /> Extraer Texturas
+            </label>
+            <label
+              class="flex cursor-pointer items-center gap-2 text-sm dark:text-neutral-300"
+            >
+              <input
+                type="checkbox"
+                class="ml-feature text-albero focus:ring-albero h-4 w-4 rounded border-neutral-300 bg-neutral-100"
+              /> Extraer Colores
+            </label>
+          </div>
+        </div>
+
+        <div class="flex justify-center text-neutral-400">⬇️</div>
+
+        <div class="rounded bg-neutral-200 p-3 text-center dark:bg-neutral-700">
+          <p class="text-xs font-bold text-neutral-600 dark:text-neutral-300">
+            2. Clasificador (SVM/RF)
+          </p>
+        </div>
+
+        <div class="flex justify-center text-neutral-400">⬇️</div>
+
+        <div
+          id="ml-result"
+          class="rounded bg-neutral-200 p-3 text-center text-sm font-bold text-neutral-500 transition-colors dark:bg-neutral-800"
+        >
+          Resultado: Desconocido
+        </div>
+      </div>
+
+      <!-- Deep Learning -->
+      <div
+        class="flex flex-col gap-4 rounded-xl border border-neutral-100 bg-neutral-50 p-4 dark:border-white/5 dark:bg-black/20"
+      >
+        <h4 class="text-center font-bold text-neutral-800 dark:text-white">
+          Deep Learning
+        </h4>
+
+        <div class="flex justify-center">
+          <div
+            class="flex h-16 w-16 items-center justify-center rounded border border-purple-200 bg-purple-100 text-2xl dark:border-purple-700 dark:bg-purple-900/30"
+          >
+            🐶
+          </div>
+        </div>
+
+        <div
+          class="flex flex-col items-center rounded border border-neutral-200 bg-white p-3 dark:border-white/10 dark:bg-neutral-800"
+        >
+          <p
+            class="mb-2 text-center text-xs font-bold text-neutral-500 uppercase"
+          >
+            Extracción y Clasificación Automática
+          </p>
+          <button
+            id="dl-process-btn"
+            class="bg-albero rounded px-4 py-1 text-sm font-bold text-black transition-transform hover:scale-105"
+            >Procesar Imagen</button
+          >
+
+          <!-- Simple NN SVG -->
+          <svg viewBox="0 0 100 60" class="mt-4 h-24 w-full overflow-visible">
+            <!-- Layers -->
+            <g
+              id="nn-lines"
+              stroke="#e5e7eb"
+              class="dark:stroke-neutral-600"
+              stroke-width="1"></g>
+            <g id="nn-nodes"></g>
+          </svg>
+        </div>
+
+        <div class="flex h-7 justify-center text-neutral-400 opacity-0">⬇️</div>
+        <!-- Spacer to align bottoms -->
+
+        <div
+          id="dl-result"
+          class="rounded bg-neutral-200 p-3 text-center text-sm font-bold text-neutral-500 transition-colors dark:bg-neutral-800"
+        >
+          Resultado: Desconocido
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const container = document.querySelector(".ml-dl-container");
+  if (container) {
+    // ML Logic
+    const mlCheckboxes = container.querySelectorAll(".ml-feature");
+    const mlResult = container.querySelector("#ml-result");
+
+    function updateML() {
+      const checkedCount = Array.from(mlCheckboxes).filter(
+        (cb) => cb.checked,
+      ).length;
+      if (checkedCount === 0) {
+        mlResult.textContent = "Resultado: Desconocido";
+        mlResult.className =
+          "p-3 rounded text-center font-bold text-sm bg-neutral-200 dark:bg-neutral-800 text-neutral-500 transition-colors";
+      } else if (checkedCount < 3) {
+        mlResult.textContent = "Resultado: Confianza Baja (60% Perro)";
+        mlResult.className =
+          "p-3 rounded text-center font-bold text-sm bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400 transition-colors";
+      } else {
+        mlResult.textContent = "Resultado: ¡Es un Perro! (95%)";
+        mlResult.className =
+          "p-3 rounded text-center font-bold text-sm bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 transition-colors";
+      }
+    }
+
+    mlCheckboxes.forEach((cb) => cb.addEventListener("change", updateML));
+
+    // DL Logic (Neural Net Visual)
+    const dlBtn = container.querySelector("#dl-process-btn");
+    const dlResult = container.querySelector("#dl-result");
+    const nnLines = container.querySelector("#nn-lines");
+    const nnNodes = container.querySelector("#nn-nodes");
+
+    // Draw NN
+    const layers = [3, 4, 4, 2];
+    const nodesPositions = [];
+    const width = 100;
+    const height = 60;
+
+    layers.forEach((count, lIndex) => {
+      const x = (lIndex / (layers.length - 1)) * width;
+      const layerNodes = [];
+      for (let i = 0; i < count; i++) {
+        const y = height / 2 - ((count - 1) * 10) / 2 + i * 10;
+        layerNodes.push({ x, y });
+      }
+      nodesPositions.push(layerNodes);
+    });
+
+    // Draw lines
+    let linesHTML = "";
+    for (let l = 0; l < layers.length - 1; l++) {
+      nodesPositions[l].forEach((n1) => {
+        nodesPositions[l + 1].forEach((n2) => {
+          linesHTML += `<line x1="${n1.x}" y1="${n1.y}" x2="${n2.x}" y2="${n2.y}" class="nn-edge" stroke-dasharray="100" stroke-dashoffset="100"></line>`;
+        });
+      });
+    }
+    nnLines.innerHTML = linesHTML;
+
+    // Draw nodes
+    let nodesHTML = "";
+    nodesPositions.forEach((layer, lIdx) => {
+      layer.forEach((n) => {
+        const color =
+          lIdx === 0
+            ? "#3b82f6"
+            : lIdx === layers.length - 1
+              ? "#10b981"
+              : "#f59e0b";
+        nodesHTML += `<circle cx="${n.x}" cy="${n.y}" r="3" fill="${color}"></circle>`;
+      });
+    });
+    nnNodes.innerHTML = nodesHTML;
+
+    // Animation logic
+    dlBtn.addEventListener("click", () => {
+      dlBtn.disabled = true;
+      dlResult.textContent = "Procesando capas ocultas...";
+      dlResult.className =
+        "p-3 rounded text-center font-bold text-sm bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 transition-colors";
+
+      const edges = container.querySelectorAll(".nn-edge");
+      edges.forEach((edge) => {
+        edge.style.transition = "stroke-dashoffset 1s ease-in-out";
+        edge.style.strokeDashoffset = "0";
+        edge.classList.add("stroke-albero"); // highlight
+      });
+
+      setTimeout(() => {
+        dlResult.textContent = "Resultado: ¡Es un Perro! (99%)";
+        dlResult.className =
+          "p-3 rounded text-center font-bold text-sm bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 transition-colors";
+
+        // reset edges
+        edges.forEach((edge) => {
+          edge.style.transition = "none";
+          edge.style.strokeDashoffset = "100";
+          edge.classList.remove("stroke-albero");
+        });
+        dlBtn.disabled = false;
+      }, 1200);
+    });
+  }
+</script>

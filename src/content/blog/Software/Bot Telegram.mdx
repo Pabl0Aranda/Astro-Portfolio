@@ -6,6 +6,7 @@ draft: false
 category: Software
 heroImage: ""
 ---
+import TelegramBotSimulator from '../../../components/interactive/TelegramBotSimulator.astro';
 
 ## Principales Problemas y Objetivos
 
@@ -13,7 +14,7 @@ Crear un bot de Telegram que envíe un par de archivos es un ejercicio sencillo.
 
 El objetivo de este proyecto fue diseñar un microservicio híbrido asíncrono optimizado que garantizara una latencia de búsqueda inferior a 5 milisegundos, un consumo de CPU casi nulo en reposo y una transferencia de archivos sin bloqueos. Para lograrlo, tuve que resolver cuellos de botella críticos a nivel de red, concurrencia y operaciones de entrada/salida (_I/O Bound_) en discos físicos.
 
-![Imagen de Telegram](./img/telegram.png)
+<TelegramBotSimulator />
 
 ## Stack Tecnológico Usado
 

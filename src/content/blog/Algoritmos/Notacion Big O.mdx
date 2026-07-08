@@ -7,6 +7,8 @@ category: Algoritmia
 heroImage: ""
 ---
 
+import BigOVisualizer from "../../../components/interactive/BigOVisualizer.astro";
+
 ## Qué es la notación Big O y cómo funciona
 
 La notación **Big O** nos aclara un número de operaciones que un algoritmo realizará. Esta notación es útil puesto que existen demasiadas variables a tener en cuenta como para saber cuánto va a tardar en segundos en ejecutarse un algoritmo.
@@ -72,6 +74,8 @@ _Ejemplo_: si $n=100$
 - Un algoritmo $O(n)$ hace 100 operaciones.
 - Un algoritmo $O(n^2)$ hace 10,000 operaciones.
 - Un algoritmo $O(2^n)$ haría aproximadamente 1,267,650,600,228,229,401,496,703,205,376 operaciones.
+
+<BigOVisualizer />
 
 ## Complejidad Temporal vs Complejidad Espacial
 

@@ -5,6 +5,7 @@ description: "Qué son los patrones de diseño, por qué estructuran mejor tu c�
 draft: false
 category: Arquitectura
 ---
+import ObserverPatternVisualizer from '../../../components/interactive/ObserverPatternVisualizer.astro';
 
 Cuando pasas de escribir código que "simplemente funciona" a escribir aplicaciones que deben ser mantenidas durante años por diferentes desarrolladores, te das cuenta de una realidad absoluta: **programar es, en gran medida, comunicación**.
 
@@ -45,6 +46,8 @@ Garantiza que una clase tenga una única instancia y proporciona un punto de acc
 
 **2. Observer (De Comportamiento)**
 Establece una relación de "uno a muchos". Cuando el objeto principal (el sujeto) cambia su estado, notifica automáticamente a todos los objetos dependientes (los observadores). Si alguna vez has usado `addEventListener` en JavaScript o el estado de React, ya has utilizado este patrón de fondo.
+
+<ObserverPatternVisualizer />
 
 **3. Factory (Creacional)**
 Proporciona una interfaz para crear objetos en una superclase, pero permite que las subclases alteren el tipo de objetos que se crearán. Es ideal cuando tu código debe generar distintos tipos de botones, tarjetas o usuarios sin ensuciar la lógica principal con cientos de condicionales `if/else`.

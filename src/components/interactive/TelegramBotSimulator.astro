@@ -1,0 +1,297 @@
+---
+// TelegramBotSimulator.astro
+---
+
+<div
+  class="telegram-container relative mx-auto my-12 flex h-[650px] w-full max-w-sm flex-col overflow-hidden rounded-[2.5rem] border-[12px] border-neutral-900 bg-neutral-900 font-sans shadow-2xl ring-1 ring-white/10"
+>
+  <!-- StatusBar -->
+  <div
+    class="absolute top-0 z-30 flex w-full items-center justify-between px-6 py-1.5 text-[10px] font-medium text-white"
+  >
+    <span class="status-time">12:00</span>
+    <div class="flex items-center gap-1.5">
+      <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor"
+        ><path
+          d="M12 21L15.6 16.2C14.6 15.45 13.35 15 12 15C10.65 15 9.4 15.45 8.4 16.2L12 21ZM12 3C7.95 3 4.21 4.76 1.4 7.6L3.8 10.8C6.01 8.54 9 7 12 7C15 7 17.99 8.54 20.2 10.8L22.6 7.6C19.79 4.76 16.05 3 12 3ZM12 9C9.3 9 6.81 10.19 4.93 12.19L7.4 15.49C8.61 14.15 10.27 13.33 12 13.33C13.73 13.33 15.39 14.15 16.6 15.49L19.07 12.19C17.19 10.19 14.7 9 12 9Z"
+        ></path></svg
+      >
+      <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"
+        ><path
+          d="M15.67 4H14V2H10V4H8.33C7.6 4 7 4.6 7 5.33V20.67C7 21.4 7.6 22 8.33 22H15.67C16.4 22 17 21.4 17 20.67V5.33C17 4.6 16.4 4 15.67 4Z"
+        ></path></svg
+      >
+    </div>
+  </div>
+
+  <!-- Notch/Camera area -->
+  <div
+    class="absolute top-0 left-1/2 z-40 h-6 w-32 -translate-x-1/2 transform rounded-b-3xl bg-neutral-900"
+  >
+  </div>
+
+  <!-- Header -->
+  <div
+    class="z-10 flex items-center justify-between bg-[#17212b] px-4 pt-10 pb-3 text-white shadow-md"
+  >
+    <div class="flex items-center gap-3">
+      <button class="text-neutral-400 transition-colors hover:text-white">
+        <svg
+          class="h-6 w-6"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"><path d="M15 19l-7-7 7-7"></path></svg
+        >
+      </button>
+      <div
+        class="bg-albero flex h-10 w-10 items-center justify-center rounded-full text-xl text-black"
+      >
+        🤖
+      </div>
+      <div class="flex flex-col">
+        <span class="text-[15px] leading-tight font-semibold"
+          >Portfolio Bot</span
+        >
+        <span
+          id="bot-status"
+          class="text-[13px] leading-tight text-[#3b8af5] transition-colors"
+          >bot</span
+        >
+      </div>
+    </div>
+    <button class="text-neutral-400 hover:text-white">
+      <svg
+        class="h-6 w-6"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        ><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"
+        ></circle><circle cx="12" cy="19" r="1"></circle></svg
+      >
+    </button>
+  </div>
+
+  <!-- Chat History -->
+  <div
+    id="chat-history"
+    class="flex flex-1 flex-col gap-3 overflow-y-auto scroll-smooth bg-[#0e1621] p-4"
+    style="background-image: url('data:image/svg+xml;utf8,<svg width=\'20\' height=\'20\' viewBox=\'0 0 20 20\' xmlns=\'http://www.w3.org/2000/svg\'><circle cx=\'2\' cy=\'2\' r=\'1\' fill=\'rgba(255,255,255,0.03)\'/></svg>');"
+  >
+
+  <div class="my-4 text-center">
+    <span
+      class="bg-opacity-70 rounded-full bg-[#182533] px-2.5 py-1 text-xs text-neutral-400 backdrop-blur-sm"
+      >Hoy</span
+    >
+  </div>
+
+  <div class="flex justify-start">
+    <div
+      class="relative max-w-[85%] rounded-2xl rounded-tl-sm bg-[#182533] p-3 text-sm text-neutral-200 shadow-sm"
+    >
+      <p>¡Hola! Soy tu primer bot de Telegram.</p>
+      <span class="float-right mt-1 ml-2 text-[10px] text-neutral-400"
+        >12:00</span
+      >
+    </div>
+  </div>
+
+  <div class="flex justify-start">
+    <div
+      class="relative max-w-[85%] rounded-2xl rounded-tl-sm bg-[#182533] p-3 text-sm text-neutral-200 shadow-sm"
+    >
+      <p>
+        Prueba a enviarme un comando como <span
+          class="cmd-clickable cursor-pointer text-blue-400">/start</span
+        > o <span class="cmd-clickable cursor-pointer text-blue-400">/help</span
+        >.
+      </p>
+      <span class="float-right mt-1 ml-2 text-[10px] text-neutral-400"
+        >12:00</span
+      >
+    </div>
+  </div>
+</div>
+
+<!-- Input Area -->
+<div class="flex items-end gap-2 bg-[#17212b] p-3">
+  <button class="p-2 text-neutral-400 hover:text-white">📎</button>
+  <div class="flex flex-1 items-center rounded-2xl bg-[#242f3d] px-3 py-2">
+    <input
+      type="text"
+      id="chat-input"
+      placeholder="Mensaje..."
+      class="w-full bg-transparent text-sm text-white placeholder-neutral-500 focus:outline-none"
+      autocomplete="off"
+    />
+  </div>
+  <button
+    id="chat-send"
+    class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500 text-white shadow transition-colors hover:bg-blue-600"
+  >
+    ➤
+  </button>
+</div>
+
+<style>
+  /* Custom scrollbar for chat */
+  #chat-history::-webkit-scrollbar {
+    width: 4px;
+  }
+  #chat-history::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  #chat-history::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+  }
+  #chat-history::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .typing-dot {
+    animation: typing-bounce 1.4s infinite ease-in-out both;
+  }
+  .typing-dot:nth-child(1) {
+    animation-delay: -0.32s;
+  }
+  .typing-dot:nth-child(2) {
+    animation-delay: -0.16s;
+  }
+
+  @keyframes typing-bounce {
+    0%,
+    80%,
+    100% {
+      transform: scale(0);
+    }
+    40% {
+      transform: scale(1);
+    }
+  }
+</style>
+
+<script>
+  const container = document.querySelector(".telegram-container");
+  if (container) {
+    const input = container.querySelector("#chat-input");
+    const btnSend = container.querySelector("#chat-send");
+    const history = container.querySelector("#chat-history");
+    const clickables = container.querySelectorAll(".cmd-clickable");
+
+    function getTime() {
+      const now = new Date();
+      return `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
+    }
+
+    function addMessage(text, isUser = false) {
+      const div = document.createElement("div");
+      div.className = `flex ${isUser ? "justify-end" : "justify-start"}`;
+
+      const bubble = document.createElement("div");
+      if (isUser) {
+        bubble.className =
+          "bg-[#2b5278] text-white p-3 rounded-2xl rounded-tr-sm max-w-[85%] text-sm shadow-sm";
+      } else {
+        bubble.className =
+          "bg-[#182533] text-neutral-200 p-3 rounded-2xl rounded-tl-sm max-w-[85%] text-sm shadow-sm";
+      }
+
+      bubble.innerHTML = `
+        <p class="whitespace-pre-wrap">${text}</p>
+        <span class="text-[10px] ${isUser ? "text-blue-200" : "text-neutral-400"} float-right mt-1 ml-2">${getTime()}</span>
+      `;
+
+      div.appendChild(bubble);
+      history.appendChild(div);
+      history.scrollTop = history.scrollHeight;
+    }
+
+    function showTypingIndicator() {
+      const div = document.createElement("div");
+      div.id = "typing-indicator";
+      div.className = "flex justify-start mb-2";
+      div.innerHTML = `
+        <div class="relative max-w-[85%] rounded-2xl rounded-tl-sm bg-[#182533] p-4 text-sm shadow-sm flex gap-1 items-center h-[38px]">
+          <div class="w-1.5 h-1.5 bg-neutral-400 rounded-full typing-dot"></div>
+          <div class="w-1.5 h-1.5 bg-neutral-400 rounded-full typing-dot"></div>
+          <div class="w-1.5 h-1.5 bg-neutral-400 rounded-full typing-dot"></div>
+        </div>
+      `;
+      history.appendChild(div);
+      history.scrollTop = history.scrollHeight;
+      const status = container.querySelector("#bot-status");
+      if (status) status.textContent = "escribiendo...";
+    }
+
+    function removeTypingIndicator() {
+      const typing = container.querySelector("#typing-indicator");
+      if (typing) typing.remove();
+      const status = container.querySelector("#bot-status");
+      if (status) status.textContent = "bot";
+    }
+
+    function botReply(text) {
+      showTypingIndicator();
+      setTimeout(
+        () => {
+          removeTypingIndicator();
+          addMessage(text, false);
+        },
+        1200 + Math.random() * 800, // slower, more realistic delay
+      );
+    }
+
+    // Auto update status bar time
+    setInterval(() => {
+      const timeElem = container.querySelector(".status-time");
+      if (timeElem) timeElem.textContent = getTime();
+    }, 10000);
+
+    function handleCommand(msg) {
+      const cmd = msg.toLowerCase().trim();
+
+      if (cmd === "/start") {
+        botReply(
+          "¡Bienvenido! He sido programado en Node.js siguiendo el tutorial de este post. ¿Qué deseas hacer?",
+        );
+      } else if (cmd === "/help") {
+        botReply(
+          "Comandos disponibles:\n/start - Inicia el bot\n/help - Muestra esta ayuda\n/about - Información sobre mí",
+        );
+      } else if (cmd === "/about") {
+        botReply(
+          "Soy un simulador escrito en Vanilla JS integrado dentro de Astro para este portfolio. ¡0 kb de frameworks externos!",
+        );
+      } else {
+        botReply(
+          "Lo siento, no reconozco ese comando. Prueba a enviar /help para ver las opciones disponibles.",
+        );
+      }
+    }
+
+    function sendMessage() {
+      const text = input.value.trim();
+      if (!text) return;
+
+      addMessage(text, true);
+      input.value = "";
+
+      handleCommand(text);
+    }
+
+    btnSend.addEventListener("click", sendMessage);
+    input.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") sendMessage();
+    });
+
+    clickables.forEach((c) => {
+      c.addEventListener("click", () => {
+        input.value = c.textContent;
+        sendMessage();
+      });
+    });
+  }
+</script>

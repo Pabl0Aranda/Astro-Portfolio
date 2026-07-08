@@ -1,0 +1,224 @@
+---
+// BigOVisualizer.astro
+---
+
+<div
+  class="big-o-container my-8 w-full rounded-2xl border border-neutral-200 bg-white p-6 font-sans shadow-xl dark:border-white/10 dark:bg-[#151515]"
+>
+  <div class="flex flex-col gap-6">
+    <div>
+      <h3 class="mb-2 text-xl font-bold text-neutral-900 dark:text-white">
+        Escalabilidad de Algoritmos
+      </h3>
+      <p class="text-sm text-neutral-600 dark:text-neutral-400">
+        Mueve el deslizador para ver cómo crecen las operaciones a medida que
+        aumenta el tamaño de los datos (N).
+      </p>
+    </div>
+
+    <div class="flex items-center gap-4">
+      <span class="font-bold text-neutral-500"
+        >N = <span
+          id="n-value"
+          class="text-albero dark:text-albero inline-block w-8 text-lg">10</span
+        ></span
+      >
+      <input
+        type="range"
+        id="n-slider"
+        min="1"
+        max="50"
+        value="10"
+        class="accent-albero h-2 flex-1 cursor-pointer appearance-none rounded-lg bg-neutral-200 dark:bg-neutral-700"
+      />
+    </div>
+
+    <div
+      class="relative h-[300px] w-full overflow-hidden rounded-xl border border-neutral-100 bg-neutral-50 dark:border-white/5 dark:bg-black/50"
+    >
+      <!-- SVG Coordinate System: bottom-left is 0,0 for ease, but SVG is top-left 0,0. We will map in JS -->
+      <svg
+        id="big-o-chart"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        class="h-full w-full overflow-visible p-4"
+      >
+        <g
+          class="grid-lines"
+          stroke="#e5e7eb"
+          stroke-dasharray="2"
+          stroke-width="0.5"
+          class="dark:stroke-white/10"></g>
+        <path
+          id="path-o1"
+          fill="none"
+          stroke="#10b981"
+          stroke-width="2"
+          class="transition-all duration-100"></path>
+        <!-- O(1) Green -->
+        <path
+          id="path-ologn"
+          fill="none"
+          stroke="#3b82f6"
+          stroke-width="2"
+          class="transition-all duration-100"></path>
+        <!-- O(log n) Blue -->
+        <path
+          id="path-on"
+          fill="none"
+          stroke="#eab308"
+          stroke-width="2"
+          class="transition-all duration-100"></path>
+        <!-- O(n) Yellow -->
+        <path
+          id="path-onlogn"
+          fill="none"
+          stroke="#f97316"
+          stroke-width="2"
+          class="transition-all duration-100"></path>
+        <!-- O(n log n) Orange -->
+        <path
+          id="path-on2"
+          fill="none"
+          stroke="#ef4444"
+          stroke-width="2"
+          class="transition-all duration-100"></path>
+        <!-- O(n^2) Red -->
+      </svg>
+
+      <!-- Legend -->
+      <div
+        class="absolute top-4 left-4 flex flex-col gap-2 rounded-lg border border-neutral-200 bg-white/80 p-3 text-xs backdrop-blur-sm dark:border-white/10 dark:bg-black/80"
+      >
+        <div class="flex items-center gap-2">
+          <div class="h-3 w-3 rounded-full bg-[#10b981]"></div><span>O(1)</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="h-3 w-3 rounded-full bg-[#3b82f6]"></div><span
+            >O(log n)</span
+          >
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="h-3 w-3 rounded-full bg-[#eab308]"></div><span>O(n)</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="h-3 w-3 rounded-full bg-[#f97316]"></div><span
+            >O(n log n)</span
+          >
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="h-3 w-3 rounded-full bg-[#ef4444]"></div><span>O(n²)</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Fix slider thumb for webkit and firefox */
+  input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #ccff00;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #ccff00;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+  }
+</style>
+
+<script>
+  const container = document.querySelector(".big-o-container");
+  if (container) {
+    const slider = container.querySelector("#n-slider");
+    const nValue = container.querySelector("#n-value");
+    const chart = container.querySelector("#big-o-chart");
+    const grid = chart.querySelector(".grid-lines");
+
+    const paths = {
+      o1: chart.querySelector("#path-o1"),
+      ologn: chart.querySelector("#path-ologn"),
+      on: chart.querySelector("#path-on"),
+      onlogn: chart.querySelector("#path-onlogn"),
+      on2: chart.querySelector("#path-on2"),
+    };
+
+    // SVG coordinate system mapping
+    // X axis: 0 to 50
+    // Y axis: 0 to max operations. Let's cap max operations visually at 2500 (50^2)
+    const MAX_X = 50;
+    const MAX_Y = 2500;
+
+    function mapCoords(x, y) {
+      // Map to 100x100 SVG viewbox
+      const svgX = (x / MAX_X) * 100;
+      const svgY = 100 - (y / MAX_Y) * 100;
+      return `${svgX},${svgY}`;
+    }
+
+    function drawGrid() {
+      let gridHTML = "";
+      for (let i = 0; i <= 5; i++) {
+        // Horizontal lines
+        const y = 100 - i * 20;
+        gridHTML += `<line x1="0" y1="${y}" x2="100" y2="${y}"></line>`;
+        // Vertical lines
+        const x = i * 20;
+        gridHTML += `<line x1="${x}" y1="0" x2="${x}" y2="100"></line>`;
+      }
+      grid.innerHTML = gridHTML;
+    }
+
+    function generatePath(points) {
+      if (points.length === 0) return "";
+      const start = mapCoords(points[0].x, points[0].y);
+      const lines = points
+        .slice(1)
+        .map((p) => `L ${mapCoords(p.x, p.y)}`)
+        .join(" ");
+      return `M ${start} ${lines}`;
+    }
+
+    function updateChart(n) {
+      const data = {
+        o1: [],
+        ologn: [],
+        on: [],
+        onlogn: [],
+        on2: [],
+      };
+
+      for (let i = 1; i <= n; i++) {
+        data.o1.push({ x: i, y: 10 }); // Baseline
+        data.ologn.push({ x: i, y: Math.log2(i) * 50 }); // Scaled for visibility
+        data.on.push({ x: i, y: i * 20 }); // Scaled
+        data.onlogn.push({ x: i, y: i * Math.log2(i) * 10 }); // Scaled
+        data.on2.push({ x: i, y: i * i });
+      }
+
+      paths.o1.setAttribute("d", generatePath(data.o1));
+      paths.ologn.setAttribute("d", generatePath(data.ologn));
+      paths.on.setAttribute("d", generatePath(data.on));
+      paths.onlogn.setAttribute("d", generatePath(data.onlogn));
+      paths.on2.setAttribute("d", generatePath(data.on2));
+    }
+
+    slider.addEventListener("input", (e) => {
+      const val = e.target.value;
+      nValue.textContent = val;
+      updateChart(Number(val));
+    });
+
+    // Init
+    drawGrid();
+    updateChart(Number(slider.value));
+  }
+</script>

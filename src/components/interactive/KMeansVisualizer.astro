@@ -1,0 +1,256 @@
+---
+// KMeansVisualizer.astro
+---
+
+<div
+  class="kmeans-container my-8 w-full rounded-2xl border border-neutral-200 bg-white p-6 font-sans shadow-xl dark:border-white/10 dark:bg-[#151515]"
+>
+  <div class="flex flex-col gap-6">
+    <div>
+      <h3 class="mb-2 text-xl font-bold text-neutral-900 dark:text-white">
+        Simulador de K-Means (Clustering)
+      </h3>
+      <p class="text-sm text-neutral-600 dark:text-neutral-400">
+        Haz clic en el lienzo para añadir puntos. Luego, pulsa "Ejecutar" para
+        ver cómo 3 centroides encuentran los grupos paso a paso.
+      </p>
+    </div>
+
+    <div class="flex flex-col gap-4 md:flex-row">
+      <div
+        class="relative aspect-video w-full overflow-hidden rounded-xl border border-neutral-100 bg-neutral-50 md:w-2/3 dark:border-white/5 dark:bg-black/50"
+      >
+        <canvas id="kmeans-canvas" class="h-full w-full cursor-crosshair"
+        ></canvas>
+      </div>
+
+      <div class="flex w-full flex-col gap-3 md:w-1/3">
+        <button
+          id="btn-add-random"
+          class="w-full rounded-lg bg-neutral-100 px-4 py-2 font-semibold text-neutral-800 transition-colors hover:bg-neutral-200 dark:bg-white/5 dark:text-white dark:hover:bg-white/10"
+        >
+          Añadir 20 puntos al azar
+        </button>
+        <button
+          id="btn-step"
+          class="bg-albero w-full rounded-lg px-4 py-2 font-semibold text-black shadow-[0_0_15px_rgba(204,255,0,0.3)] transition-transform hover:scale-105"
+          disabled
+        >
+          Iniciar K-Means (K=3)
+        </button>
+        <button
+          id="btn-reset-kmeans"
+          class="w-full rounded-lg bg-red-100 px-4 py-2 font-semibold text-red-600 transition-colors hover:bg-red-200 dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50"
+        >
+          Limpiar Todo
+        </button>
+
+        <div
+          class="mt-4 flex-1 rounded-lg border border-neutral-100 bg-neutral-50 p-4 dark:border-white/5 dark:bg-black/30"
+        >
+          <h4
+            class="mb-2 text-xs font-bold tracking-wider text-neutral-500 uppercase"
+          >
+            Estado
+          </h4>
+          <p
+            id="kmeans-status"
+            class="text-sm text-neutral-700 dark:text-neutral-300"
+          >
+            Esperando puntos de datos...
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const container = document.querySelector(".kmeans-container");
+  if (container) {
+    const canvas = container.querySelector("#kmeans-canvas");
+    const ctx = canvas.getContext("2d");
+    const btnAddRandom = container.querySelector("#btn-add-random");
+    const btnStep = container.querySelector("#btn-step");
+    const btnReset = container.querySelector("#btn-reset-kmeans");
+    const statusText = container.querySelector("#kmeans-status");
+
+    let points = [];
+    let centroids = [];
+    let k = 3;
+    let stepNumber = 0; // 0: Init, 1: Assign, 2: Move
+    let isFinished = false;
+
+    // Palette
+    const colors = ["#ef4444", "#3b82f6", "#10b981", "#f59e0b", "#8b5cf6"];
+    const unassignedColor = "#9ca3af";
+
+    function resizeCanvas() {
+      // Set actual size in memory (scaled for retina displays)
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      draw();
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw points
+      points.forEach((p) => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+        ctx.fillStyle = p.cluster !== -1 ? colors[p.cluster] : unassignedColor;
+        ctx.fill();
+        ctx.closePath();
+      });
+
+      // Draw centroids
+      centroids.forEach((c, i) => {
+        ctx.beginPath();
+        // Draw cross or larger circle for centroid
+        ctx.arc(c.x, c.y, 8, 0, Math.PI * 2);
+        ctx.fillStyle = colors[i];
+        ctx.strokeStyle = "#fff";
+        ctx.lineWidth = 2;
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+
+        // inner star/cross
+        ctx.beginPath();
+        ctx.moveTo(c.x - 4, c.y - 4);
+        ctx.lineTo(c.x + 4, c.y + 4);
+        ctx.moveTo(c.x + 4, c.y - 4);
+        ctx.lineTo(c.x - 4, c.y + 4);
+        ctx.strokeStyle = "#fff";
+        ctx.stroke();
+      });
+    }
+
+    function addPoint(x, y) {
+      points.push({ x, y, cluster: -1 });
+      btnStep.disabled = points.length < k;
+      draw();
+    }
+
+    canvas.addEventListener("mousedown", (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      addPoint(x, y);
+      statusText.textContent = `Puntos totales: ${points.length}`;
+    });
+
+    btnAddRandom.addEventListener("click", () => {
+      for (let i = 0; i < 20; i++) {
+        // cluster them somewhat randomly
+        const cx = Math.random() * canvas.width;
+        const cy = Math.random() * canvas.height;
+        addPoint(
+          Math.max(
+            10,
+            Math.min(canvas.width - 10, cx + (Math.random() - 0.5) * 50),
+          ),
+          Math.max(
+            10,
+            Math.min(canvas.height - 10, cy + (Math.random() - 0.5) * 50),
+          ),
+        );
+      }
+      statusText.textContent = `Puntos totales: ${points.length}`;
+    });
+
+    btnReset.addEventListener("click", () => {
+      points = [];
+      centroids = [];
+      stepNumber = 0;
+      isFinished = false;
+      btnStep.disabled = true;
+      btnStep.textContent = "Iniciar K-Means (K=3)";
+      statusText.textContent = "Esperando puntos de datos...";
+      draw();
+    });
+
+    function dist(p1, p2) {
+      return Math.hypot(p1.x - p2.x, p1.y - p2.y);
+    }
+
+    function step() {
+      if (isFinished) return;
+
+      if (stepNumber === 0) {
+        // Init centroids randomly from existing points
+        let shuffled = [...points].sort(() => 0.5 - Math.random());
+        centroids = shuffled.slice(0, k).map((p) => ({ x: p.x, y: p.y }));
+
+        statusText.textContent =
+          "Paso 1: Centroides inicializados aleatoriamente en puntos existentes.";
+        btnStep.textContent = "Siguiente Paso (Asignar)";
+        stepNumber = 1;
+      } else if (stepNumber === 1) {
+        // Assign points to nearest centroid
+        let changed = false;
+        points.forEach((p) => {
+          let minDist = Infinity;
+          let bestCluster = -1;
+          centroids.forEach((c, i) => {
+            const d = dist(p, c);
+            if (d < minDist) {
+              minDist = d;
+              bestCluster = i;
+            }
+          });
+          if (p.cluster !== bestCluster) changed = true;
+          p.cluster = bestCluster;
+        });
+
+        if (!changed) {
+          isFinished = true;
+          statusText.textContent =
+            "¡Algoritmo convergido! Los clústeres ya no cambian.";
+          btnStep.disabled = true;
+          btnStep.textContent = "Finalizado";
+        } else {
+          statusText.textContent =
+            "Paso 2: Puntos asignados a su centroide más cercano (por color).";
+          btnStep.textContent = "Siguiente Paso (Mover Centroides)";
+          stepNumber = 2;
+        }
+      } else if (stepNumber === 2) {
+        // Move centroids to mean of their cluster
+        let sums = Array(k)
+          .fill(0)
+          .map(() => ({ x: 0, y: 0, count: 0 }));
+        points.forEach((p) => {
+          if (p.cluster !== -1) {
+            sums[p.cluster].x += p.x;
+            sums[p.cluster].y += p.y;
+            sums[p.cluster].count++;
+          }
+        });
+
+        centroids.forEach((c, i) => {
+          if (sums[i].count > 0) {
+            c.x = sums[i].x / sums[i].count;
+            c.y = sums[i].y / sums[i].count;
+          }
+        });
+
+        statusText.textContent =
+          "Paso 3: Centroides movidos al centro de masa de su grupo.";
+        btnStep.textContent = "Siguiente Paso (Reasignar)";
+        stepNumber = 1;
+      }
+
+      draw();
+    }
+
+    btnStep.addEventListener("click", step);
+
+    // Give time for layout to happen, then resize
+    setTimeout(resizeCanvas, 100);
+  }
+</script>
