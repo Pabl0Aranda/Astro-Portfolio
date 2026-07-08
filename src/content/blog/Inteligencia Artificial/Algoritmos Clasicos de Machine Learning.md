@@ -1,7 +1,7 @@
 ---
-title: "Fundamentos de Machine Learning: Guía de Algoritmos Clásicos para Ingenieros"
+title: "Fundamentos de Machine Learning: Algoritmos Clásicos"
 date: 2026-07-08
-description: "Análisis técnico de los algoritmos de Machine Learning más utilizados, su complejidad computacional, optimización matemática y arquitectura de despliegue."
+description: "Análisis de los algoritmos de Machine Learning más utilizados, su complejidad computacional, optimización matemática y arquitectura de despliegue."
 draft: false
 category: "Inteligencia Artificial"
 ---
