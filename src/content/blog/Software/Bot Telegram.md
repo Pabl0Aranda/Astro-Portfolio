@@ -4,6 +4,7 @@ date: 2026-06-05
 description: "Diseño e implementación de un microservicio asíncrono para indexar, buscar y distribuir más de 150.000 volúmenes digitales superando cuellos de botella I/O."
 draft: false
 category: Software
+heroImage: ""
 ---
 
 ## Principales Problemas y Objetivos

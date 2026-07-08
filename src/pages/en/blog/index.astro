@@ -50,24 +50,47 @@ const getRelativeDate = (date: Date) => {
       </p>
     </header>
 
-    <div class="mb-12 flex flex-wrap gap-3">
-      <button
-        class="filter-btn active bg-albero border-albero rounded-full border px-5 py-2 text-sm font-semibold text-black transition-all duration-300 hover:scale-105 hover:bg-neutral-900 hover:text-white dark:hover:bg-white dark:hover:text-black"
-        data-filter="all"
-      >
-        {lang === "es" ? "Todos" : "All"}
-      </button>
+    <div class="mb-12 flex flex-wrap items-center justify-between gap-6">
+      <div class="flex flex-wrap gap-3">
+        <button
+          class="filter-btn active bg-albero border-albero rounded-full border px-5 py-2 text-sm font-semibold text-black transition-all duration-300 hover:scale-105 hover:bg-neutral-900 hover:text-white dark:hover:bg-white dark:hover:text-black"
+          data-filter="all"
+        >
+          {lang === "es" ? "Todos" : "All"}
+        </button>
 
-      {
-        categories.map((category) => (
-          <button
-            class="filter-btn hover:border-albero hover:text-albero dark:hover:border-albero dark:hover:text-albero rounded-full border border-neutral-300 bg-transparent px-5 py-2 text-sm font-medium text-neutral-600 transition-all duration-300 hover:scale-105 dark:border-white/20 dark:text-white"
-            data-filter={category}
-          >
-            {category}
-          </button>
-        ))
-      }
+        {
+          categories.map((category) => (
+            <button
+              class="filter-btn hover:border-albero hover:text-albero dark:hover:border-albero dark:hover:text-albero rounded-full border border-neutral-300 bg-transparent px-5 py-2 text-sm font-medium text-neutral-600 transition-all duration-300 hover:scale-105 dark:border-white/20 dark:text-white"
+              data-filter={category}
+            >
+              {category}
+            </button>
+          ))
+        }
+      </div>
+
+      <div class="flex items-center gap-1 rounded-full border border-neutral-200 p-1 dark:border-white/10">
+        <button
+          id="btn-view-grid"
+          class="rounded-full bg-neutral-200 p-2 text-black transition-colors dark:bg-white/20 dark:text-white"
+          title={lang === "es" ? "Vista de cuadrícula" : "Grid view"}
+        >
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+          </svg>
+        </button>
+        <button
+          id="btn-view-list"
+          class="rounded-full p-2 text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-black dark:text-neutral-400 dark:hover:bg-white/10 dark:hover:text-white"
+          title={lang === "es" ? "Vista de lista" : "List view"}
+        >
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
     </div>
 
     <div
@@ -189,6 +212,41 @@ const getRelativeDate = (date: Date) => {
         });
       });
     });
+
+    // Toggle Vista Cuadrícula / Lista
+    const btnViewGrid = document.getElementById("btn-view-grid");
+    const btnViewList = document.getElementById("btn-view-list");
+    const postsGrid = document.getElementById("posts-grid");
+
+    if (btnViewGrid && btnViewList && postsGrid) {
+      const gridClasses = ["grid", "grid-cols-1", "gap-8", "md:grid-cols-2", "lg:grid-cols-3"];
+      const listClasses = ["flex", "flex-col", "gap-4"];
+      
+      const activeBtnClasses = ["bg-neutral-200", "text-black", "dark:bg-white/20", "dark:text-white"];
+      const inactiveBtnClasses = ["text-neutral-500", "dark:text-neutral-400", "hover:bg-neutral-100", "hover:text-black", "dark:hover:bg-white/10", "dark:hover:text-white"];
+
+      btnViewGrid.addEventListener("click", () => {
+        postsGrid.classList.remove(...listClasses, "view-list");
+        postsGrid.classList.add(...gridClasses, "view-grid");
+        
+        btnViewGrid.classList.remove(...inactiveBtnClasses);
+        btnViewGrid.classList.add(...activeBtnClasses);
+        
+        btnViewList.classList.remove(...activeBtnClasses);
+        btnViewList.classList.add(...inactiveBtnClasses);
+      });
+
+      btnViewList.addEventListener("click", () => {
+        postsGrid.classList.remove(...gridClasses, "view-grid");
+        postsGrid.classList.add(...listClasses, "view-list");
+        
+        btnViewList.classList.remove(...inactiveBtnClasses);
+        btnViewList.classList.add(...activeBtnClasses);
+        
+        btnViewGrid.classList.remove(...activeBtnClasses);
+        btnViewGrid.classList.add(...inactiveBtnClasses);
+      });
+    }
   });
 </script>
 
@@ -201,6 +259,38 @@ const getRelativeDate = (date: Date) => {
     to {
       opacity: 1;
       transform: translateY(0);
+    }
+  }
+
+  /* Estilos para la vista de lista (List View) */
+  @media (min-width: 768px) {
+    :global(.view-list .post-card) {
+      flex-direction: row !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 2rem !important;
+      padding: 1.5rem 2rem !important;
+      min-height: auto !important;
+    }
+    :global(.view-list .post-card > div:first-child) {
+      margin-bottom: 0 !important;
+      width: 25% !important;
+      flex-shrink: 0 !important;
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 0.5rem !important;
+    }
+    :global(.view-list .post-card > h2) {
+      margin-bottom: 0 !important;
+      flex: 1 !important;
+    }
+    :global(.view-list .post-card > div.grid) {
+      display: none !important;
+    }
+    :global(.view-list .post-card > a:last-child) {
+      margin-top: 0 !important;
+      width: max-content !important;
+      flex-shrink: 0 !important;
     }
   }
 </style>

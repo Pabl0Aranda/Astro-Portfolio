@@ -21,7 +21,8 @@ const sortedPosts = allPosts.sort(
 );
 const currentIndex = sortedPosts.findIndex((p) => p.slug === entry.slug);
 const nextPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
-const prevPost = currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null;
+const prevPost =
+  currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null;
 const suggestedPost = nextPost || prevPost;
 
 const { Content, remarkPluginFrontmatter, headings } = await entry.render();
@@ -33,13 +34,13 @@ const lang = getLangFromUrl(Astro.url);
 const schema = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": entry.data.title,
-  "description": entry.data.description,
-  "datePublished": entry.data.date.toISOString(),
-  "author": {
+  headline: entry.data.title,
+  description: entry.data.description,
+  datePublished: entry.data.date.toISOString(),
+  author: {
     "@type": "Person",
-    "name": "Pablo Aranda"
-  }
+    name: "Pablo Aranda",
+  },
 });
 ---
 
@@ -48,116 +49,144 @@ const schema = JSON.stringify({
   description={entry.data.description}
   structuredData={schema}
 >
-  <div id="progress-container" class="fixed top-0 left-0 w-full h-1 z-50 bg-transparent print:hidden">
-    <div id="progress-bar" class="h-full bg-albero w-0 transition-all duration-150 ease-out"></div>
+  <div
+    id="progress-container"
+    class="fixed top-0 left-0 z-50 h-1 w-full bg-transparent print:hidden"
+  >
+    <div
+      id="progress-bar"
+      class="bg-albero h-full w-0 transition-all duration-150 ease-out"
+    >
+    </div>
   </div>
 
-  <div class="mx-auto w-full max-w-5xl px-6 py-20 text-neutral-900 md:px-0 md:py-32 dark:text-white flex justify-between items-start gap-12 relative">
+  <div
+    class="relative mx-auto flex w-full max-w-5xl items-start justify-between gap-12 px-6 py-20 text-neutral-900 md:px-0 md:py-32 dark:text-white"
+  >
     <div class="w-full max-w-3xl shrink-0">
-    <a
-      href={lang === "es" ? "/blog" : "/en/blog"}
-      class="text-albero mb-10 inline-flex items-center font-medium transition-colors duration-300 hover:text-neutral-900 dark:hover:text-white"
-    >
-      <svg
-        class="mr-2 h-4 w-4"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
+      <a
+        href={lang === "es" ? "/blog" : "/en/blog"}
+        class="text-albero mb-10 inline-flex items-center font-medium transition-colors duration-300 hover:text-neutral-900 dark:hover:text-white"
       >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-      </svg>
-      {lang === "es" ? "Volver al blog" : "Back to blog"}
-    </a>
+        <svg
+          class="mr-2 h-4 w-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        {lang === "es" ? "Volver al blog" : "Back to blog"}
+      </a>
 
-    <header class="mb-14">
-      <div class="mb-6 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <span
-            class="text-albero rounded-full bg-neutral-100 px-3 py-1 text-xs font-bold dark:bg-white/10"
+      <header class="mb-14">
+        {
+          entry.data.heroImage && (
+            <img
+              src={entry.data.heroImage}
+              alt={`Header image for ${entry.data.title}`}
+              class="mb-10 max-h-[400px] w-full rounded-2xl border border-neutral-200 object-cover shadow-xl dark:border-white/10"
+            />
+          )
+        }
+
+        <div class="mb-6 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span
+              class="text-albero rounded-full bg-neutral-100 px-3 py-1 text-xs font-bold dark:bg-white/10"
+            >
+              {entry.data.category}
+            </span>
+            <time class="text-sm text-neutral-500">
+              {
+                entry.data.date.toLocaleDateString(
+                  lang === "es" ? "es-ES" : "en-US",
+                  {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  },
+                )
+              }
+            </time>
+            <span
+              class="hidden text-neutral-300 md:inline dark:text-neutral-600"
+              >•</span
+            >
+            <span class="text-sm text-neutral-500">
+              {remarkPluginFrontmatter.minutesRead}
+              {lang === "es" ? "min de lectura" : "min read"}
+            </span>
+          </div>
+
+          <button
+            id="btn-download-paper"
+            class="hover:bg-albero dark:hover:bg-albero group flex items-center justify-center rounded-full bg-neutral-100 p-2.5 text-neutral-600 transition-colors duration-300 hover:text-black dark:bg-white/10 dark:text-neutral-300 dark:hover:text-black print:hidden"
+            title={lang === "es"
+              ? "Descargar como Paper (PDF)"
+              : "Download as Paper (PDF)"}
           >
-            {entry.data.category}
-          </span>
-          <time class="text-sm text-neutral-500">
-            {
-              entry.data.date.toLocaleDateString(
-                lang === "es" ? "es-ES" : "en-US",
-                {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                },
-              )
-            }
-          </time>
-          <span class="hidden text-neutral-300 md:inline dark:text-neutral-600"
-            >•</span
-          >
-          <span class="text-sm text-neutral-500">
-            {remarkPluginFrontmatter.minutesRead}
-            {lang === "es" ? "min de lectura" : "min read"}
-          </span>
+            <svg
+              class="h-5 w-5 transition-transform duration-300 group-hover:-translate-y-0.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              ></path>
+            </svg>
+          </button>
         </div>
 
-        <button
-          id="btn-download-paper"
-          class="hover:bg-albero dark:hover:bg-albero group flex items-center justify-center rounded-full bg-neutral-100 p-2.5 text-neutral-600 transition-colors duration-300 hover:text-black dark:bg-white/10 dark:text-neutral-300 dark:hover:text-black print:hidden"
-          title={lang === "es"
-            ? "Descargar como Paper (PDF)"
-            : "Download as Paper (PDF)"}
+        <h1
+          class="mb-6 text-3xl leading-tight font-bold tracking-tight text-neutral-900 md:text-5xl dark:text-white"
         >
-          <svg
-            class="h-5 w-5 transition-transform duration-300 group-hover:-translate-y-0.5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-            ></path>
-          </svg>
-        </button>
-      </div>
+          {entry.data.title}
+        </h1>
+      </header>
 
-      <h1
-        class="mb-6 text-3xl leading-tight font-bold tracking-tight text-neutral-900 md:text-5xl dark:text-white"
-      >
-        {entry.data.title}
-      </h1>
-    </header>
+      <article class="prose-custom w-full max-w-full break-words">
+        <Content />
+      </article>
 
-    <article class="prose-custom w-full max-w-full break-words">
-      <Content />
-    </article>
-
-    {suggestedPost && (
-      <div class="mt-20 border-t border-neutral-200 pt-10 dark:border-white/10 print:hidden">
-        <h3 class="mb-6 text-2xl font-bold text-neutral-900 dark:text-white">Continue reading</h3>
-        <a
-          href={`/en/blog/${suggestedPost.slug}`}
-          class="group block rounded-2xl border border-neutral-200 bg-neutral-50 p-8 transition-all duration-300 hover:border-albero hover:-translate-y-1 hover:shadow-lg dark:border-white/10 dark:bg-[#151515] dark:hover:border-albero/50"
-        >
-          <span class="text-albero mb-3 inline-block rounded-full bg-black/5 px-3 py-1 text-xs font-bold dark:bg-white/10">
-            {suggestedPost.data.category}
-          </span>
-          <h4 class="mb-2 text-xl font-bold text-neutral-900 transition-colors duration-300 group-hover:text-albero dark:text-white dark:group-hover:text-albero">
-            {suggestedPost.data.title}
-          </h4>
-          <p class="text-sm text-neutral-600 dark:text-neutral-400">
-            {suggestedPost.data.description}
-          </p>
-        </a>
-      </div>
-    )}
+      {
+        suggestedPost && (
+          <div class="mt-20 border-t border-neutral-200 pt-10 dark:border-white/10 print:hidden">
+            <h3 class="mb-6 text-2xl font-bold text-neutral-900 dark:text-white">
+              Continue reading
+            </h3>
+            <a
+              href={`/en/blog/${suggestedPost.slug}`}
+              class="group hover:border-albero dark:hover:border-albero/50 block rounded-2xl border border-neutral-200 bg-neutral-50 p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:border-white/10 dark:bg-[#151515]"
+            >
+              <span class="text-albero mb-3 inline-block rounded-full bg-black/5 px-3 py-1 text-xs font-bold dark:bg-white/10">
+                {suggestedPost.data.category}
+              </span>
+              <h4 class="group-hover:text-albero dark:group-hover:text-albero mb-2 text-xl font-bold text-neutral-900 transition-colors duration-300 dark:text-white">
+                {suggestedPost.data.title}
+              </h4>
+              <p class="text-sm text-neutral-600 dark:text-neutral-400">
+                {suggestedPost.data.description}
+              </p>
+            </a>
+          </div>
+        )
+      }
     </div>
 
-    {headings && headings.length > 0 && <TableOfContents headings={headings} lang={lang} />}
+    {
+      headings && headings.length > 0 && (
+        <TableOfContents headings={headings} lang={lang} />
+      )
+    }
   </div>
 </Layout>
 
@@ -175,12 +204,17 @@ const schema = JSON.stringify({
     // 2. Barra de progreso de lectura
     const progressBar = document.getElementById("progress-bar");
     if (progressBar) {
-      window.addEventListener("scroll", () => {
-        const scrollTop = window.scrollY;
-        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-        const scrollPercent = (scrollTop / docHeight) * 100;
-        progressBar.style.width = scrollPercent + "%";
-      }, { passive: true });
+      window.addEventListener(
+        "scroll",
+        () => {
+          const scrollTop = window.scrollY;
+          const docHeight =
+            document.documentElement.scrollHeight - window.innerHeight;
+          const scrollPercent = (scrollTop / docHeight) * 100;
+          progressBar.style.width = scrollPercent + "%";
+        },
+        { passive: true },
+      );
     }
 
     // 3. Botón de Copiar al portapapeles
@@ -191,7 +225,8 @@ const schema = JSON.stringify({
       // Create copy button
       const copyButton = document.createElement("button");
       copyButton.innerHTML = copyButtonIcon;
-      copyButton.className = "absolute top-2 right-2 p-1.5 rounded-md bg-white/10 hover:bg-white/20 text-neutral-400 hover:text-white transition-colors print:hidden";
+      copyButton.className =
+        "absolute top-2 right-2 p-1.5 rounded-md bg-white/10 hover:bg-white/20 text-neutral-400 hover:text-white transition-colors print:hidden";
       copyButton.title = "Copy code";
 
       // Wrap the pre in a relative div if it isn't already

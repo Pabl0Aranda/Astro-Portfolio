@@ -4,6 +4,7 @@ date: 2026-03-12
 description: "Qué es, para que nos sirve en el mundo de la Algoritmia la notación Big O y sus tipos de notación en comparativas."
 draft: false
 category: Algoritmia
+heroImage: ""
 ---
 
 ## Qué es la notación Big O y cómo funciona

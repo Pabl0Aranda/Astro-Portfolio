@@ -20,6 +20,7 @@ const blogCollection = defineCollection({
     description: z.string(),
     draft: z.boolean().default(false), // Útil para que Netlify no publique posts a medias
     category: z.string().default("General"),
+    heroImage: z.string().optional(),
   }),
 });
 

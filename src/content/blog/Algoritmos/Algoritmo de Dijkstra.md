@@ -4,6 +4,7 @@ date: 2026-03-06
 description: "Usos del algoritmo de Dijkstra, su relación con las redes y conexiones y avances sobre el algoritmo."
 draft: false
 category: Algoritmia
+heroImage: "/images/Algoritmo-Dijkstra-header.png"
 ---
 
 Google Maps sabe exactamente cuál es la ruta más rápida para llegar a tu destino esquivando el tráfico, un mensaje de WhatsApp cruza el mundo a través de miles de servidores en milisegundos. Todo esto se apoya en la teoría de grafos y en una de las mentes más innovadoras de la ingeniería informática: **Edsger W. Dijkstra**.
