@@ -1,0 +1,290 @@
+---
+// DijkstraVisualizer.astro
+---
+
+<div class="dijkstra-container my-8 w-full rounded-2xl bg-white p-6 shadow-xl border border-neutral-200 dark:bg-[#151515] dark:border-white/10 overflow-hidden font-sans">
+  <div class="flex flex-col md:flex-row gap-6">
+    
+    <!-- Grafo Visual -->
+    <div class="flex-1 min-w-[300px] h-[300px] relative bg-neutral-50 dark:bg-black/50 rounded-xl overflow-hidden border border-neutral-100 dark:border-white/5 flex items-center justify-center">
+      <svg id="graph-svg" viewBox="0 0 400 300" class="w-full h-full max-w-full drop-shadow-md">
+        <!-- Aristas -->
+        <g id="edges-layer" stroke-width="4" stroke-linecap="round"></g>
+        
+        <!-- Nodos -->
+        <g id="nodes-layer"></g>
+      </svg>
+    </div>
+
+    <!-- Panel de Estado y Controles -->
+    <div class="flex-1 flex flex-col justify-between">
+      <div>
+        <h3 class="text-xl font-bold mb-2 text-neutral-900 dark:text-white">Estado del Algoritmo</h3>
+        <p id="status-text" class="text-sm text-neutral-600 dark:text-neutral-400 min-h-[40px]">
+          Haz clic en "Siguiente Paso" para comenzar.
+        </p>
+        
+        <div class="mt-4">
+          <h4 class="text-xs font-semibold uppercase tracking-wider text-neutral-500 mb-2">Distancias desde A</h4>
+          <div id="distances-container" class="grid grid-cols-5 gap-2">
+            <!-- Rellenado por JS -->
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 flex gap-3">
+        <button id="btn-next" class="flex-1 bg-albero text-black font-semibold py-2 px-4 rounded-lg shadow-[0_0_15px_rgba(204,255,0,0.3)] hover:scale-105 transition-transform">
+          Siguiente Paso
+        </button>
+        <button id="btn-reset" class="flex-1 bg-neutral-200 dark:bg-white/10 text-neutral-800 dark:text-white font-semibold py-2 px-4 rounded-lg hover:bg-neutral-300 dark:hover:bg-white/20 transition-colors">
+          Reiniciar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Vanilla JS logic logic for Dijkstra Visualizer
+  
+  const nodes = [
+    { id: 'A', x: 50, y: 150 },
+    { id: 'B', x: 150, y: 50 },
+    { id: 'C', x: 150, y: 250 },
+    { id: 'D', x: 280, y: 100 },
+    { id: 'E', x: 350, y: 200 }
+  ];
+
+  const edges = [
+    { source: 'A', target: 'B', weight: 4 },
+    { source: 'A', target: 'C', weight: 2 },
+    { source: 'B', target: 'C', weight: 5 },
+    { source: 'B', target: 'D', weight: 10 },
+    { source: 'C', target: 'D', weight: 3 },
+    { source: 'C', target: 'E', weight: 8 },
+    { source: 'D', target: 'E', weight: 2 }
+  ];
+
+  // Colors
+  const colors = {
+    defaultEdge: '#9ca3af',
+    activeEdge: '#ccff00', // albero
+    pathEdge: '#10b981', // green
+    defaultNode: '#374151',
+    activeNode: '#ccff00', // albero (current evaluating)
+    visitedNode: '#10b981', // green (done)
+    unvisitedNode: '#1f2937',
+    text: '#ffffff'
+  };
+
+  class DijkstraState {
+    constructor() {
+      this.reset();
+    }
+    
+    reset() {
+      this.distances = { A: 0, B: Infinity, C: Infinity, D: Infinity, E: Infinity };
+      this.visited = new Set();
+      this.unvisited = new Set(['A', 'B', 'C', 'D', 'E']);
+      this.previous = { A: null, B: null, C: null, D: null, E: null };
+      
+      this.currentNode = null;
+      this.evaluatingEdge = null;
+      this.stepType = 'INIT'; // INIT -> SELECT_NODE -> EVALUATE_NEIGHBORS -> MARK_VISITED -> DONE
+      this.currentNeighbors = [];
+      this.neighborIndex = 0;
+      this.statusMessage = 'Haz clic en "Siguiente Paso" para inicializar el algoritmo, empezando desde A con distancia 0 y el resto en Infinito.';
+    }
+  }
+
+  // Find elements in the specific container instance (if multiple, we scope them, but here we assume one per page)
+  const container = document.querySelector('.dijkstra-container');
+  if (container) {
+    const svgEdges = container.querySelector('#edges-layer');
+    const svgNodes = container.querySelector('#nodes-layer');
+    const btnNext = container.querySelector('#btn-next');
+    const btnReset = container.querySelector('#btn-reset');
+    const statusText = container.querySelector('#status-text');
+    const distContainer = container.querySelector('#distances-container');
+
+    let state = new DijkstraState();
+
+    function drawGraph() {
+      // Draw Edges
+      svgEdges.innerHTML = edges.map(edge => {
+        const source = nodes.find(n => n.id === edge.source);
+        const target = nodes.find(n => n.id === edge.target);
+        
+        let strokeColor = colors.defaultEdge;
+        let strokeWidth = 2;
+        let opacity = 0.5;
+
+        // Check if edge is part of final shortest path (to visually show tree if wanted, but simpler to just show evaluating edge)
+        if (state.evaluatingEdge === edge) {
+          strokeColor = colors.activeEdge;
+          strokeWidth = 4;
+          opacity = 1;
+        }
+
+        // Draw line and text for weight
+        const midX = (source.x + target.x) / 2;
+        const midY = (source.y + target.y) / 2;
+
+        return `
+          <g>
+            <line x1="${source.x}" y1="${source.y}" x2="${target.x}" y2="${target.y}" stroke="${strokeColor}" stroke-width="${strokeWidth}" opacity="${opacity}" class="transition-all duration-300"></line>
+            <rect x="${midX - 10}" y="${midY - 10}" width="20" height="20" rx="4" fill="white" class="dark:fill-[#1a1a1a]"></rect>
+            <text x="${midX}" y="${midY + 4}" text-anchor="middle" font-size="12" font-weight="bold" fill="currentColor" class="text-neutral-800 dark:text-neutral-300">${edge.weight}</text>
+          </g>
+        `;
+      }).join('');
+
+      // Draw Nodes
+      svgNodes.innerHTML = nodes.map(node => {
+        let bgColor = colors.unvisitedNode;
+        let stroke = colors.defaultEdge;
+        
+        if (state.visited.has(node.id)) {
+          bgColor = colors.visitedNode;
+          stroke = colors.visitedNode;
+        } else if (state.currentNode === node.id) {
+          bgColor = colors.activeNode;
+          stroke = colors.activeNode;
+        }
+
+        return `
+          <g transform="translate(${node.x}, ${node.y})" class="transition-all duration-300">
+            <circle r="18" fill="${bgColor}" stroke="${stroke}" stroke-width="2"></circle>
+            <text x="0" y="5" text-anchor="middle" font-size="14" font-weight="bold" fill="${state.currentNode === node.id ? '#000' : '#fff'}">${node.id}</text>
+          </g>
+        `;
+      }).join('');
+      
+      // Render Distances
+      distContainer.innerHTML = nodes.map(node => {
+        const dist = state.distances[node.id] === Infinity ? '∞' : state.distances[node.id];
+        const isCurrent = state.currentNode === node.id;
+        const isVisited = state.visited.has(node.id);
+        
+        let bgClass = "bg-neutral-100 dark:bg-white/5 border-neutral-200 dark:border-white/10";
+        if (isCurrent) bgClass = "bg-albero text-black border-albero shadow-[0_0_10px_rgba(204,255,0,0.4)]";
+        else if (isVisited) bgClass = "bg-emerald-500 text-white border-emerald-500";
+        
+        return `
+          <div class="flex flex-col items-center justify-center rounded-lg border p-2 transition-all duration-300 ${bgClass}">
+            <span class="font-bold text-sm ${isCurrent ? 'text-black' : 'text-neutral-500 dark:text-neutral-400'}">${node.id}</span>
+            <span class="font-mono text-lg font-bold">${dist}</span>
+          </div>
+        `;
+      }).join('');
+      
+      statusText.textContent = state.statusMessage;
+    }
+
+    function step() {
+      if (state.stepType === 'DONE') {
+        state.statusMessage = "¡Algoritmo finalizado! Hemos encontrado la ruta más corta a todos los nodos.";
+        drawGraph();
+        return;
+      }
+
+      if (state.stepType === 'INIT') {
+        state.stepType = 'SELECT_NODE';
+        state.statusMessage = "Paso 1: Iniciamos en A con distancia 0. Ahora seleccionamos el nodo no visitado con la menor distancia.";
+        drawGraph();
+        return;
+      }
+
+      if (state.stepType === 'SELECT_NODE') {
+        // Find unvisited node with minimum distance
+        let minNode = null;
+        let minDist = Infinity;
+        for (let node of state.unvisited) {
+          if (state.distances[node] < minDist) {
+            minDist = state.distances[node];
+            minNode = node;
+          }
+        }
+
+        if (minNode === null) {
+          state.stepType = 'DONE';
+          step();
+          return;
+        }
+
+        state.currentNode = minNode;
+        state.stepType = 'EVALUATE_NEIGHBORS';
+        
+        // Find all neighbors of currentNode
+        state.currentNeighbors = edges.filter(e => 
+          (e.source === state.currentNode || e.target === state.currentNode)
+        ).map(e => {
+          return {
+            edge: e,
+            neighborId: e.source === state.currentNode ? e.target : e.source
+          };
+        }).filter(n => state.unvisited.has(n.neighborId));
+        
+        state.neighborIndex = 0;
+        
+        if (state.currentNeighbors.length === 0) {
+          state.statusMessage = `Paso 2: Nodo ${minNode} seleccionado. No tiene vecinos sin visitar, así que lo marcamos como completado.`;
+          state.stepType = 'MARK_VISITED';
+        } else {
+          state.statusMessage = `Paso 2: Seleccionamos el nodo ${minNode} (distancia ${minDist}). Vamos a evaluar sus vecinos no visitados.`;
+        }
+        drawGraph();
+        return;
+      }
+
+      if (state.stepType === 'EVALUATE_NEIGHBORS') {
+        if (state.neighborIndex < state.currentNeighbors.length) {
+          const current = state.currentNeighbors[state.neighborIndex];
+          state.evaluatingEdge = current.edge;
+          const altDist = state.distances[state.currentNode] + current.edge.weight;
+          
+          if (altDist < state.distances[current.neighborId]) {
+            state.distances[current.neighborId] = altDist;
+            state.previous[current.neighborId] = state.currentNode;
+            state.statusMessage = `Paso 3: Evaluando vecino ${current.neighborId}. La nueva distancia (${state.distances[state.currentNode]} + ${current.edge.weight} = ${altDist}) es MEJOR que la anterior. Actualizamos la distancia de ${current.neighborId} a ${altDist}.`;
+          } else {
+            state.statusMessage = `Paso 3: Evaluando vecino ${current.neighborId}. La nueva distancia (${altDist}) NO es mejor que la actual (${state.distances[current.neighborId]}). No actualizamos.`;
+          }
+          
+          state.neighborIndex++;
+        } else {
+          state.evaluatingEdge = null;
+          state.stepType = 'MARK_VISITED';
+          state.statusMessage = `Ya hemos evaluado todos los vecinos de ${state.currentNode}. Ahora lo marcamos como visitado.`;
+        }
+        drawGraph();
+        return;
+      }
+
+      if (state.stepType === 'MARK_VISITED') {
+        state.evaluatingEdge = null;
+        state.visited.add(state.currentNode);
+        state.unvisited.delete(state.currentNode);
+        state.statusMessage = `Paso 4: Nodo ${state.currentNode} visitado y cerrado. Volvemos a empezar.`;
+        state.currentNode = null;
+        
+        if (state.unvisited.size === 0) {
+          state.stepType = 'DONE';
+        } else {
+          state.stepType = 'SELECT_NODE';
+        }
+        drawGraph();
+        return;
+      }
+    }
+
+    btnNext.addEventListener('click', step);
+    btnReset.addEventListener('click', () => {
+      state.reset();
+      drawGraph();
+    });
+
+    // Initial render
+    drawGraph();
+  }
+</script>
