@@ -3,6 +3,7 @@ import { ViewTransitions } from "astro:transitions"; // 1. Importamos la magia
 import "../styles/global.css";
 import Header from "../components/Header.astro";
 import CommandPalette from "../components/CommandPalette.astro";
+import Search from "../components/Search.astro";
 import "katex/dist/katex.min.css";
 
 // 1. Añadimos 'image' como propiedad opcional
@@ -71,7 +72,6 @@ const socialImageURL = new URL(image, canonicalURL);
       document.addEventListener("astro:after-swap", applyTheme);
     </script>
   </head>
-</html>
 <body
   class="selection:bg-albero group relative flex min-h-screen flex-col overflow-x-hidden bg-white text-neutral-900 antialiased transition-colors duration-300 selection:text-black dark:bg-black dark:text-white"
 >
@@ -95,6 +95,8 @@ const socialImageURL = new URL(image, canonicalURL);
     </div>
   </div>
 
+  <Search />
+  
   <Header />
 
   <CommandPalette />
@@ -162,3 +164,4 @@ const socialImageURL = new URL(image, canonicalURL);
     });
   </script>
 </body>
+</html>

@@ -1,0 +1,88 @@
+---
+import { getLangFromUrl } from "../i18n/ui";
+
+interface Props {
+  title: string;
+  url: string;
+}
+
+const { title, url } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+
+const encodedTitle = encodeURIComponent(title);
+const encodedUrl = encodeURIComponent(url);
+
+const twitterUrl = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`;
+const linkedinUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedTitle}`;
+---
+
+<div class="flex items-center gap-4 py-8 border-y border-neutral-200 dark:border-white/10 my-10 print:hidden">
+  <span class="text-sm font-bold text-neutral-900 dark:text-white">
+    {lang === "es" ? "Compartir:" : "Share:"}
+  </span>
+  <a
+    href={twitterUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="hover:bg-albero hover:text-black hover:border-albero group flex h-10 w-10 items-center justify-center rounded-full border border-neutral-300 bg-transparent text-neutral-600 transition-all duration-300 dark:border-white/20 dark:text-neutral-400 dark:hover:bg-albero dark:hover:text-black"
+    aria-label="Compartir en Twitter"
+  >
+    <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.007 4.15H5.059z"></path>
+    </svg>
+  </a>
+
+  <a
+    href={linkedinUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="hover:bg-albero hover:text-black hover:border-albero group flex h-10 w-10 items-center justify-center rounded-full border border-neutral-300 bg-transparent text-neutral-600 transition-all duration-300 dark:border-white/20 dark:text-neutral-400 dark:hover:bg-albero dark:hover:text-black"
+    aria-label="Compartir en LinkedIn"
+  >
+    <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+      <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+    </svg>
+  </a>
+
+  <button
+    class="copy-url-btn hover:bg-albero hover:text-black hover:border-albero group flex h-10 w-10 items-center justify-center rounded-full border border-neutral-300 bg-transparent text-neutral-600 transition-all duration-300 dark:border-white/20 dark:text-neutral-400 dark:hover:bg-albero dark:hover:text-black"
+    aria-label="Copiar enlace"
+    data-url={url}
+  >
+    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+    </svg>
+  </button>
+  
+  <span class="copy-url-toast opacity-0 transition-opacity text-xs text-green-600 dark:text-green-400 font-bold ml-2 hidden">
+    {lang === "es" ? "¡Copiado!" : "Copied!"}
+  </span>
+</div>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const copyBtns = document.querySelectorAll(".copy-url-btn");
+    copyBtns.forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const url = btn.getAttribute("data-url");
+        if (url) {
+          await navigator.clipboard.writeText(url);
+          const toast = btn.parentElement?.querySelector(".copy-url-toast");
+          if (toast) {
+            toast.classList.remove("hidden");
+            // Forzar reflow
+            void (toast as HTMLElement).offsetWidth;
+            toast.classList.remove("opacity-0");
+            toast.classList.add("opacity-100");
+            
+            setTimeout(() => {
+              toast.classList.remove("opacity-100");
+              toast.classList.add("opacity-0");
+              setTimeout(() => toast.classList.add("hidden"), 300);
+            }, 2000);
+          }
+        }
+      });
+    });
+  });
+</script>

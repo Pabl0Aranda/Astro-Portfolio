@@ -22,3 +22,13 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# hosting platform caches
+.netlify/
+.vercel/
+
+# VS Code settings
+.vscode/
+
+# Pagefind local dev generated folder
+public/pagefind/

@@ -3,11 +3,12 @@ import tailwindcss from "@tailwindcss/vite";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import sitemap from "@astrojs/sitemap";
+import mdx from "@astrojs/mdx";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
 
 export default defineConfig({
   site: "https://pabloaranda.netlify.app/", // Tu dominio real
-  integrations: [sitemap()],
+  integrations: [sitemap(), mdx()],
 
   // Configuración de Tailwind v4 mediante Vite
   vite: {

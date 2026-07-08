@@ -154,6 +154,24 @@ const getRelativeDate = (date: Date) => {
         ))
       }
     </div>
+
+    <div class="mt-12 flex justify-center">
+      <button
+        id="btn-load-more"
+        class="group flex items-center justify-center rounded-full bg-neutral-900 px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-albero hover:text-black dark:bg-white dark:text-black dark:hover:bg-albero"
+        style="display: none;"
+      >
+        {lang === "es" ? "Cargar más artículos" : "Load more articles"}
+        <svg
+          class="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-y-1"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+    </div>
   </section>
 </Layout>
 
@@ -187,6 +205,51 @@ const getRelativeDate = (date: Date) => {
       "dark:hover:text-albero",
     ];
 
+    let currentFilter = "all";
+    let currentVisibleCount = 9;
+    const btnLoadMore = document.getElementById("btn-load-more");
+
+    const updateVisibility = () => {
+      let visibleCount = 0;
+      let matchedCount = 0;
+      
+      postCards.forEach((card) => {
+        const postCategory = card.getAttribute("data-category");
+        const matchFilter = currentFilter === "all" || currentFilter === postCategory;
+        
+        if (matchFilter) {
+          matchedCount++;
+          if (visibleCount < currentVisibleCount) {
+            (card as HTMLElement).style.display = "flex";
+            (card as HTMLElement).style.animation = "fadeIn 0.5s ease-out forwards";
+            visibleCount++;
+          } else {
+            (card as HTMLElement).style.display = "none";
+          }
+        } else {
+          (card as HTMLElement).style.display = "none";
+        }
+      });
+      
+      if (btnLoadMore) {
+        if (matchedCount > currentVisibleCount) {
+          btnLoadMore.style.display = "flex";
+        } else {
+          btnLoadMore.style.display = "none";
+        }
+      }
+    };
+
+    // Inicializar vista
+    updateVisibility();
+
+    if (btnLoadMore) {
+      btnLoadMore.addEventListener("click", () => {
+        currentVisibleCount += 6;
+        updateVisibility();
+      });
+    }
+
     filterBtns.forEach((btn) => {
       btn.addEventListener("click", () => {
         filterBtns.forEach((b) => {
@@ -197,19 +260,9 @@ const getRelativeDate = (date: Date) => {
         btn.classList.remove(...inactiveClasses);
         btn.classList.add(...activeClasses);
 
-        const filterValue = btn.getAttribute("data-filter");
-
-        postCards.forEach((card) => {
-          const postCategory = card.getAttribute("data-category");
-
-          if (filterValue === "all" || filterValue === postCategory) {
-            (card as HTMLElement).style.display = "flex";
-            (card as HTMLElement).style.animation =
-              "fadeIn 0.5s ease-out forwards";
-          } else {
-            (card as HTMLElement).style.display = "none";
-          }
-        });
+        currentFilter = btn.getAttribute("data-filter") || "all";
+        currentVisibleCount = 9; // Resetear contador al cambiar de filtro
+        updateVisibility();
       });
     });
 
