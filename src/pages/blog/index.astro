@@ -10,18 +10,44 @@ const sortedPosts = allPosts.sort(
 );
 
 const categories = [...new Set(sortedPosts.map((post) => post.data.category))];
+const categoryCounts = sortedPosts.reduce(
+  (acc, post) => {
+    acc[post.data.category] = (acc[post.data.category] || 0) + 1;
+    return acc;
+  },
+  {} as Record<string, number>,
+);
+
+const getCategoryIcon = (category: string) => {
+  switch (category) {
+    case "Desarrollo Web":
+      return '<svg class="w-4 h-4 mr-1.5 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>';
+    case "Inteligencia Artificial":
+      return '<svg class="w-4 h-4 mr-1.5 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>';
+    case "Arquitectura":
+      return '<svg class="w-4 h-4 mr-1.5 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>';
+    case "Software":
+      return '<svg class="w-4 h-4 mr-1.5 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>';
+    case "Algoritmos":
+      return '<svg class="w-4 h-4 mr-1.5 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" /></svg>';
+    default:
+      return '<svg class="w-4 h-4 mr-1.5 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>';
+  }
+};
 
 const getRelativeDate = (date: Date) => {
-  const rtf = new Intl.RelativeTimeFormat('es', { numeric: 'auto' });
+  const rtf = new Intl.RelativeTimeFormat("es", { numeric: "auto" });
   const daysDifference = Math.round(
-    (date.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+    (date.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24),
   );
   if (Math.abs(daysDifference) > 30) {
-    return date.toLocaleDateString('es-ES', {
-      year: 'numeric', month: 'short', day: 'numeric'
+    return date.toLocaleDateString("es-ES", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   }
-  return rtf.format(daysDifference, 'day');
+  return rtf.format(daysDifference, "day");
 };
 ---
 
@@ -44,7 +70,7 @@ const getRelativeDate = (date: Date) => {
     <div class="mb-12 flex flex-wrap items-center justify-between gap-6">
       <div class="flex flex-wrap gap-3">
         <button
-          class="filter-btn active bg-albero border-albero rounded-full border px-5 py-2 text-sm font-semibold text-black transition-all duration-300 hover:scale-105 hover:bg-neutral-900 hover:text-white dark:hover:bg-white dark:hover:text-black"
+          class="filter-btn active bg-albero border-albero rounded-full border px-5 py-2 text-sm font-semibold text-black transition-all duration-300 hover:scale-105 hover:bg-neutral-900 hover:text-white dark:hover:bg-white dark:hover:text-black flex items-center justify-center"
           data-filter="all"
         >
           Todos
@@ -53,23 +79,36 @@ const getRelativeDate = (date: Date) => {
         {
           categories.map((category) => (
             <button
-              class="filter-btn hover:border-albero hover:text-albero dark:hover:border-albero dark:hover:text-albero rounded-full border border-neutral-300 bg-transparent px-5 py-2 text-sm font-medium text-neutral-600 transition-all duration-300 hover:scale-105 dark:border-white/20 dark:text-white"
+              class="filter-btn hover:border-albero hover:text-albero dark:hover:border-albero dark:hover:text-albero rounded-full border border-neutral-300 bg-transparent px-5 py-2 text-sm font-medium text-neutral-600 transition-all duration-300 hover:scale-105 dark:border-white/20 dark:text-white flex items-center justify-center"
               data-filter={category}
             >
-              {category}
+              <Fragment set:html={getCategoryIcon(category)} />
+              {category} <span class="ml-1.5 opacity-60">({categoryCounts[category]})</span>
             </button>
           ))
         }
       </div>
 
-      <div class="flex items-center gap-1 rounded-full border border-neutral-200 p-1 dark:border-white/10">
+      <div
+        class="flex items-center gap-1 rounded-full border border-neutral-200 p-1 dark:border-white/10"
+      >
         <button
           id="btn-view-grid"
           class="rounded-full bg-neutral-200 p-2 text-black transition-colors dark:bg-white/20 dark:text-white"
           title="Vista de cuadrícula"
         >
-          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+          <svg
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+            ></path>
           </svg>
         </button>
         <button
@@ -77,8 +116,17 @@ const getRelativeDate = (date: Date) => {
           class="rounded-full p-2 text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-black dark:text-neutral-400 dark:hover:bg-white/10 dark:hover:text-white"
           title="Vista de lista"
         >
-          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          <svg
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"></path>
           </svg>
         </button>
       </div>
@@ -93,6 +141,7 @@ const getRelativeDate = (date: Date) => {
           <article
             class="post-card group flex h-full min-h-[220px] flex-col rounded-2xl border border-neutral-200 bg-neutral-50 p-6 transition-all duration-500 hover:bg-neutral-100 hover:shadow-xl dark:border-white/10 dark:bg-white/5 dark:hover:bg-[#151515] hover:-translate-y-1 dark:hover:border-albero/30"
             data-category={post.data.category}
+            style={`view-transition-name: post-${post.slug.replace(/[^a-zA-Z0-9]/g, '-')};`}
           >
             <div class="mb-4 flex items-center justify-between">
               <span class="text-albero rounded-full bg-black/5 px-3 py-1 text-xs font-bold dark:bg-white/10">
@@ -112,9 +161,9 @@ const getRelativeDate = (date: Date) => {
               </a>
             </h2>
 
-            <div class="grid grid-rows-[0fr] opacity-0 transition-all duration-500 ease-in-out group-hover:grid-rows-[1fr] group-hover:mt-3 group-hover:opacity-100">
+            <div class="grid grid-rows-[0fr] opacity-0 transition-all duration-500 ease-in-out group-hover:mt-3 group-hover:grid-rows-[1fr] group-hover:opacity-100">
               <div class="overflow-hidden">
-                <p class="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400 line-clamp-2">
+                <p class="line-clamp-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                   {post.data.description}
                 </p>
               </div>
@@ -147,7 +196,7 @@ const getRelativeDate = (date: Date) => {
     <div class="mt-12 flex justify-center">
       <button
         id="btn-load-more"
-        class="group flex items-center justify-center rounded-full bg-neutral-900 px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-albero hover:text-black dark:bg-white dark:text-black dark:hover:bg-albero"
+        class="group hover:bg-albero dark:hover:bg-albero flex items-center justify-center rounded-full bg-neutral-900 px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:scale-105 hover:text-black dark:bg-white dark:text-black"
         style="display: none;"
       >
         Cargar más artículos
@@ -157,7 +206,11 @@ const getRelativeDate = (date: Date) => {
           viewBox="0 0 24 24"
           stroke="currentColor"
         >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 9l-7 7-7-7"></path>
         </svg>
       </button>
     </div>
@@ -195,23 +248,24 @@ const getRelativeDate = (date: Date) => {
       "dark:hover:text-albero",
     ];
 
-    let currentFilter = "all";
+    let activeFilters = new Set();
     let currentVisibleCount = 9;
     const btnLoadMore = document.getElementById("btn-load-more");
 
-    const updateVisibility = () => {
+    const updateDOM = () => {
       let visibleCount = 0;
       let matchedCount = 0;
       
       postCards.forEach((card) => {
-        const postCategory = card.getAttribute("data-category");
-        const matchFilter = currentFilter === "all" || currentFilter === postCategory;
+        const postCategory = card.getAttribute("data-category") || "";
+        const matchFilter = activeFilters.size === 0 || activeFilters.has(postCategory);
         
         if (matchFilter) {
           matchedCount++;
           if (visibleCount < currentVisibleCount) {
             (card as HTMLElement).style.display = "flex";
-            (card as HTMLElement).style.animation = "fadeIn 0.5s ease-out forwards";
+            // Remove fadeIn animation so it doesn't conflict with View Transitions
+            (card as HTMLElement).style.animation = "none";
             visibleCount++;
           } else {
             (card as HTMLElement).style.display = "none";
@@ -230,6 +284,15 @@ const getRelativeDate = (date: Date) => {
       }
     };
 
+    const updateVisibility = () => {
+      // Use View Transitions API if supported
+      if ((document as any).startViewTransition) {
+        (document as any).startViewTransition(() => updateDOM());
+      } else {
+        updateDOM();
+      }
+    };
+
     // Inicializar vista
     updateVisibility();
 
@@ -240,18 +303,41 @@ const getRelativeDate = (date: Date) => {
       });
     }
 
+    const btnAll = Array.from(filterBtns).find(b => b.getAttribute("data-filter") === "all");
+
     filterBtns.forEach((btn) => {
       btn.addEventListener("click", () => {
-        filterBtns.forEach((b) => {
-          b.classList.remove(...activeClasses);
-          b.classList.add(...inactiveClasses);
-        });
+        const filter = btn.getAttribute("data-filter") || "all";
 
-        btn.classList.remove(...inactiveClasses);
-        btn.classList.add(...activeClasses);
+        if (filter === "all") {
+          activeFilters.clear();
+          filterBtns.forEach((b) => {
+            b.classList.remove(...activeClasses);
+            b.classList.add(...inactiveClasses);
+          });
+          btn.classList.remove(...inactiveClasses);
+          btn.classList.add(...activeClasses);
+        } else {
+          if (activeFilters.has(filter)) {
+            activeFilters.delete(filter);
+            btn.classList.remove(...activeClasses);
+            btn.classList.add(...inactiveClasses);
+          } else {
+            activeFilters.add(filter);
+            btn.classList.remove(...inactiveClasses);
+            btn.classList.add(...activeClasses);
+          }
+          
+          if (activeFilters.size === 0) {
+            btnAll?.classList.remove(...inactiveClasses);
+            btnAll?.classList.add(...activeClasses);
+          } else {
+            btnAll?.classList.remove(...activeClasses);
+            btnAll?.classList.add(...inactiveClasses);
+          }
+        }
 
-        currentFilter = btn.getAttribute("data-filter") || "all";
-        currentVisibleCount = 9; // Resetear contador al cambiar de filtro
+        currentVisibleCount = 9; // Reset contador
         updateVisibility();
       });
     });
@@ -262,19 +348,37 @@ const getRelativeDate = (date: Date) => {
     const postsGrid = document.getElementById("posts-grid");
 
     if (btnViewGrid && btnViewList && postsGrid) {
-      const gridClasses = ["grid", "grid-cols-1", "gap-8", "md:grid-cols-2", "lg:grid-cols-3"];
+      const gridClasses = [
+        "grid",
+        "grid-cols-1",
+        "gap-8",
+        "md:grid-cols-2",
+        "lg:grid-cols-3",
+      ];
       const listClasses = ["flex", "flex-col", "gap-4"];
-      
-      const activeBtnClasses = ["bg-neutral-200", "text-black", "dark:bg-white/20", "dark:text-white"];
-      const inactiveBtnClasses = ["text-neutral-500", "dark:text-neutral-400", "hover:bg-neutral-100", "hover:text-black", "dark:hover:bg-white/10", "dark:hover:text-white"];
+
+      const activeBtnClasses = [
+        "bg-neutral-200",
+        "text-black",
+        "dark:bg-white/20",
+        "dark:text-white",
+      ];
+      const inactiveBtnClasses = [
+        "text-neutral-500",
+        "dark:text-neutral-400",
+        "hover:bg-neutral-100",
+        "hover:text-black",
+        "dark:hover:bg-white/10",
+        "dark:hover:text-white",
+      ];
 
       btnViewGrid.addEventListener("click", () => {
         postsGrid.classList.remove(...listClasses, "view-list");
         postsGrid.classList.add(...gridClasses, "view-grid");
-        
+
         btnViewGrid.classList.remove(...inactiveBtnClasses);
         btnViewGrid.classList.add(...activeBtnClasses);
-        
+
         btnViewList.classList.remove(...activeBtnClasses);
         btnViewList.classList.add(...inactiveBtnClasses);
       });
@@ -282,10 +386,10 @@ const getRelativeDate = (date: Date) => {
       btnViewList.addEventListener("click", () => {
         postsGrid.classList.remove(...gridClasses, "view-grid");
         postsGrid.classList.add(...listClasses, "view-list");
-        
+
         btnViewList.classList.remove(...inactiveBtnClasses);
         btnViewList.classList.add(...activeBtnClasses);
-        
+
         btnViewGrid.classList.remove(...activeBtnClasses);
         btnViewGrid.classList.add(...inactiveBtnClasses);
       });
