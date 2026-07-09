@@ -78,7 +78,7 @@ const socialImageURL = new URL(image, canonicalURL);
   <div
     id="custom-cursor"
     aria-hidden="true"
-    class="bg-albero pointer-events-none fixed top-0 left-0 z-100 hidden h-3 w-3 rounded-full opacity-0 transition-all duration-300 ease-out group-hover:opacity-100 md:block"
+    class="bg-albero pointer-events-none fixed top-0 left-0 z-100 hidden h-2 w-2 rounded-full opacity-0 transition-all duration-300 ease-out group-hover:opacity-100 md:block"
     style="transform: translate(calc(var(--x) - 50%), calc(var(--y) - 50%));"
   >
   </div>
@@ -121,12 +121,14 @@ const socialImageURL = new URL(image, canonicalURL);
         document.addEventListener("mouseover", (e) => {
           const target = e.target as HTMLElement;
           if (target.closest("a") || target.closest("button")) {
+            customCursor.classList.remove("h-2", "w-2", "bg-albero");
             customCursor.classList.add(
+              "h-8",
+              "w-8",
               "bg-transparent",
               "border",
-              "border-black",
+              "border-albero"
             );
-            customCursor.classList.remove("bg-albero");
           }
         });
 
@@ -134,11 +136,13 @@ const socialImageURL = new URL(image, canonicalURL);
           const target = e.target as HTMLElement;
           if (target.closest("a") || target.closest("button")) {
             customCursor.classList.remove(
+              "h-8",
+              "w-8",
               "bg-transparent",
               "border",
-              "border-albero",
+              "border-albero"
             );
-            customCursor.classList.add("bg-albero");
+            customCursor.classList.add("h-2", "w-2", "bg-albero");
           }
         });
       }
