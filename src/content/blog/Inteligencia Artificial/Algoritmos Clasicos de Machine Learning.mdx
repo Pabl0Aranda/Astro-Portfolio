@@ -49,7 +49,7 @@ En la vida real, los modelos lineales sufren de _overfitting_ (sobreajuste). Par
 
 A pesar de su nombre, es el estándar industrial para la **clasificación binaria**. Transforma la salida de la combinación lineal utilizando la **función sigmoide**, limitando el resultado estrictamente a un rango probabilístico entre 0 y 1.
 
-$$\sigma(z) = \frac{1}{1 + e^{-z}}$$
+$$\sigma(z) = \frac{1}\{1 + e^{-z}\}$$
 
 En lugar del MSE, utiliza la **Entropía Cruzada Binaria (Log Loss)** como función de coste, penalizando fuertemente las predicciones seguras pero incorrectas:
 
