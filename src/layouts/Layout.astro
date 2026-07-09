@@ -16,7 +16,12 @@ interface Props {
 }
 
 // 2. Definimos una imagen por defecto (/og-image.jpg) si no le pasamos ninguna
-const { title, description, image = "/og-image.jpg", structuredData } = Astro.props;
+const {
+  title,
+  description,
+  image = "/og-image.jpg",
+  structuredData,
+} = Astro.props;
 
 // 3. Construimos las URLs absolutas necesarias para el SEO
 const canonicalURL = new URL(Astro.url.pathname, Astro.site || Astro.url);
@@ -48,9 +53,11 @@ const socialImageURL = new URL(image, canonicalURL);
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content={socialImageURL} />
 
-    {structuredData && (
-      <script type="application/ld+json" set:html={structuredData} />
-    )}
+    {
+      structuredData && (
+        <script type="application/ld+json" set:html={structuredData} />
+      )
+    }
 
     <ViewTransitions />
 
@@ -73,132 +80,140 @@ const socialImageURL = new URL(image, canonicalURL);
       document.addEventListener("astro:after-swap", applyTheme);
     </script>
   </head>
-<body
-  class="selection:bg-albero group relative flex min-h-screen flex-col overflow-x-hidden bg-white text-neutral-900 antialiased transition-colors duration-300 selection:text-black dark:bg-black dark:text-white"
->
-  <div
-    id="custom-cursor"
-    aria-hidden="true"
-    class="bg-albero pointer-events-none fixed top-0 left-0 z-100 hidden h-2 w-2 rounded-full opacity-0 transition-all duration-300 ease-out group-hover:opacity-100 md:block"
-    style="transform: translate(calc(var(--x) - 50%), calc(var(--y) - 50%));"
+  <body
+    class="selection:bg-albero group relative flex min-h-screen flex-col overflow-x-hidden bg-white text-neutral-900 antialiased transition-colors duration-300 selection:text-black dark:bg-black dark:text-white"
   >
-  </div>
-
-  <div class="pointer-events-none fixed inset-0 z-[-1]">
     <div
-      class="bg-size:4rem_4rem mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%) absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)]"
+      id="custom-cursor"
+      aria-hidden="true"
+      class="bg-albero pointer-events-none fixed top-0 left-0 z-100 hidden h-2 w-2 rounded-full opacity-0 transition-all duration-300 ease-out group-hover:opacity-100 md:block"
+      style="transform: translate(calc(var(--x) - 50%), calc(var(--y) - 50%));"
     >
     </div>
-    <div
-      class="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-      style="background: radial-gradient(600px circle at var(--x, 50%) var(--y, 50%), rgba(229, 177, 58, 0.15), transparent 40%);"
-    >
+
+    <div class="pointer-events-none fixed inset-0 z-[-1]">
+      <div
+        class="bg-size:4rem_4rem mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%) absolute inset-0 bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)]"
+      >
+      </div>
+      <div
+        class="absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+        style="background: radial-gradient(600px circle at var(--x, 50%) var(--y, 50%), rgba(229, 177, 58, 0.05), transparent 40%);"
+      >
+      </div>
     </div>
-  </div>
 
-  <Search />
-  
-  <Header />
+    <Search />
 
-  <CommandPalette />
+    <Header />
 
-  <main transition:animate="slide" class="relative z-10 mx-auto w-full max-w-5xl grow px-6">
-    <slot />
-  </main>
+    <CommandPalette />
 
-  <BackToTop />
-  <script>
-    import VanillaTilt from "vanilla-tilt";
+    <main
+      transition:animate="slide"
+      class="relative z-10 mx-auto w-full max-w-5xl grow px-6"
+    >
+      <slot />
+    </main>
 
-    document.addEventListener("astro:page-load", () => {
-      const body = document.body;
-      const customCursor = document.getElementById("custom-cursor");
+    <BackToTop />
+    <script>
+      import VanillaTilt from "vanilla-tilt";
 
-      window.addEventListener("mousemove", (e) => {
-        requestAnimationFrame(() => {
-          body.style.setProperty("--x", `${e.clientX}px`);
-          body.style.setProperty("--y", `${e.clientY}px`);
+      document.addEventListener("astro:page-load", () => {
+        const body = document.body;
+        const customCursor = document.getElementById("custom-cursor");
+
+        window.addEventListener("mousemove", (e) => {
+          requestAnimationFrame(() => {
+            body.style.setProperty("--x", `${e.clientX}px`);
+            body.style.setProperty("--y", `${e.clientY}px`);
+          });
         });
+
+        if (customCursor) {
+          document.addEventListener("mouseover", (e) => {
+            const target = e.target as HTMLElement;
+            if (target.closest("a") || target.closest("button")) {
+              customCursor.classList.remove("h-2", "w-2", "bg-albero");
+              customCursor.classList.add(
+                "h-8",
+                "w-8",
+                "bg-transparent",
+                "border",
+                "border-albero",
+              );
+            }
+          });
+
+          document.addEventListener("mouseout", (e) => {
+            const target = e.target as HTMLElement;
+            if (target.closest("a") || target.closest("button")) {
+              customCursor.classList.remove(
+                "h-8",
+                "w-8",
+                "bg-transparent",
+                "border",
+                "border-albero",
+              );
+              customCursor.classList.add("h-2", "w-2", "bg-albero");
+            }
+          });
+        }
+
+        const observerOptions = {
+          root: null,
+          rootMargin: "0px",
+          threshold: 0.15,
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+          let delay = 0;
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setTimeout(() => {
+                entry.target.classList.add("is-visible");
+              }, delay);
+              delay += 100;
+              observer.unobserve(entry.target);
+            }
+          });
+        }, observerOptions);
+
+        document
+          .querySelectorAll(".reveal-text, .reveal-card")
+          .forEach((el) => {
+            observer.observe(el);
+          });
+
+        // Magnetic Buttons Logic
+        document.querySelectorAll(".magnetic-btn").forEach((btn) => {
+          btn.addEventListener("mousemove", (e) => {
+            const mouseEvent = e as MouseEvent;
+            const rect = btn.getBoundingClientRect();
+            const x = mouseEvent.clientX - rect.left - rect.width / 2;
+            const y = mouseEvent.clientY - rect.top - rect.height / 2;
+            (btn as HTMLElement).style.transform =
+              `translate(${x * 0.2}px, ${y * 0.2}px)`;
+          });
+          btn.addEventListener("mouseleave", () => {
+            (btn as HTMLElement).style.transform = `translate(0px, 0px)`;
+          });
+        });
+
+        // VanillaTilt Initialization
+        const tiltElements = Array.from(
+          document.querySelectorAll(".tilt-card"),
+        ) as HTMLElement[];
+        if (tiltElements.length > 0) {
+          VanillaTilt.init(tiltElements, {
+            max: 5,
+            speed: 400,
+            glare: true,
+            "max-glare": 0.1,
+          });
+        }
       });
-
-      if (customCursor) {
-        document.addEventListener("mouseover", (e) => {
-          const target = e.target as HTMLElement;
-          if (target.closest("a") || target.closest("button")) {
-            customCursor.classList.remove("h-2", "w-2", "bg-albero");
-            customCursor.classList.add(
-              "h-8",
-              "w-8",
-              "bg-transparent",
-              "border",
-              "border-albero"
-            );
-          }
-        });
-
-        document.addEventListener("mouseout", (e) => {
-          const target = e.target as HTMLElement;
-          if (target.closest("a") || target.closest("button")) {
-            customCursor.classList.remove(
-              "h-8",
-              "w-8",
-              "bg-transparent",
-              "border",
-              "border-albero"
-            );
-            customCursor.classList.add("h-2", "w-2", "bg-albero");
-          }
-        });
-      }
-
-      const observerOptions = {
-        root: null,
-        rootMargin: "0px",
-        threshold: 0.15,
-      };
-
-      const observer = new IntersectionObserver((entries, observer) => {
-        let delay = 0;
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setTimeout(() => {
-              entry.target.classList.add("is-visible");
-            }, delay);
-            delay += 100;
-            observer.unobserve(entry.target);
-          }
-        });
-      }, observerOptions);
-
-      document.querySelectorAll(".reveal-text, .reveal-card").forEach((el) => {
-        observer.observe(el);
-      });
-
-      // Magnetic Buttons Logic
-      document.querySelectorAll(".magnetic-btn").forEach((btn) => {
-        btn.addEventListener("mousemove", (e) => {
-          const mouseEvent = e as MouseEvent;
-          const rect = btn.getBoundingClientRect();
-          const x = mouseEvent.clientX - rect.left - rect.width / 2;
-          const y = mouseEvent.clientY - rect.top - rect.height / 2;
-          (btn as HTMLElement).style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
-        });
-        btn.addEventListener("mouseleave", () => {
-          (btn as HTMLElement).style.transform = `translate(0px, 0px)`;
-        });
-      });
-
-      // VanillaTilt Initialization
-      const tiltElements = Array.from(document.querySelectorAll(".tilt-card")) as HTMLElement[];
-      if (tiltElements.length > 0) {
-        VanillaTilt.init(tiltElements, {
-          max: 5,
-          speed: 400,
-          glare: true,
-          "max-glare": 0.1,
-        });
-      }
-    });
-  </script>
-</body>
+    </script>
+  </body>
 </html>
