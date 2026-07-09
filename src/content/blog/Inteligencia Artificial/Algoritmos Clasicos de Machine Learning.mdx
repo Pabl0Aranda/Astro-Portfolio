@@ -39,10 +39,8 @@ Existen dos formas de encontrar los pesos óptimos:
 
 **Regularización (L1/L2)**
 En la vida real, los modelos lineales sufren de _overfitting_ (sobreajuste). Para evitarlo, sumamos una penalización a la función de coste:
-
 - **L2 (Ridge Regression):** Penaliza el cuadrado de los pesos. Previene que ninguna variable domine el modelo y soluciona problemas matemáticos cuando la matriz $X^T X$ no es invertible.
 - **L1 (Lasso Regression):** Penaliza el valor absoluto de los pesos, forzando a que muchos de ellos se vuelvan exactamente cero. Actúa como un selector de características integrado, ideal para ahorrar memoria.
-
 - **Complejidad en Inferencia:** $O(p)$ - Extremadamente rápido y eficiente en memoria RAM (solo guarda un vector de pesos), ideal para sistemas embebidos (Edge AI) o microcontroladores.
 
 ### B. Regresión Logística
