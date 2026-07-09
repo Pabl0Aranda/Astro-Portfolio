@@ -7,73 +7,153 @@ interface Props {
   tech: string;
   link: string;
   class?: string;
-  size?: 'large' | 'medium' | 'wide';
+  size?: "large" | "medium" | "wide";
 }
 
-const { title, description, tech, link, class: className = "", size = 'medium' } = Astro.props;
+const {
+  title,
+  description,
+  tech,
+  link,
+  class: className = "",
+  size = "medium",
+} = Astro.props;
 const lang = getLangFromUrl(Astro.url);
 
 // Split tech stack into array, supporting both commas and bullets
-const techArray = tech.split(/[,•]/).map(t => t.trim()).filter(Boolean);
+const techArray = tech
+  .split(/[,•]/)
+  .map((t) => t.trim())
+  .filter(Boolean);
 
-const isLarge = size === 'large';
+const isLarge = size === "large";
 ---
 
 <a
   href={link}
   target="_blank"
   rel="noopener noreferrer"
-  class={`glow-card group relative block overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-50 p-6 md:p-8 transition-all duration-500 dark:border-white/5 dark:bg-[#151515] hover:border-albero dark:hover:border-albero hover:-translate-y-1 hover:shadow-[0_10px_40px_-10px_rgba(229,177,58,0.2)] dark:hover:shadow-[0_10px_40px_-10px_rgba(229,177,58,0.15)] ${className}`}
+  class={`tilt-card glow-card group relative block overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-50 p-6 md:p-8 transition-all duration-500 dark:border-white/5 dark:bg-[#151515] hover:border-albero dark:hover:border-albero hover:-translate-y-1 hover:shadow-[0_10px_40px_-10px_rgba(229,177,58,0.2)] dark:hover:shadow-[0_10px_40px_-10px_rgba(229,177,58,0.15)] ${className}`}
 >
   <!-- Glow Effect -->
-  <div class="glow-effect absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none z-0" style="background: radial-gradient(600px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(229,177,58,0.12), transparent 40%);"></div>
+  <div
+    class="glow-effect pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+    style="background: radial-gradient(600px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(229,177,58,0.12), transparent 40%);"
+  >
+  </div>
 
   <!-- Subtle background pattern (Dots) -->
-  <div class="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none z-0" style="background-image: radial-gradient(circle at 1px 1px, black 1px, transparent 0); background-size: 24px 24px;"></div>
-  <div class="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none z-0 hidden dark:block" style="background-image: radial-gradient(circle at 1px 1px, white 1px, transparent 0); background-size: 24px 24px;"></div>
+  <div
+    class="pointer-events-none absolute inset-0 z-0 opacity-[0.03] dark:opacity-[0.05]"
+    style="background-image: radial-gradient(circle at 1px 1px, black 1px, transparent 0); background-size: 24px 24px;"
+  >
+  </div>
+  <div
+    class="pointer-events-none absolute inset-0 z-0 hidden opacity-[0.03] dark:block dark:opacity-[0.05]"
+    style="background-image: radial-gradient(circle at 1px 1px, white 1px, transparent 0); background-size: 24px 24px;"
+  >
+  </div>
 
-  <div class="relative z-10 h-full flex flex-col">
-    <div class="flex justify-between items-start mb-4">
-      <h3 class={`font-bold text-neutral-900 transition-colors duration-300 dark:text-white group-hover:text-albero dark:group-hover:text-albero ${isLarge ? 'text-3xl md:text-4xl' : 'text-2xl'}`}>
+  <div class="relative z-10 flex h-full flex-col">
+    <div class="mb-4 flex items-start justify-between">
+      <h3
+        class={`font-bold text-neutral-900 transition-colors duration-300 dark:text-white group-hover:text-albero dark:group-hover:text-albero ${isLarge ? "text-3xl md:text-4xl" : "text-2xl"}`}
+      >
         {title}
       </h3>
-      
-      <div class="rounded-full bg-white dark:bg-white/5 p-2 shadow-sm border border-neutral-100 dark:border-white/10 text-neutral-400 group-hover:text-albero group-hover:bg-albero/10 dark:group-hover:text-albero dark:group-hover:bg-albero/20 transition-all duration-300 group-hover:-translate-y-1 group-hover:translate-x-1 shrink-0 ml-4">
-        <svg aria-hidden="true" class="w-4 h-4 md:w-5 md:h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+
+      <div
+        class="group-hover:text-albero group-hover:bg-albero/10 dark:group-hover:text-albero dark:group-hover:bg-albero/20 ml-4 shrink-0 rounded-full border border-neutral-100 bg-white p-2 text-neutral-400 shadow-sm transition-all duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 dark:border-white/10 dark:bg-white/5"
+      >
+        <svg
+          aria-hidden="true"
+          class="h-4 w-4 md:h-5 md:w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+          ></path>
         </svg>
       </div>
     </div>
 
-    {description && (
-      <p class="mb-6 text-sm md:text-base leading-relaxed text-neutral-600 dark:text-neutral-400 line-clamp-3">
-        {description}
-      </p>
-    )}
+    {
+      description && (
+        <p class="mb-6 line-clamp-3 text-sm leading-relaxed text-neutral-600 md:text-base dark:text-neutral-400">
+          {description}
+        </p>
+      )
+    }
 
     <!-- Tech Badges -->
-    <div class="flex flex-wrap gap-2 mb-8 grow items-start relative z-10">
-      {techArray.map(t => (
-        <span class="px-2.5 py-1 text-[11px] md:text-xs font-semibold rounded-md bg-neutral-200/50 dark:bg-white/10 text-neutral-700 dark:text-neutral-300 border border-black/5 dark:border-white/5 backdrop-blur-md transition-colors duration-300 hover:bg-albero/20 dark:hover:bg-albero/20 hover:text-albero dark:hover:text-albero hover:border-albero/30 cursor-default">
-          {t}
-        </span>
-      ))}
+    <div class="relative z-10 mb-8 flex grow flex-wrap items-start gap-2">
+      {
+        techArray.map((t) => (
+          <span class="hover:bg-albero/20 dark:hover:bg-albero/20 hover:text-albero dark:hover:text-albero hover:border-albero/30 cursor-default rounded-md border border-black/5 bg-neutral-200/50 px-2.5 py-1 text-[11px] font-semibold text-neutral-700 backdrop-blur-md transition-colors duration-300 md:text-xs dark:border-white/5 dark:bg-white/10 dark:text-neutral-300">
+            {t}
+          </span>
+        ))
+      }
     </div>
 
-    {isLarge && (
-      <div class="absolute bottom-10 right-10 opacity-10 dark:opacity-20 pointer-events-none transform rotate-12 transition-all duration-500 group-hover:opacity-30 dark:group-hover:opacity-40 group-hover:rotate-0 group-hover:scale-110">
-        <svg aria-hidden="true" width="120" height="120" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M7 8L3 12L7 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M17 8L21 12L17 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M14 4L10 20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-    )}
+    {
+      isLarge && (
+        <div class="pointer-events-none absolute right-10 bottom-10 rotate-12 transform opacity-10 transition-all duration-500 group-hover:scale-110 group-hover:rotate-0 group-hover:opacity-30 dark:opacity-20 dark:group-hover:opacity-40">
+          <svg
+            aria-hidden="true"
+            width="120"
+            height="120"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M7 8L3 12L7 16"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M17 8L21 12L17 16"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M14 4L10 20"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+      )
+    }
 
-    <span class="mt-auto inline-flex items-center text-sm font-bold text-neutral-900 transition-colors duration-300 dark:text-white group-hover:text-albero dark:group-hover:text-albero w-fit">
+    <span
+      class="group-hover:text-albero dark:group-hover:text-albero mt-auto inline-flex w-fit items-center text-sm font-bold text-neutral-900 transition-colors duration-300 dark:text-white"
+    >
       {lang === "es" ? "Ver proyecto" : "View project"}
-      <svg aria-hidden="true" class="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+      <svg
+        aria-hidden="true"
+        class="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-2"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
       </svg>
     </span>
   </div>
