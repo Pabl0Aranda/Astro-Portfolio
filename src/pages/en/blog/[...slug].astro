@@ -259,6 +259,16 @@ const schema = JSON.stringify({
   .prose-custom {
     @apply space-y-6 text-base leading-relaxed text-neutral-700 dark:text-neutral-300;
   }
+  
+  /* Reglas de paginación para PDF */
+  .prose-custom pre, .prose-custom img, .prose-custom blockquote, .prose-custom ul > li {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .prose-custom h2, .prose-custom h3, .prose-custom h4 {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
   @media (min-width: 768px) {
     .prose-custom {
       @apply text-lg;

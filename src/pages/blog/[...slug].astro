@@ -155,22 +155,38 @@ const lang = getLangFromUrl(Astro.url);
 
       {
         headings && headings.length > 0 && (
-          <details class="group mb-8 rounded-2xl border border-neutral-200 bg-neutral-50 p-5 dark:border-white/10 dark:bg-white/5 xl:hidden">
+          <details class="group mb-8 rounded-2xl border border-neutral-200 bg-neutral-50 p-5 xl:hidden dark:border-white/10 dark:bg-white/5">
             <summary class="flex cursor-pointer list-none items-center justify-between font-bold text-neutral-900 dark:text-white">
               {lang === "es" ? "Índice de Contenidos" : "Table of Contents"}
-              <svg class="h-5 w-5 text-neutral-500 transition-transform group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              <svg
+                class="h-5 w-5 text-neutral-500 transition-transform group-open:rotate-180"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             </summary>
             <div class="mt-4 border-t border-neutral-200 pt-4 dark:border-white/10">
               <ul class="space-y-3 text-sm">
-                {headings.filter((h) => h.depth > 1 && h.depth < 4).map((heading) => (
-                  <li class={`depth-${heading.depth}`}>
-                    <a href={`#${heading.slug}`} class="block text-neutral-600 transition-colors hover:text-albero dark:text-neutral-400 dark:hover:text-albero" style={`padding-left: ${(heading.depth - 2) * 1}rem;`}>
-                      {heading.text}
-                    </a>
-                  </li>
-                ))}
+                {headings
+                  .filter((h) => h.depth > 1 && h.depth < 4)
+                  .map((heading) => (
+                    <li class={`depth-${heading.depth}`}>
+                      <a
+                        href={`#${heading.slug}`}
+                        class="hover:text-albero dark:hover:text-albero block text-neutral-600 transition-colors dark:text-neutral-400"
+                        style={`padding-left: ${(heading.depth - 2) * 1}rem;`}
+                      >
+                        {heading.text}
+                      </a>
+                    </li>
+                  ))}
               </ul>
             </div>
           </details>
@@ -281,6 +297,21 @@ const lang = getLangFromUrl(Astro.url);
 
   .prose-custom {
     @apply space-y-6 text-base leading-relaxed text-neutral-300;
+  }
+
+  /* Reglas de paginación para PDF */
+  .prose-custom pre,
+  .prose-custom img,
+  .prose-custom blockquote,
+  .prose-custom ul > li {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .prose-custom h2,
+  .prose-custom h3,
+  .prose-custom h4 {
+    page-break-after: avoid;
+    break-after: avoid;
   }
   @media (min-width: 768px) {
     .prose-custom {

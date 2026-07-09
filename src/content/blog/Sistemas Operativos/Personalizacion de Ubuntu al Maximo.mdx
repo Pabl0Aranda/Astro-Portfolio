@@ -1,0 +1,246 @@
+---
+title: "Personalización de Ubuntu"
+date: 2026-07-09
+description: "Transforma tu instalación de Ubuntu en un entorno de trabajo extremadamente productivo, estético y personalizado."
+draft: true
+category: "Sistemas Operativos"
+heroImage: "/images/ubuntu-custom.png"
+---
+
+Ubuntu es uno de los sistemas operativos basados en Linux más populares del mundo. Su entorno de escritorio por defecto, GNOME, es robusto, estable y confiable. Sin embargo, para muchos usuarios avanzados, desarrolladores y entusiastas, la experiencia por defecto de GNOME puede resultar algo rígida o visualmente genérica. 
+
+La buena noticia es que Linux está construido sobre la filosofía de la libertad y la flexibilidad. Con las herramientas adecuadas, puedes transformar un entorno básico en una estación de trabajo que no solo luzca espectacular, sino que también potencie tu productividad de manera exponencial. En esta extensa guía (diseñada para leerse con calma y aplicarse paso a paso), exploraremos todas las capas de personalización: desde retoques visuales superficiales hasta profundas modificaciones en el shell y flujos de trabajo en mosaico (*tiling*).
+
+A lo largo de este artículo, utilizaremos comandos de terminal. Si eres nuevo en Linux, no te preocupes; explicaremos qué hace cada comando antes de que lo ejecutes. ¡Comencemos!
+
+---
+
+## 1. Fundamentos
+
+Antes de empezar a instalar temas y extensiones, necesitamos sentar las bases. GNOME, por defecto, oculta muchas de sus opciones avanzadas de configuración para mantener una interfaz limpia. Para desbloquear este potencial, necesitamos dos herramientas fundamentales.
+
+### GNOME Tweaks (Retoques)
+GNOME Tweaks es la navaja suiza de la personalización básica en Ubuntu. Te permite cambiar la tipografía del sistema, gestionar aplicaciones al inicio, modificar el comportamiento de las ventanas y, lo más importante, aplicar temas de terceros.
+
+Abre tu terminal (`Ctrl` + `Alt` + `T`) y ejecuta:
+
+```bash
+sudo apt update
+sudo apt install gnome-tweaks
+```
+
+### Gestor de Extensiones (Extension Manager)
+Anteriormente, la gestión de extensiones de GNOME se hacía a través del navegador web, un proceso propenso a errores. Hoy en día, la comunidad ha creado la aplicación **Extension Manager**, que permite buscar, instalar y gestionar extensiones de GNOME de forma nativa.
+
+```bash
+sudo apt install gnome-shell-extension-manager
+```
+
+Una vez instaladas ambas herramientas, ábrelas y familiarízate con su interfaz. En "Retoques", verás una pestaña de "Apariencia" (Appearance). Aquí es donde ocurrirá la magia más adelante.
+
+---
+
+## 2. Apariencia
+
+El *theming* o tematización es el cambio más radical que puedes hacer en poco tiempo. Cambiar los iconos, el tema de las ventanas (GTK) y el cursor alterará por completo la percepción de tu sistema.
+
+### Temas GTK y Shell
+Para aplicar temas correctamente, primero debemos habilitar la extensión `User Themes` (Temas de usuario). 
+1. Abre **Extension Manager**.
+2. Ve a la pestaña de exploración.
+3. Busca y activa "User Themes".
+
+Ahora, hablemos de temas. Existen repositorios increíbles como [Gnome-Look](https://www.gnome-look.org/). Algunos de los temas más populares y elegantes son **Orchis**, **WhiteSur** (estilo macOS) y **Graphite**.
+
+Para instalar un tema como Orchis, clonaremos su repositorio oficial. Necesitaremos tener `git` instalado:
+
+```bash
+sudo apt install git
+git clone https://github.com/vinceliuice/Orchis-theme.git
+cd Orchis-theme
+./install.sh -t all
+```
+
+El script de instalación automatizará todo el proceso. Una vez terminado, abre **GNOME Tweaks**, ve a "Apariencia" y cambia el tema de "Aplicaciones heredadas" y "Shell" a Orchis.
+
+### Temas de Iconos
+Un buen tema GTK no está completo sin iconos modernos. **Papirus** es, sin lugar a dudas, el estándar de oro en cuanto a cobertura y diseño plano (*flat*). Otro contendiente moderno es **Tela Icon Theme**.
+
+Para instalar Papirus a través de su PPA oficial:
+
+```bash
+sudo add-apt-repository ppa:papirus/papirus
+sudo apt update
+sudo apt install papirus-icon-theme
+```
+
+Para aplicar los iconos, vuelve a **GNOME Tweaks** > Apariencia > Iconos, y selecciona "Papirus-Dark" (o la variante que prefieras). Inmediatamente, tu explorador de archivos y lanzador de aplicaciones lucirán mucho más limpios.
+
+### Personalización del Cursor
+El cursor de Ubuntu es funcional, pero podemos darle un toque más refinado. **Bibata Cursor** es un excelente ejemplo de un diseño de cursor moderno con bordes suaves.
+
+```bash
+wget https://github.com/ful1e5/Bibata_Cursor/releases/download/v2.0.3/Bibata-Modern-Classic.tar.xz
+tar -xf Bibata-Modern-Classic.tar.xz
+sudo mv Bibata-Modern-Classic /usr/share/icons/
+```
+Luego, selecciónalo en GNOME Tweaks.
+
+---
+
+## 3. Extensiones Imprescindibles de GNOME
+
+GNOME es modular. Las extensiones permiten alterar casi cualquier aspecto del comportamiento del escritorio. Abre **Extension Manager** y busca las siguientes recomendaciones:
+
+### Blur My Shell
+Esta es, posiblemente, la extensión visual más impactante. Añade un elegante efecto de desenfoque (*blur*) al estilo cristal esmerilado en la vista de actividades, el panel superior, el *dash* y la pantalla de bloqueo. Transforma un entorno mate en uno profundo y moderno, aprovechando la aceleración de hardware para no penalizar el rendimiento.
+
+### Dash to Dock o Dash to Panel
+El dock lateral por defecto de Ubuntu está bien, pero muchos prefieren un dock inferior flotante (estilo macOS) o un panel inferior completo (estilo Windows).
+- **Dash to Dock**: Extrae el dock de la vista de actividades y lo coloca en tu escritorio de forma permanente o auto-ocultable.
+- **Dash to Panel**: Combina la barra superior y el dock en un solo panel en la parte inferior, ahorrando espacio vertical de pantalla.
+
+### Just Perfection
+GNOME tiene elementos que quizás nunca uses (el menú de accesibilidad, botones específicos, indicadores, etc.). **Just Perfection** te permite ocultar de forma quirúrgica cualquier componente de la interfaz de GNOME que te estorbe, logrando un escritorio minimalista puro.
+
+### GSConnect
+¿Usas Android? GSConnect es una implementación nativa de KDE Connect para GNOME. Te permite sincronizar notificaciones, transferir archivos inalámbricamente, usar tu móvil como ratón/teclado, y controlar la multimedia de tu PC desde el teléfono.
+
+---
+
+## 4. Elevando la Terminal: Zsh y Emuladores Modernos
+
+Si eres desarrollador o administrador de sistemas, vas a pasar gran parte de tu tiempo en la terminal. El bash predeterminado es funcional, pero carece de características modernas de productividad.
+
+### Emuladores de Terminal: Alacritty o Kitty
+La terminal por defecto de GNOME está escrita en tecnologías antiguas. **Alacritty** y **Kitty** son emuladores de terminal modernos renderizados por GPU. Esto significa que la latencia de entrada es casi nula y pueden renderizar grandes cantidades de texto instantáneamente.
+
+Para instalar Alacritty:
+```bash
+sudo add-apt-repository ppa:aslatter/ppa
+sudo apt update
+sudo apt install alacritty
+```
+
+### Zsh y Oh My Zsh
+Z Shell (Zsh) es una alternativa a Bash que soporta plugins, autocompletado avanzado y tematización brutal.
+
+1. **Instalar Zsh:**
+```bash
+sudo apt install zsh
+```
+2. **Establecer Zsh como tu shell por defecto:**
+```bash
+chsh -s $(which zsh)
+```
+*(Deberás cerrar sesión y volver a entrar para que los cambios surtan efecto).*
+
+3. **Instalar Oh My Zsh:** (Un framework comunitario para gestionar Zsh).
+```bash
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+```
+
+### Tematización del Prompt: Powerlevel10k
+Un *prompt* es el texto que aparece en la terminal esperando tus comandos. **Powerlevel10k** es un tema hiper-rápido que muestra información de git, tiempo de ejecución, rutas de directorios, y estados de entorno virtual de Python o Node.js.
+
+```bash
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+```
+Luego, edita tu archivo `~/.zshrc` y cambia la línea `ZSH_THEME` a:
+`ZSH_THEME="powerlevel10k/powerlevel10k"`
+
+Al abrir una nueva terminal, un asistente de configuración visual te guiará para dejar el prompt exactamente a tu gusto.
+
+### Plugins de Productividad para Zsh
+Oh My Zsh brilla gracias a sus plugins. Dos son absolutamente esenciales:
+- **zsh-autosuggestions**: Sugiere comandos basados en tu historial.
+- **zsh-syntax-highlighting**: Colorea los comandos mientras los escribes para saber si son válidos antes de pulsar Enter.
+
+Para instalarlos, clónalos en el directorio de plugins:
+```bash
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+```
+Añádelos a tu `~/.zshrc`:
+`plugins=(git zsh-autosuggestions zsh-syntax-highlighting)`
+
+---
+
+## 5. Tiling Window Management: Control Absoluto
+
+La gestión manual de ventanas (arrastrar y redimensionar con el ratón) es ineficiente en grandes monitores modernos. El *Tiling* (mosaico) organiza las ventanas automáticamente ocupando todo el espacio disponible sin solaparse.
+
+Aunque existen entornos puros de tiling (como i3wm, Sway o Hyprland), aprenderlos requiere semanas. Podemos tener lo mejor de ambos mundos integrando extensiones de tiling directamente en GNOME.
+
+### Forge o Pop Shell
+Existen dos grandes contendientes para añadir tiling a GNOME:
+1. **Forge**: Disponible en el Extension Manager. Es moderno, se actualiza rápido con las nuevas versiones de GNOME y es muy fácil de configurar.
+2. **Pop Shell**: Desarrollado por System76. Es extremadamente maduro, incluye navegación visual por el teclado y es increíblemente estable.
+
+Para instalar Pop Shell en Ubuntu:
+```bash
+sudo apt install nodejs npm
+git clone https://github.com/pop-os/shell.git
+cd shell
+make local-install
+```
+
+Una vez activo, cada vez que abras una nueva ventana (por ejemplo, una terminal), esta ocupará automáticamente la mitad de la pantalla de la ventana actual. Puedes moverte entre ellas, redimensionarlas y cambiar de espacios de trabajo usando atajos de teclado (usualmente la tecla `Super/Windows` + flechas).
+
+El tiling transforma tu flujo de trabajo. Una vez que tu memoria muscular se acostumbra a manipular decenas de ventanas sin tocar el ratón, la ganancia de productividad es inmensa.
+
+---
+
+## 6. Personalizaciones Avanzadas (El Toque Hacker)
+
+Si quieres llevar el aspecto de tu sistema a un nivel donde parezca sacado de una película ciberpunk, hay algunas herramientas clásicas en la cultura Linux que no pueden faltar.
+
+### Fastfetch (El sucesor de Neofetch)
+Neofetch ha sido abandonado recientemente. Su sucesor espiritual y en rendimiento es **Fastfetch**, escrito en C. Es la herramienta responsable de mostrar el logo de tu sistema operativo junto con las especificaciones de tu hardware en la terminal.
+
+```bash
+sudo add-apt-repository ppa:zhangsongcui3371/fastfetch
+sudo apt update
+sudo apt install fastfetch
+```
+Para que se ejecute cada vez que abres una terminal, añade la palabra `fastfetch` al final de tu archivo `~/.zshrc`.
+
+### Conky: Telemetría en el Escritorio
+Conky es un monitor del sistema ligero que renderiza texto, gráficos de uso de CPU, RAM, red, temperaturas e incluso widgets de reloj directamente sobre el fondo de tu escritorio.
+
+```bash
+sudo apt install conky-all
+```
+Conky se configura mediante archivos `.conkyrc`. Puedes encontrar miles de temas (desde estilos minimalistas de reloj hasta paneles de control estilo nave espacial) en DeviantArt o GitHub. Uno muy recomendado para empezar es **Conky Manager**, una interfaz gráfica que te permite aplicar temas descargados con un solo clic.
+
+---
+
+## 7. Tematización de GRUB
+La pantalla de inicio de GRUB (el gestor de arranque que aparece si tienes un sistema de arranque dual con Windows) suele ser una pantalla negra aburrida. 
+
+Temas como **Vinceliuice's Grub Themes** ofrecen menús oscuros con iconos modernos de los sistemas operativos.
+
+```bash
+git clone https://github.com/vinceliuice/grub2-themes.git
+cd grub2-themes
+sudo ./install.sh -t vimix
+```
+La próxima vez que arranques tu PC, serás recibido por una interfaz elegante antes incluso de que cargue Ubuntu.
+
+---
+
+## Conclusión y Consejos de Estabilidad
+
+Has transformado un Ubuntu estándar en una máquina altamente productiva, estética y optimizada para desarrolladores. Sin embargo, "un gran poder conlleva una gran responsabilidad".
+
+**Regla de oro de la personalización:**
+Cada extensión de GNOME que instalas inyecta código JavaScript directamente en el proceso principal del compositor de ventanas. Si instalas decenas de extensiones no actualizadas, podrías experimentar fugas de memoria (memory leaks) o caídas del entorno gráfico.
+
+- Mantén tus extensiones al mínimo imprescindible.
+- Desactiva extensiones problemáticas antes de realizar saltos grandes de versión del sistema operativo (por ejemplo, al actualizar de Ubuntu 22.04 a 24.04).
+- Realiza copias de seguridad de tus archivos de configuración (`.zshrc`, `.config/alacritty`) subiéndolos a un repositorio git privado (los llamados *dotfiles*).
+
+Linux es tuyo. No hay muros ni restricciones. Experimenta, rompe cosas, aprende a arreglarlas y disfruta creando un sistema operativo que sea verdaderamente y únicamente **tuyo**.
+
+*Happy Hacking!*
