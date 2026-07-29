@@ -33,12 +33,12 @@ const isLarge = size === "large";
   href={link}
   target="_blank"
   rel="noopener noreferrer"
-  class={`tilt-card glow-card group relative block overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-50 p-6 md:p-8 transition-all duration-500 dark:border-white/5 dark:bg-[#151515] hover:border-albero dark:hover:border-albero hover:-translate-y-1 hover:shadow-[0_10px_40px_-10px_rgba(229,177,58,0.2)] dark:hover:shadow-[0_10px_40px_-10px_rgba(229,177,58,0.15)] ${className}`}
+  class={`tilt-card glow-card group relative block overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-50 p-6 md:p-8 transition-colors transition-shadow duration-500 will-change-transform dark:border-white/5 dark:bg-[#151515] hover:border-albero dark:hover:border-albero hover:shadow-[0_10px_40px_-10px_rgba(229,177,58,0.2)] dark:hover:shadow-[0_10px_40px_-10px_rgba(229,177,58,0.15)] ${className}`}
 >
   <!-- Glow Effect -->
   <div
-    class="glow-effect pointer-events-none absolute inset-0 z-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-    style="background: radial-gradient(600px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(229,177,58,0.12), transparent 40%);"
+    class="glow-effect pointer-events-none absolute left-0 top-0 z-0 w-[1200px] h-[1200px] -mt-[600px] -ml-[600px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+    style="background: radial-gradient(circle, rgba(229,177,58,0.12) 0%, transparent 50%); transform: translate(var(--mouse-x, 0), var(--mouse-y, 0)); will-change: transform;"
   >
   </div>
 
@@ -94,7 +94,7 @@ const isLarge = size === "large";
     <div class="relative z-10 mb-8 flex grow flex-wrap items-start gap-2">
       {
         techArray.map((t) => (
-          <span class="hover:bg-albero/20 dark:hover:bg-albero/20 hover:text-albero dark:hover:text-albero hover:border-albero/30 cursor-default rounded-md border border-black/5 bg-neutral-200/50 px-2.5 py-1 text-[11px] font-semibold text-neutral-700 backdrop-blur-md transition-colors duration-300 md:text-xs dark:border-white/5 dark:bg-white/10 dark:text-neutral-300">
+          <span class="hover:bg-albero/20 dark:hover:bg-albero/20 hover:text-albero dark:hover:text-albero hover:border-albero/30 cursor-default rounded-md border border-black/5 bg-neutral-200/50 px-2.5 py-1 text-[11px] font-semibold text-neutral-700 transition-colors duration-300 md:text-xs dark:border-white/5 dark:bg-white/10 dark:text-neutral-300">
             {t}
           </span>
         ))
@@ -162,12 +162,16 @@ const isLarge = size === "large";
 <script>
   document.addEventListener("astro:page-load", () => {
     document.querySelectorAll(".glow-card").forEach((card) => {
+      let rafId: number | null = null;
       (card as HTMLElement).onmousemove = (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        (card as HTMLElement).style.setProperty("--mouse-x", `${x}px`);
-        (card as HTMLElement).style.setProperty("--mouse-y", `${y}px`);
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(() => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          (card as HTMLElement).style.setProperty("--mouse-x", `${x}px`);
+          (card as HTMLElement).style.setProperty("--mouse-y", `${y}px`);
+        });
       };
     });
   });
