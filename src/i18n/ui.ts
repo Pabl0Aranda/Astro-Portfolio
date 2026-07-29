@@ -29,8 +29,12 @@ export const ui = {
     "education.degree_date": "Universidad Pablo de Olavide • 2022 - Actualidad",
     "education.degree_desc":
       "Diseño de Software, APIs, Algoritmia, Machine Learning, Análisis de Datos y Gestión de Sistemas y BBDD.",
+
     "education.ml_title": "Formación sobre ML & DL",
-    "education.ml_date": "Kaggle y Coursera • 2026",
+    "education.ml_date": "Kaggle y Coursera • 2025",
+
+    "education.Java_backend_title" : "Spring Certified Professional",
+    "education.Java_backend_date" : "En proceso",
 
     "experience.title": "Experiencia",
     "experience.job1_title": "Socorrista",
@@ -93,8 +97,12 @@ export const ui = {
     "education.degree_date": "Universidad Pablo de Olavide • 2022 - Present",
     "education.degree_desc":
       "Software Design, APIs, Algorithms, Machine Learning, Data Analysis, and Systems & Database Management.",
+
     "education.ml_title": "Machine & Deep Learning Training",
-    "education.ml_date": "Kaggle and Coursera • 2026",
+    "education.ml_date": "Kaggle and Coursera • 2025",
+    
+    "education.Java_backend_title" : "Spring Certified Professional",
+    "education.Java_backend_date" : "In process",
 
     "experience.title": "Experience",
     "experience.job1_title": "Lifeguard",
