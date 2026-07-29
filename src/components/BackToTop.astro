@@ -1,0 +1,43 @@
+---
+---
+
+<button
+  id="back-to-top"
+  class="pointer-events-none fixed bottom-6 right-6 z-50 translate-y-10 rounded-full bg-neutral-900 p-3 text-white opacity-0 transition-all duration-300 hover:scale-110 hover:bg-albero hover:text-black dark:bg-white dark:text-black dark:hover:bg-albero"
+  aria-label="Volver arriba"
+>
+  <svg
+    class="h-6 w-6"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="M5 10l7-7m0 0l7 7m-7-7v18"
+    ></path>
+  </svg>
+</button>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const btn = document.getElementById("back-to-top");
+    if (!btn) return;
+
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > 300) {
+        btn.classList.remove("opacity-0", "translate-y-10", "pointer-events-none");
+        btn.classList.add("opacity-100", "translate-y-0", "pointer-events-auto");
+      } else {
+        btn.classList.add("opacity-0", "translate-y-10", "pointer-events-none");
+        btn.classList.remove("opacity-100", "translate-y-0", "pointer-events-auto");
+      }
+    });
+
+    btn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  });
+</script>

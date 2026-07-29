@@ -4,7 +4,7 @@ date: 2026-07-08
 description: "Análisis de los algoritmos de Machine Learning más utilizados, su complejidad computacional, optimización matemática y arquitectura de despliegue."
 draft: false
 category: "Inteligencia Artificial"
-heroImage: ""
+heroImage: "/images/Algoritmos-ML.png"
 ---
 
 import KMeansVisualizer from "../../../components/interactive/KMeansVisualizer.astro";
@@ -39,17 +39,15 @@ Existen dos formas de encontrar los pesos óptimos:
 
 **Regularización (L1/L2)**
 En la vida real, los modelos lineales sufren de _overfitting_ (sobreajuste). Para evitarlo, sumamos una penalización a la función de coste:
-
 - **L2 (Ridge Regression):** Penaliza el cuadrado de los pesos. Previene que ninguna variable domine el modelo y soluciona problemas matemáticos cuando la matriz $X^T X$ no es invertible.
 - **L1 (Lasso Regression):** Penaliza el valor absoluto de los pesos, forzando a que muchos de ellos se vuelvan exactamente cero. Actúa como un selector de características integrado, ideal para ahorrar memoria.
-
 - **Complejidad en Inferencia:** $O(p)$ - Extremadamente rápido y eficiente en memoria RAM (solo guarda un vector de pesos), ideal para sistemas embebidos (Edge AI) o microcontroladores.
 
 ### B. Regresión Logística
 
 A pesar de su nombre, es el estándar industrial para la **clasificación binaria**. Transforma la salida de la combinación lineal utilizando la **función sigmoide**, limitando el resultado estrictamente a un rango probabilístico entre 0 y 1.
 
-$$\sigma(z) = \frac{1}{1 + e^{-z}}$$
+$$\sigma(z) = (1 + e^{-z})^{-1}$$
 
 En lugar del MSE, utiliza la **Entropía Cruzada Binaria (Log Loss)** como función de coste, penalizando fuertemente las predicciones seguras pero incorrectas:
 
