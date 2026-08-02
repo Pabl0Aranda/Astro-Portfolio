@@ -1,5 +1,5 @@
 ---
-import { ViewTransitions } from "astro:transitions";
+import { ClientRouter } from "astro:transitions";
 import "../styles/global.css";
 import Header from "../components/Header.astro";
 import CommandPalette from "../components/CommandPalette.astro";
@@ -83,7 +83,7 @@ const gtmId = import.meta.env.PUBLIC_GTM_ID;
       )
     }
 
-    <ViewTransitions />
+    <ClientRouter />
 
     <script is:inline>
       const applyTheme = () => {
