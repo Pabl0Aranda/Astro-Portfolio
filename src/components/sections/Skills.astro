@@ -239,14 +239,14 @@ const categories = [
   class="border-t border-neutral-200 py-20 dark:border-white/10"
 >
   <div
-    class="mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-center"
+    class="relative z-50 mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-center"
   >
     <h2 class="reveal-text text-3xl font-bold text-neutral-900 dark:text-white">
       {t("skills.title")}
     </h2>
 
     {/* Dropdown Custom Estilizado */}
-    <div class="relative w-full md:w-72" id="custom-skills-dropdown">
+    <div class="relative w-full md:w-72 z-50" id="custom-skills-dropdown">
       <button
         type="button"
         id="dropdown-toggle"
@@ -277,7 +277,7 @@ const categories = [
       {/* Menu Desplegable Flotante */}
       <ul
         id="dropdown-menu"
-        class="invisible absolute z-30 mt-2 w-full origin-top-right scale-95 rounded-2xl border border-neutral-200 bg-white/95 p-2 opacity-0 shadow-xl backdrop-blur-md transition-all duration-200 dark:border-white/10 dark:bg-neutral-900/95"
+        class="invisible absolute z-50 mt-2 w-full origin-top-right scale-95 rounded-2xl border border-neutral-200 bg-white/95 p-2 opacity-0 shadow-xl backdrop-blur-md transition-all duration-200 dark:border-white/10 dark:bg-neutral-900/95"
       >
         {
           categories.map((cat) => (
@@ -296,7 +296,7 @@ const categories = [
     </div>
   </div>
 
-  <div id="skills-container" class="flex flex-col gap-10">
+  <div id="skills-container" class="relative z-10 flex flex-col gap-10">
     {
       categories
         .filter((c) => c.id !== "all")
