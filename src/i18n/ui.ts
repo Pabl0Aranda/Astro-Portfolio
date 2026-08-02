@@ -33,8 +33,8 @@ export const ui = {
     "education.ml_title": "Formación sobre ML & DL",
     "education.ml_date": "Kaggle y Coursera • 2025",
 
-    "education.Java_backend_title" : "Spring Certified Professional",
-    "education.Java_backend_date" : "En proceso",
+    "education.Java_backend_title": "Spring Certified Professional",
+    "education.Java_backend_date": "En proceso",
 
     "experience.title": "Experiencia",
     "experience.job1_title": "Socorrista",
@@ -100,9 +100,9 @@ export const ui = {
 
     "education.ml_title": "Machine & Deep Learning Training",
     "education.ml_date": "Kaggle and Coursera • 2025",
-    
-    "education.Java_backend_title" : "Spring Certified Professional",
-    "education.Java_backend_date" : "In process",
+
+    "education.Java_backend_title": "Spring Certified Professional",
+    "education.Java_backend_date": "In process",
 
     "experience.title": "Experience",
     "experience.job1_title": "Lifeguard",

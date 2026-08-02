@@ -108,14 +108,23 @@ Abre `http://localhost:4321` en tu navegador para ver el resultado en vivo.
 
 ---
 
-## Cómo gestionar el contenido
+## Cómo gestionar el contenido (CMS Híbrido)
 
-Gracias a las colecciones de Astro y MDX, la gestión del contenido es muy sencilla y está completamente separada de la lógica de programación.
+El blog cuenta con un potente **CMS Híbrido**, lo que significa que unifica dos fuentes de datos en la misma lista y páginas de artículos:
+
+1. **Notion Headless CMS (Archivos remotos)**
+   - Escribe artículos cómodamente en una base de datos de Notion.
+   - Cuando marcas el estado como "Publicado", Astro automáticamente extrae el artículo, genera el *slug*, renderiza el Markdown y procesa los encabezados para inyectar una tabla de contenidos.
+   - **No necesitas hacer commits a GitHub** para publicar nuevos artículos remotos.
+
+2. **Astro Content Collections (Archivos locales .mdx)**
+   - Si necesitas interactividad profunda, puedes crear un archivo `.mdx` local en `src/content/blog/`. Requiere `title`, `date`, `description` y `category`.
+   - **Matemáticas en artículos:** Utiliza `$$` para bloques matemáticos completos o `$` para matemáticas en línea (ej. `$E = mc^2$`). Todo es renderizado velozmente gracias a KaTeX.
+   - **Interactividad (React / Vanilla):** Aprovechando MDX, puedes importar componentes interactivos y usarlos directamente en el cuerpo del post para demos o gráficos explicativos.
+
+Ambas fuentes se procesan, validan y fusionan automáticamente en tiempo de compilación.
 
 - **Añadir un Proyecto:** Crea un archivo `.md` en `src/content/proyectos/` rellenando su frontmatter con los campos obligatorios (`title`, `tech`, `link`, etc).
-- **Publicar en el Blog:** Crea un archivo `.md` o `.mdx` en `src/content/blog/`. Requiere `title`, `date`, `description` y `heroImage`.
-  - **Matemáticas en artículos:** Utiliza `$$` para bloques matemáticos completos o `$` para matemáticas en línea (ej. `$E = mc^2$`). Todo es renderizado velozmente gracias a KaTeX.
-  - **Interactividad:** Aprovechando MDX, puedes importar componentes React, Vanilla o Astro y usarlos directamente en el cuerpo del post para demos o gráficos explicativos.
 
 ---
 

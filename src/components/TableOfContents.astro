@@ -8,8 +8,12 @@ const { headings, lang = "es" } = Astro.props;
 const tocTitle = lang === "es" ? "En esta página" : "On this page";
 ---
 
-<nav class="toc-container hidden xl:block sticky top-32 max-h-[calc(100vh-8rem)] overflow-y-auto pl-8 w-64 shrink-0 border-l border-neutral-200 dark:border-white/10 print:hidden">
-  <h2 class="text-sm font-bold uppercase tracking-wider text-neutral-900 dark:text-white mb-4">
+<nav
+  class="toc-container sticky top-32 hidden max-h-[calc(100vh-8rem)] w-64 shrink-0 overflow-y-auto border-l border-neutral-200 pl-8 xl:block dark:border-white/10 print:hidden"
+>
+  <h2
+    class="mb-4 text-sm font-bold tracking-wider text-neutral-900 uppercase dark:text-white"
+  >
     {tocTitle}
   </h2>
   <ul class="space-y-3 text-sm">
@@ -20,7 +24,7 @@ const tocTitle = lang === "es" ? "En esta página" : "On this page";
           <li class={`heading-link depth-${heading.depth}`}>
             <a
               href={`#${heading.slug}`}
-              class="block text-neutral-500 hover:text-albero dark:text-neutral-400 dark:hover:text-albero transition-colors duration-200"
+              class="hover:text-albero dark:hover:text-albero block text-neutral-500 transition-colors duration-200 dark:text-neutral-400"
               style={`padding-left: ${(heading.depth - 2) * 1}rem;`}
             >
               {heading.text}
@@ -41,9 +45,9 @@ const tocTitle = lang === "es" ? "En esta página" : "On this page";
     background: transparent;
   }
   .toc-container::-webkit-scrollbar-thumb {
-    @apply bg-neutral-300 dark:bg-white/20 rounded-full;
+    @apply rounded-full bg-neutral-300 dark:bg-white/20;
   }
-  
+
   .toc-container a.active {
     @apply text-albero font-bold;
   }
@@ -62,14 +66,16 @@ const tocTitle = lang === "es" ? "En esta página" : "On this page";
             document.querySelectorAll(".toc-container a").forEach((a) => {
               a.classList.remove("active");
             });
-            const activeLink = document.querySelector(`.toc-container a[href="#${id}"]`);
+            const activeLink = document.querySelector(
+              `.toc-container a[href="#${id}"]`,
+            );
             if (activeLink) {
               activeLink.classList.add("active");
             }
           }
         });
       },
-      { rootMargin: "-100px 0px -66% 0px" }
+      { rootMargin: "-100px 0px -66% 0px" },
     );
 
     headings.forEach((section) => {

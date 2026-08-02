@@ -15,16 +15,18 @@ const sortedPosts = allPosts.sort(
 const categories = [...new Set(sortedPosts.map((post) => post.data.category))];
 
 const getRelativeDate = (date: Date) => {
-  const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+  const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
   const daysDifference = Math.round(
-    (date.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+    (date.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24),
   );
   if (Math.abs(daysDifference) > 30) {
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric', month: 'short', day: 'numeric'
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   }
-  return rtf.format(daysDifference, 'day');
+  return rtf.format(daysDifference, "day");
 };
 ---
 
@@ -71,14 +73,26 @@ const getRelativeDate = (date: Date) => {
         }
       </div>
 
-      <div class="flex items-center gap-1 rounded-full border border-neutral-200 p-1 dark:border-white/10">
+      <div
+        class="flex items-center gap-1 rounded-full border border-neutral-200 p-1 dark:border-white/10"
+      >
         <button
           id="btn-view-grid"
           class="rounded-full bg-neutral-200 p-2 text-black transition-colors dark:bg-white/20 dark:text-white"
           title={lang === "es" ? "Vista de cuadrícula" : "Grid view"}
         >
-          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+          <svg
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+            ></path>
           </svg>
         </button>
         <button
@@ -86,8 +100,17 @@ const getRelativeDate = (date: Date) => {
           class="rounded-full p-2 text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-black dark:text-neutral-400 dark:hover:bg-white/10 dark:hover:text-white"
           title={lang === "es" ? "Vista de lista" : "List view"}
         >
-          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          <svg
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 12h16M4 18h16"></path>
           </svg>
         </button>
       </div>
@@ -100,7 +123,7 @@ const getRelativeDate = (date: Date) => {
       {
         sortedPosts.map((post) => (
           <article
-            class="post-card group flex h-full min-h-[220px] flex-col rounded-2xl border border-neutral-200 bg-neutral-50 p-6 transition-all duration-500 hover:bg-neutral-100 hover:shadow-xl dark:border-white/10 dark:bg-white/5 dark:hover:bg-[#151515] hover:-translate-y-1 dark:hover:border-albero/30"
+            class="post-card group dark:hover:border-albero/30 flex h-full min-h-[220px] flex-col rounded-2xl border border-neutral-200 bg-neutral-50 p-6 transition-all duration-500 hover:-translate-y-1 hover:bg-neutral-100 hover:shadow-xl dark:border-white/10 dark:bg-white/5 dark:hover:bg-[#151515]"
             data-category={post.data.category}
           >
             <div class="mb-4 flex items-center justify-between">
@@ -121,9 +144,9 @@ const getRelativeDate = (date: Date) => {
               </a>
             </h2>
 
-            <div class="grid grid-rows-[0fr] opacity-0 transition-all duration-500 ease-in-out group-hover:grid-rows-[1fr] group-hover:mt-3 group-hover:opacity-100">
+            <div class="grid grid-rows-[0fr] opacity-0 transition-all duration-500 ease-in-out group-hover:mt-3 group-hover:grid-rows-[1fr] group-hover:opacity-100">
               <div class="overflow-hidden">
-                <p class="text-sm leading-relaxed text-neutral-600 dark:text-neutral-400 line-clamp-2">
+                <p class="line-clamp-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
                   {post.data.description}
                 </p>
               </div>
@@ -158,7 +181,7 @@ const getRelativeDate = (date: Date) => {
     <div class="mt-12 flex justify-center">
       <button
         id="btn-load-more"
-        class="group flex items-center justify-center rounded-full bg-neutral-900 px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-albero hover:text-black dark:bg-white dark:text-black dark:hover:bg-albero"
+        class="group hover:bg-albero dark:hover:bg-albero flex items-center justify-center rounded-full bg-neutral-900 px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:scale-105 hover:text-black dark:bg-white dark:text-black"
         style="display: none;"
       >
         {lang === "es" ? "Cargar más artículos" : "Load more articles"}
@@ -168,7 +191,11 @@ const getRelativeDate = (date: Date) => {
           viewBox="0 0 24 24"
           stroke="currentColor"
         >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 9l-7 7-7-7"></path>
         </svg>
       </button>
     </div>
@@ -212,16 +239,18 @@ const getRelativeDate = (date: Date) => {
     const updateVisibility = () => {
       let visibleCount = 0;
       let matchedCount = 0;
-      
+
       postCards.forEach((card) => {
         const postCategory = card.getAttribute("data-category");
-        const matchFilter = currentFilter === "all" || currentFilter === postCategory;
-        
+        const matchFilter =
+          currentFilter === "all" || currentFilter === postCategory;
+
         if (matchFilter) {
           matchedCount++;
           if (visibleCount < currentVisibleCount) {
             (card as HTMLElement).style.display = "flex";
-            (card as HTMLElement).style.animation = "fadeIn 0.5s ease-out forwards";
+            (card as HTMLElement).style.animation =
+              "fadeIn 0.5s ease-out forwards";
             visibleCount++;
           } else {
             (card as HTMLElement).style.display = "none";
@@ -230,7 +259,7 @@ const getRelativeDate = (date: Date) => {
           (card as HTMLElement).style.display = "none";
         }
       });
-      
+
       if (btnLoadMore) {
         if (matchedCount > currentVisibleCount) {
           btnLoadMore.style.display = "flex";
@@ -272,19 +301,37 @@ const getRelativeDate = (date: Date) => {
     const postsGrid = document.getElementById("posts-grid");
 
     if (btnViewGrid && btnViewList && postsGrid) {
-      const gridClasses = ["grid", "grid-cols-1", "gap-8", "md:grid-cols-2", "lg:grid-cols-3"];
+      const gridClasses = [
+        "grid",
+        "grid-cols-1",
+        "gap-8",
+        "md:grid-cols-2",
+        "lg:grid-cols-3",
+      ];
       const listClasses = ["flex", "flex-col", "gap-4"];
-      
-      const activeBtnClasses = ["bg-neutral-200", "text-black", "dark:bg-white/20", "dark:text-white"];
-      const inactiveBtnClasses = ["text-neutral-500", "dark:text-neutral-400", "hover:bg-neutral-100", "hover:text-black", "dark:hover:bg-white/10", "dark:hover:text-white"];
+
+      const activeBtnClasses = [
+        "bg-neutral-200",
+        "text-black",
+        "dark:bg-white/20",
+        "dark:text-white",
+      ];
+      const inactiveBtnClasses = [
+        "text-neutral-500",
+        "dark:text-neutral-400",
+        "hover:bg-neutral-100",
+        "hover:text-black",
+        "dark:hover:bg-white/10",
+        "dark:hover:text-white",
+      ];
 
       btnViewGrid.addEventListener("click", () => {
         postsGrid.classList.remove(...listClasses, "view-list");
         postsGrid.classList.add(...gridClasses, "view-grid");
-        
+
         btnViewGrid.classList.remove(...inactiveBtnClasses);
         btnViewGrid.classList.add(...activeBtnClasses);
-        
+
         btnViewList.classList.remove(...activeBtnClasses);
         btnViewList.classList.add(...inactiveBtnClasses);
       });
@@ -292,10 +339,10 @@ const getRelativeDate = (date: Date) => {
       btnViewList.addEventListener("click", () => {
         postsGrid.classList.remove(...gridClasses, "view-grid");
         postsGrid.classList.add(...listClasses, "view-list");
-        
+
         btnViewList.classList.remove(...inactiveBtnClasses);
         btnViewList.classList.add(...activeBtnClasses);
-        
+
         btnViewGrid.classList.remove(...activeBtnClasses);
         btnViewGrid.classList.add(...inactiveBtnClasses);
       });

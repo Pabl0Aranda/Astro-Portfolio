@@ -36,6 +36,6 @@ Gracias a la estandarización mediante contenedores, el despliegue del proyecto 
 
 ## Conclusión
 
-El desarrollo de este Sistema de Gestión de Aprendizaje demostró la inmensa ventaja de adoptar infraestructura como código (IaC) desde el inicio del ciclo de vida del software. La containerización estricta con Docker no solo eliminó el clásico problema de dependencias rotas entre entornos, sino que proporcionó una arquitectura orquestada y predecible donde Nginx, Gunicorn y PostgreSQL operan en total simbiosis. 
+El desarrollo de este Sistema de Gestión de Aprendizaje demostró la inmensa ventaja de adoptar infraestructura como código (IaC) desde el inicio del ciclo de vida del software. La containerización estricta con Docker no solo eliminó el clásico problema de dependencias rotas entre entornos, sino que proporcionó una arquitectura orquestada y predecible donde Nginx, Gunicorn y PostgreSQL operan en total simbiosis.
 
 Esta separación de responsabilidades, sumada a la solidez de Django para la lógica de negocio y Django REST Framework para la exposición de datos, da como resultado un sistema escalable, altamente resiliente y preparado para futuras integraciones de terceros.

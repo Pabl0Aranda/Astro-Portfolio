@@ -4,44 +4,131 @@ import Layout from "../../layouts/Layout.astro";
 import { getLangFromUrl } from "../../i18n/ui";
 import TableOfContents from "../../components/TableOfContents.astro";
 import ShareButtons from "../../components/ShareButtons.astro";
+import {
+  getPublishedPosts,
+  getPostContent,
+  type UnifiedPost,
+} from "../../utils/notion";
+import { marked } from "marked";
+import GithubSlugger from "github-slugger";
 
-// Generamos las rutas dinámicas para cada post
+// Generamos las rutas dinámicas combinando Notion y MDX local
 export async function getStaticPaths() {
-  const blogEntries = await getCollection("blog");
-  return blogEntries.map((entry) => ({
-    params: { slug: entry.slug },
-    props: { entry },
+  const mdxEntries = await getCollection(
+    "blog",
+    ({ data }) => data.draft !== true,
+  );
+  const notionEntries = await getPublishedPosts();
+
+  const unifiedPosts: UnifiedPost[] = [
+    ...mdxEntries.map((entry) => {
+      // Extraemos solo el nombre del archivo para el slug si está anidado en carpetas
+      const slugParts = entry.slug.split("/");
+      const cleanSlug = slugParts[slugParts.length - 1];
+
+      return {
+        sourceType: "mdx" as const,
+        id: entry.id,
+        slug: cleanSlug,
+        title: entry.data.title,
+        date: entry.data.date,
+        description: entry.data.description,
+        category: entry.data.category,
+        draft: entry.data.draft,
+        heroImage: entry.data.heroImage,
+        series: entry.data.series,
+        orderInSeries: entry.data.orderInSeries,
+        renderMdx: async () => entry.render(),
+      };
+    }),
+    ...notionEntries,
+  ];
+
+  unifiedPosts.sort((a, b) => b.date.valueOf() - a.date.valueOf());
+
+  return unifiedPosts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post, allPosts: unifiedPosts },
   }));
 }
 
-const { entry } = Astro.props;
+const { post, allPosts } = Astro.props;
+const entry = post; // Alias to preserve existing template variable names
 
-const allPosts = await getCollection("blog", ({ data }) => data.draft !== true);
-const sortedPosts = allPosts.sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
-);
-const currentIndex = sortedPosts.findIndex((p) => p.slug === entry.slug);
-const nextPost = currentIndex > 0 ? sortedPosts[currentIndex - 1] : null;
+const currentIndex = allPosts.findIndex((p) => p.slug === entry.slug);
+const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
 const prevPost =
-  currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null;
+  currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
 const suggestedPost = nextPost || prevPost;
 
 // Obtener posts de la misma serie si existe
-const seriesPosts = entry.data.series
+const seriesPosts = entry.series
   ? allPosts
-      .filter((p) => p.data.series === entry.data.series)
-      .sort((a, b) => (a.data.orderInSeries || 0) - (b.data.orderInSeries || 0))
+      .filter((p) => p.series === entry.series)
+      .sort((a, b) => (a.orderInSeries || 0) - (b.orderInSeries || 0))
   : [];
 
-const { Content, remarkPluginFrontmatter, headings } = await entry.render();
+let Content = null;
+let remarkPluginFrontmatter: any = {};
+let headings: any[] = [];
+let htmlContent = "";
+
+if (post.sourceType === "mdx" && post.renderMdx) {
+  const renderResult = await post.renderMdx();
+  Content = renderResult.Content;
+  remarkPluginFrontmatter = renderResult.remarkPluginFrontmatter || {};
+  headings = renderResult.headings || [];
+} else if (post.sourceType === "notion") {
+  const rawMd = await getPostContent(post.id);
+  const slugger = new GithubSlugger();
+
+  // Extraemos headings manualmente del AST de marked para el TableOfContents
+  const tokens = marked.lexer(rawMd);
+  tokens.forEach((token) => {
+    if (token.type === "heading") {
+      const rawText = token.text;
+      // Limpiamos algo de sintaxis markdown/HTML para el TOC
+      const cleanText = rawText
+        .replace(/<[^>]*>?/gm, "")
+        .replace(/[*_~`]/g, "");
+      const slug = slugger.slug(cleanText);
+      headings.push({
+        depth: token.depth,
+        slug: slug,
+        text: cleanText,
+      });
+    }
+  });
+
+  // Reiniciamos slugger para garantizar que los IDs generados coincidan exactamente al renderizar el HTML
+  slugger.reset();
+
+  // Inyectar IDs en los HTML headings generados
+  const renderer = new marked.Renderer();
+  renderer.heading = function (args) {
+    // Soporte para marked v12+ (objeto) o versiones anteriores (posicional)
+    const text = typeof args === "object" ? args.text : arguments[0];
+    const depth = typeof args === "object" ? args.depth : arguments[1];
+
+    // Obtenemos el slug a partir del texto limpio
+    const cleanText = text.replace(/<[^>]*>?/gm, "");
+    const slug = slugger.slug(cleanText);
+
+    return `<h${depth} id="${slug}">${text}</h${depth}>\n`;
+  };
+
+  htmlContent = await marked.parse(rawMd, { renderer });
+  const words = rawMd.trim().split(/\s+/).length;
+  remarkPluginFrontmatter.minutesRead = Math.max(1, Math.ceil(words / 200));
+}
 
 // Generar JSON-LD
 const schema = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  headline: entry.data.title,
-  description: entry.data.description,
-  datePublished: entry.data.date.toISOString(),
+  headline: entry.title,
+  description: entry.description,
+  datePublished: entry.date.toISOString(),
   author: {
     "@type": "Person",
     name: "Pablo Aranda",
@@ -52,8 +139,8 @@ const lang = getLangFromUrl(Astro.url);
 ---
 
 <Layout
-  title={`${entry.data.title} | Pablo.`}
-  description={entry.data.description}
+  title={`${entry.title} | Pablo.`}
+  description={entry.description}
   structuredData={schema}
 >
   <div
@@ -92,10 +179,10 @@ const lang = getLangFromUrl(Astro.url);
 
       <header class="mb-14">
         {
-          entry.data.heroImage && (
+          entry.heroImage && (
             <img
-              src={entry.data.heroImage}
-              alt={`Imagen de cabecera para ${entry.data.title}`}
+              src={entry.heroImage}
+              alt={`Imagen de cabecera para ${entry.title}`}
               class="mb-10 max-h-[400px] w-full rounded-2xl border border-neutral-200 object-cover shadow-xl dark:border-white/10"
             />
           )
@@ -106,11 +193,11 @@ const lang = getLangFromUrl(Astro.url);
             <span
               class="text-albero rounded-full bg-neutral-100 px-3 py-1 text-xs font-bold dark:bg-white/10"
             >
-              {entry.data.category}
+              {entry.category}
             </span>
             <time class="text-sm text-neutral-500">
               {
-                entry.data.date.toLocaleDateString(
+                entry.date.toLocaleDateString(
                   lang === "es" ? "es-ES" : "en-US",
                   {
                     year: "numeric",
@@ -156,15 +243,15 @@ const lang = getLangFromUrl(Astro.url);
         <h1
           class="mb-6 text-3xl leading-tight font-bold tracking-tight text-neutral-900 md:text-5xl dark:text-white"
         >
-          {entry.data.title}
+          {entry.title}
         </h1>
 
         {
           seriesPosts.length > 0 && (
             <div class="mt-8 rounded-xl border border-neutral-200 bg-neutral-50 p-6 dark:border-white/10 dark:bg-white/5">
-              <h3 class="mb-4 text-sm font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+              <h3 class="mb-4 text-sm font-bold tracking-wider text-neutral-500 uppercase dark:text-neutral-400">
                 {lang === "es" ? "Serie:" : "Series:"}{" "}
-                <span class="text-albero">{entry.data.series}</span>
+                <span class="text-albero">{entry.series}</span>
               </h3>
               <ul class="space-y-3">
                 {seriesPosts.map((post, i) => (
@@ -174,14 +261,14 @@ const lang = getLangFromUrl(Astro.url);
                     </span>
                     {post.slug === entry.slug ? (
                       <span class="font-bold text-neutral-900 dark:text-white">
-                        {post.data.title}
+                        {post.title}
                       </span>
                     ) : (
                       <a
                         href={`/blog/${post.slug}`}
-                        class="text-neutral-600 transition-colors hover:text-albero dark:text-neutral-400 dark:hover:text-albero"
+                        class="hover:text-albero dark:hover:text-albero text-neutral-600 transition-colors dark:text-neutral-400"
                       >
-                        {post.data.title}
+                        {post.title}
                       </a>
                     )}
                   </li>
@@ -233,10 +320,11 @@ const lang = getLangFromUrl(Astro.url);
       }
 
       <article class="prose-custom w-full max-w-full break-words">
-        <Content />
+        {post.sourceType === "mdx" && Content && <Content />}
+        {post.sourceType === "notion" && <div set:html={htmlContent} />}
       </article>
 
-      <ShareButtons title={entry.data.title} url={Astro.url.href} />
+      <ShareButtons title={entry.title} url={Astro.url.href} />
 
       {
         suggestedPost && (
@@ -249,13 +337,13 @@ const lang = getLangFromUrl(Astro.url);
               class="group hover:border-albero dark:hover:border-albero/50 block rounded-2xl border border-neutral-200 bg-neutral-50 p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:border-white/10 dark:bg-[#151515]"
             >
               <span class="text-albero mb-3 inline-block rounded-full bg-black/5 px-3 py-1 text-xs font-bold dark:bg-white/10">
-                {suggestedPost.data.category}
+                {suggestedPost.category}
               </span>
               <h4 class="group-hover:text-albero dark:group-hover:text-albero mb-2 text-xl font-bold text-neutral-900 transition-colors duration-300 dark:text-white">
-                {suggestedPost.data.title}
+                {suggestedPost.title}
               </h4>
               <p class="text-sm text-neutral-600 dark:text-neutral-400">
-                {suggestedPost.data.description}
+                {suggestedPost.description}
               </p>
             </a>
           </div>
@@ -299,7 +387,7 @@ const lang = getLangFromUrl(Astro.url);
     }
 
     // 3. Botón de Copiar al portapapeles
-    const copyButtonIcon = `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>`;
+    const copyButtonIcon = `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-4 h-4"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2 2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>`;
     const copiedIcon = `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-4 h-4 text-green-400"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>`;
 
     document.querySelectorAll(".prose-custom pre").forEach((block) => {

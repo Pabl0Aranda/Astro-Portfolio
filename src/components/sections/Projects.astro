@@ -15,10 +15,22 @@ const proyectosOrdenados = proyectos.sort(
 
 const getBentoConfig = (index: number) => {
   const configs = [
-    { class: "md:col-span-2 md:row-span-2 min-h-[320px]", size: "large" as const },
-    { class: "md:col-span-2 md:row-span-1 min-h-[160px]", size: "medium" as const },
-    { class: "md:col-span-2 md:row-span-1 min-h-[160px]", size: "medium" as const },
-    { class: "md:col-span-4 md:row-span-1 min-h-[220px]", size: "wide" as const }
+    {
+      class: "md:col-span-2 md:row-span-2 min-h-[320px]",
+      size: "large" as const,
+    },
+    {
+      class: "md:col-span-2 md:row-span-1 min-h-[160px]",
+      size: "medium" as const,
+    },
+    {
+      class: "md:col-span-2 md:row-span-1 min-h-[160px]",
+      size: "medium" as const,
+    },
+    {
+      class: "md:col-span-4 md:row-span-1 min-h-[220px]",
+      size: "wide" as const,
+    },
   ];
   return configs[index % 4];
 };
@@ -34,12 +46,14 @@ const getBentoConfig = (index: number) => {
     {t("projects.title")}
   </h2>
 
-  <div class="grid grid-cols-1 gap-6 md:grid-cols-4 auto-rows-fr">
+  <div class="grid auto-rows-fr grid-cols-1 gap-6 md:grid-cols-4">
     {
       proyectosOrdenados.map((proyecto, index) => {
         const config = getBentoConfig(index);
         return (
-          <div class={`reveal-card ${config.class} h-full delay-${((index % 3) + 1) * 100}`}>
+          <div
+            class={`reveal-card ${config.class} h-full delay-${((index % 3) + 1) * 100}`}
+          >
             <ProjectCard
               title={proyecto.data.title}
               description={proyecto.data.description}

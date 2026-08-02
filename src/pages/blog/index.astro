@@ -1,18 +1,43 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { getCollection } from "astro:content";
+import { getPublishedPosts, type UnifiedPost } from "../../utils/notion";
 
-const allPosts = await getCollection("blog", ({ data }) => {
+const mdxEntries = await getCollection("blog", ({ data }) => {
   return data.draft !== true;
 });
-const sortedPosts = allPosts.sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+const notionEntries = await getPublishedPosts();
+
+const unifiedPosts: UnifiedPost[] = [
+  ...mdxEntries.map((entry) => {
+    const slugParts = entry.slug.split("/");
+    const cleanSlug = slugParts[slugParts.length - 1];
+
+    return {
+      sourceType: "mdx" as const,
+      id: entry.id,
+      slug: cleanSlug,
+      title: entry.data.title,
+      date: entry.data.date,
+      description: entry.data.description,
+      category: entry.data.category,
+      draft: entry.data.draft || false,
+      heroImage: entry.data.heroImage,
+      series: entry.data.series,
+      orderInSeries: entry.data.orderInSeries,
+    };
+  }),
+  ...notionEntries,
+];
+
+const sortedPosts = unifiedPosts.sort(
+  (a, b) => b.date.valueOf() - a.date.valueOf(),
 );
 
-const categories = [...new Set(sortedPosts.map((post) => post.data.category))];
+const categories = [...new Set(sortedPosts.map((post) => post.category))];
 const categoryCounts = sortedPosts.reduce(
   (acc, post) => {
-    acc[post.data.category] = (acc[post.data.category] || 0) + 1;
+    acc[post.category] = (acc[post.category] || 0) + 1;
     return acc;
   },
   {} as Record<string, number>,
@@ -26,10 +51,14 @@ const getCategoryIcon = (category: string) => {
       return '<svg class="w-4 h-4 mr-1.5 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>';
     case "Arquitectura":
       return '<svg class="w-4 h-4 mr-1.5 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>';
-    case 'Software': return '<svg class="w-4 h-4 mr-1.5 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>';
-    case 'Algoritmos': return '<svg class="w-4 h-4 mr-1.5 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" /></svg>';
-    case 'Sistemas Operativos': return '<svg class="w-4 h-4 mr-1.5 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>';
-    default: return '<svg class="w-4 h-4 mr-1.5 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>';
+    case "Software":
+      return '<svg class="w-4 h-4 mr-1.5 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>';
+    case "Algoritmos":
+      return '<svg class="w-4 h-4 mr-1.5 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" /></svg>';
+    case "Sistemas Operativos":
+      return '<svg class="w-4 h-4 mr-1.5 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>';
+    default:
+      return '<svg class="w-4 h-4 mr-1.5 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>';
   }
 };
 
@@ -67,27 +96,49 @@ const getRelativeDate = (date: Date) => {
 
     <div class="mb-12 flex flex-wrap items-center justify-between gap-6">
       <div class="relative w-full md:w-auto" id="category-dropdown-container">
-        <button 
+        <button
           id="btn-category-dropdown"
-          class="w-full md:w-64 flex items-center justify-between gap-3 rounded-xl border border-neutral-300 bg-white px-5 py-3 text-sm font-medium text-neutral-700 transition-colors hover:border-albero dark:border-white/20 dark:bg-[#121212] dark:text-white dark:hover:border-albero"
+          class="hover:border-albero dark:hover:border-albero flex w-full items-center justify-between gap-3 rounded-xl border border-neutral-300 bg-white px-5 py-3 text-sm font-medium text-neutral-700 transition-colors md:w-64 dark:border-white/20 dark:bg-[#121212] dark:text-white"
         >
           <span class="flex items-center gap-2 truncate">
-            <svg class="h-4 w-4 shrink-0 text-albero" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+            <svg
+              class="text-albero h-4 w-4 shrink-0"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+              ></path>
             </svg>
-            <span id="selected-category-text" class="truncate">Todas las temáticas</span>
+            <span id="selected-category-text" class="truncate"
+              >Todas las temáticas</span
+            >
           </span>
-          <svg id="dropdown-icon" class="h-4 w-4 shrink-0 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+          <svg
+            id="dropdown-icon"
+            class="h-4 w-4 shrink-0 transition-transform duration-300"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M19 9l-7 7-7-7"></path>
           </svg>
         </button>
 
-        <div 
+        <div
           id="category-dropdown-menu"
-          class="absolute left-0 top-full z-20 mt-2 hidden w-full origin-top-left flex-col gap-1 rounded-xl border border-neutral-200 bg-white p-2 shadow-xl dark:border-white/10 dark:bg-[#1a1a1a]"
+          class="absolute top-full left-0 z-20 mt-2 hidden w-full origin-top-left flex-col gap-1 rounded-xl border border-neutral-200 bg-white p-2 shadow-xl dark:border-white/10 dark:bg-[#1a1a1a]"
         >
           <button
-            class="filter-btn active flex w-full items-center justify-between rounded-lg px-4 py-2.5 text-left text-sm font-semibold transition-colors bg-albero/10 text-albero dark:bg-albero/20 dark:text-albero"
+            class="filter-btn active bg-albero/10 text-albero dark:bg-albero/20 dark:text-albero flex w-full items-center justify-between rounded-lg px-4 py-2.5 text-left text-sm font-semibold transition-colors"
             data-filter="all"
           >
             <span>Todas</span>
@@ -101,10 +152,14 @@ const getRelativeDate = (date: Date) => {
                 data-filter={category}
               >
                 <span class="flex items-center gap-2 truncate">
-                  <span class="opacity-70 shrink-0"><Fragment set:html={getCategoryIcon(category)} /></span>
+                  <span class="shrink-0 opacity-70">
+                    <Fragment set:html={getCategoryIcon(category)} />
+                  </span>
                   <span class="truncate">{category}</span>
                 </span>
-                <span class="text-xs opacity-60 shrink-0">({categoryCounts[category]})</span>
+                <span class="shrink-0 text-xs opacity-60">
+                  ({categoryCounts[category]})
+                </span>
               </button>
             ))
           }
@@ -161,16 +216,16 @@ const getRelativeDate = (date: Date) => {
       {
         sortedPosts.map((post) => (
           <article
-            class="tilt-card post-card group flex h-full min-h-[220px] flex-col rounded-2xl border border-neutral-200 bg-neutral-50 p-6 transition-colors transition-shadow duration-500 will-change-transform hover:bg-neutral-100 hover:shadow-xl dark:border-white/10 dark:bg-white/5 dark:hover:bg-[#151515] dark:hover:border-albero/30"
-            data-category={post.data.category}
-            style={`view-transition-name: post-${post.slug.replace(/[^a-zA-Z0-9]/g, '-')};`}
+            class="tilt-card post-card group dark:hover:border-albero/30 flex h-full min-h-[220px] flex-col rounded-2xl border border-neutral-200 bg-neutral-50 p-6 transition-colors transition-shadow duration-500 will-change-transform hover:bg-neutral-100 hover:shadow-xl dark:border-white/10 dark:bg-white/5 dark:hover:bg-[#151515]"
+            data-category={post.category}
+            style={`view-transition-name: post-${post.slug.replace(/[^a-zA-Z0-9]/g, "-")};`}
           >
             <div class="mb-4 flex items-center justify-between">
               <span class="text-albero rounded-full bg-black/5 px-3 py-1 text-xs font-bold dark:bg-white/10">
-                {post.data.category}
+                {post.category}
               </span>
               <time class="text-sm text-neutral-500 capitalize">
-                {getRelativeDate(post.data.date)}
+                {getRelativeDate(post.date)}
               </time>
             </div>
 
@@ -179,14 +234,14 @@ const getRelativeDate = (date: Date) => {
                 href={`/blog/${post.slug}`}
                 class="hover:text-albero dark:hover:text-albero transition-colors duration-300 focus:outline-none"
               >
-                {post.data.title}
+                {post.title}
               </a>
             </h2>
 
             <div class="grid grid-rows-[0fr] opacity-0 transition-all duration-500 ease-in-out group-hover:mt-3 group-hover:grid-rows-[1fr] group-hover:opacity-100">
               <div class="overflow-hidden">
                 <p class="line-clamp-2 text-sm leading-relaxed text-neutral-600 dark:text-neutral-400">
-                  {post.data.description}
+                  {post.description}
                 </p>
               </div>
             </div>
@@ -215,28 +270,53 @@ const getRelativeDate = (date: Date) => {
       }
     </div>
 
-    <div class="mt-12 flex items-center justify-center gap-4" id="pagination-controls" style="display: none;">
+    <div
+      class="mt-12 flex items-center justify-center gap-4"
+      id="pagination-controls"
+      style="display: none;"
+    >
       <button
         id="btn-prev-page"
-        class="group flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-600 transition-colors hover:border-albero hover:text-albero disabled:opacity-50 disabled:pointer-events-none dark:border-white/10 dark:bg-[#151515] dark:text-neutral-400 dark:hover:border-albero dark:hover:text-albero"
+        class="group hover:border-albero hover:text-albero dark:hover:border-albero dark:hover:text-albero flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-600 transition-colors disabled:pointer-events-none disabled:opacity-50 dark:border-white/10 dark:bg-[#151515] dark:text-neutral-400"
         aria-label="Página anterior"
       >
-        <svg class="h-5 w-5 transition-transform duration-300 group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        <svg
+          class="h-5 w-5 transition-transform duration-300 group-hover:-translate-x-1"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"></path>
         </svg>
       </button>
 
       <span class="text-sm font-medium text-neutral-600 dark:text-neutral-400">
-        Página <span id="current-page-num" class="text-neutral-900 dark:text-white">1</span> de <span id="total-pages-num">1</span>
+        Página <span
+          id="current-page-num"
+          class="text-neutral-900 dark:text-white">1</span
+        > de <span id="total-pages-num">1</span>
       </span>
 
       <button
         id="btn-next-page"
-        class="group flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-600 transition-colors hover:border-albero hover:text-albero disabled:opacity-50 disabled:pointer-events-none dark:border-white/10 dark:bg-[#151515] dark:text-neutral-400 dark:hover:border-albero dark:hover:text-albero"
+        class="group hover:border-albero hover:text-albero dark:hover:border-albero dark:hover:text-albero flex h-10 w-10 items-center justify-center rounded-full border border-neutral-200 bg-white text-neutral-600 transition-colors disabled:pointer-events-none disabled:opacity-50 dark:border-white/10 dark:bg-[#151515] dark:text-neutral-400"
         aria-label="Página siguiente"
       >
-        <svg class="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        <svg
+          class="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 5l7 7-7 7"></path>
         </svg>
       </button>
     </div>
@@ -255,7 +335,7 @@ const getRelativeDate = (date: Date) => {
       "dark:bg-albero/20",
       "dark:text-albero",
       "font-semibold",
-      "active"
+      "active",
     ];
 
     const inactiveClasses = [
@@ -263,16 +343,20 @@ const getRelativeDate = (date: Date) => {
       "dark:text-neutral-300",
       "font-medium",
       "hover:bg-neutral-100",
-      "dark:hover:bg-white/5"
+      "dark:hover:bg-white/5",
     ];
 
     let activeFilters = new Set();
     let currentPage = 1;
     const itemsPerPage = 6;
-    
+
     const paginationControls = document.getElementById("pagination-controls");
-    const btnPrevPage = document.getElementById("btn-prev-page") as HTMLButtonElement;
-    const btnNextPage = document.getElementById("btn-next-page") as HTMLButtonElement;
+    const btnPrevPage = document.getElementById(
+      "btn-prev-page",
+    ) as HTMLButtonElement;
+    const btnNextPage = document.getElementById(
+      "btn-next-page",
+    ) as HTMLButtonElement;
     const currentPageNum = document.getElementById("current-page-num");
     const totalPagesNum = document.getElementById("total-pages-num");
 
@@ -280,7 +364,8 @@ const getRelativeDate = (date: Date) => {
       const matchedCards: HTMLElement[] = [];
       postCards.forEach((card) => {
         const postCategory = card.getAttribute("data-category") || "";
-        const matchFilter = activeFilters.size === 0 || activeFilters.has(postCategory);
+        const matchFilter =
+          activeFilters.size === 0 || activeFilters.has(postCategory);
         if (matchFilter) {
           matchedCards.push(card as HTMLElement);
         } else {
@@ -288,7 +373,10 @@ const getRelativeDate = (date: Date) => {
         }
       });
 
-      const totalPages = Math.max(1, Math.ceil(matchedCards.length / itemsPerPage));
+      const totalPages = Math.max(
+        1,
+        Math.ceil(matchedCards.length / itemsPerPage),
+      );
       if (currentPage > totalPages) currentPage = 1;
 
       const startIndex = (currentPage - 1) * itemsPerPage;
@@ -302,13 +390,19 @@ const getRelativeDate = (date: Date) => {
           card.style.display = "none";
         }
       });
-      
-      if (paginationControls && btnPrevPage && btnNextPage && currentPageNum && totalPagesNum) {
+
+      if (
+        paginationControls &&
+        btnPrevPage &&
+        btnNextPage &&
+        currentPageNum &&
+        totalPagesNum
+      ) {
         if (matchedCards.length > itemsPerPage) {
           paginationControls.style.display = "flex";
           currentPageNum.textContent = currentPage.toString();
           totalPagesNum.textContent = totalPages.toString();
-          
+
           btnPrevPage.disabled = currentPage === 1;
           btnNextPage.disabled = currentPage === totalPages;
         } else {
@@ -339,7 +433,7 @@ const getRelativeDate = (date: Date) => {
           scrollToGrid();
         }
       });
-      
+
       btnNextPage.addEventListener("click", () => {
         const totalPages = parseInt(totalPagesNum?.textContent || "1");
         if (currentPage < totalPages) {
@@ -350,13 +444,17 @@ const getRelativeDate = (date: Date) => {
       });
     }
 
-    const btnAll = Array.from(filterBtns).find(b => b.getAttribute("data-filter") === "all");
-    
+    const btnAll = Array.from(filterBtns).find(
+      (b) => b.getAttribute("data-filter") === "all",
+    );
+
     // Lógica para el menú desplegable
     const dropdownBtn = document.getElementById("btn-category-dropdown");
     const dropdownMenu = document.getElementById("category-dropdown-menu");
     const dropdownIcon = document.getElementById("dropdown-icon");
-    const selectedCategoryText = document.getElementById("selected-category-text");
+    const selectedCategoryText = document.getElementById(
+      "selected-category-text",
+    );
 
     if (dropdownBtn && dropdownMenu && dropdownIcon) {
       dropdownBtn.addEventListener("click", (e) => {
@@ -367,7 +465,10 @@ const getRelativeDate = (date: Date) => {
       });
 
       document.addEventListener("click", (e) => {
-        if (!dropdownBtn.contains(e.target as Node) && !dropdownMenu.contains(e.target as Node)) {
+        if (
+          !dropdownBtn.contains(e.target as Node) &&
+          !dropdownMenu.contains(e.target as Node)
+        ) {
           dropdownMenu.classList.add("hidden");
           dropdownMenu.classList.remove("flex");
           dropdownIcon.classList.remove("rotate-180");
@@ -380,7 +481,9 @@ const getRelativeDate = (date: Date) => {
       if (activeFilters.size === 0) {
         selectedCategoryText.textContent = "Todas las temáticas";
       } else if (activeFilters.size === 1) {
-        selectedCategoryText.textContent = Array.from(activeFilters)[0] as string;
+        selectedCategoryText.textContent = Array.from(
+          activeFilters,
+        )[0] as string;
       } else {
         selectedCategoryText.textContent = `${activeFilters.size} temáticas seleccionadas`;
       }
@@ -408,7 +511,7 @@ const getRelativeDate = (date: Date) => {
             btn.classList.remove(...inactiveClasses);
             btn.classList.add(...activeClasses);
           }
-          
+
           if (activeFilters.size === 0) {
             btnAll?.classList.remove(...inactiveClasses);
             btnAll?.classList.add(...activeClasses);

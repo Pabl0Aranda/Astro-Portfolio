@@ -8,7 +8,7 @@ orden: 6
 
 ## El Problema
 
-El dominio de las estructuras de datos y la algoritmia es el pilar fundamental para escribir código eficiente y escalable en la ingeniería de software. A menudo, las soluciones a problemas complejos carecen de contexto: es fácil encontrar código que funcione, pero es difícil encontrar código que explique *por qué* funciona y *cuál* es su coste computacional real.
+El dominio de las estructuras de datos y la algoritmia es el pilar fundamental para escribir código eficiente y escalable en la ingeniería de software. A menudo, las soluciones a problemas complejos carecen de contexto: es fácil encontrar código que funcione, pero es difícil encontrar código que explique _por qué_ funciona y _cuál_ es su coste computacional real.
 
 El desafío era crear un repositorio que no solo sirviera como un registro personal de preparación técnica para entrevistas, sino como una verdadera base de conocimiento documentada donde cada problema estuviera desglosado metodológicamente.
 
@@ -17,13 +17,14 @@ El desafío era crear un repositorio que no solo sirviera como un registro perso
 Para resolver esto, diseñé una arquitectura de repositorio altamente estructurada, categorizando los problemas por estructura de datos subyacente (Grafos, Árboles, Programación Dinámica, etc.) y por dificultad (Fácil, Medio, Difícil).
 
 Más allá del código en sí (principalmente en Python), cada solución está acompañada de una documentación rigurosa que incluye:
+
 - **Intuición del Problema:** El proceso mental y las observaciones que guían hacia la solución.
 - **Enfoque (Approach):** Un desglose paso a paso de la implementación.
 - **Análisis de Complejidad:** Evaluación detallada de la complejidad temporal (Time) y espacial (Space) usando notación Big O.
 
 ## Fragmento de Código Clave: Búsqueda Binaria Avanzada
 
-Un excelente ejemplo del nivel de optimización de las soluciones es el problema *Find the median of two sorted arrays*. En lugar de fusionar los arrays en tiempo `O(n + m)`, la solución implementa una búsqueda binaria particionada que logra un rendimiento logarítmico `O(log(min(n, m)))`.
+Un excelente ejemplo del nivel de optimización de las soluciones es el problema _Find the median of two sorted arrays_. En lugar de fusionar los arrays en tiempo `O(n + m)`, la solución implementa una búsqueda binaria particionada que logra un rendimiento logarítmico `O(log(min(n, m)))`.
 
 ```python
 def findMedianSortedArrays(nums1: list[int], nums2: list[int]) -> float:

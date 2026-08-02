@@ -8,21 +8,25 @@ orden: 7
 
 ## El Desafío Computacional
 
-Existen problemas en el mundo real, como la logística de rutas o la asignación de horarios, que pertenecen a la categoría matemática de problemas **NP-Hard**. Un ejemplo clásico es el *Problema del Viajante de Comercio (Traveling Salesman Problem - TSP)*. 
+Existen problemas en el mundo real, como la logística de rutas o la asignación de horarios, que pertenecen a la categoría matemática de problemas **NP-Hard**. Un ejemplo clásico es el _Problema del Viajante de Comercio (Traveling Salesman Problem - TSP)_.
 
-Intentar resolver estos problemas evaluando todas las combinaciones posibles (fuerza bruta) es computacionalmente imposible para entradas grandes, ya que el tiempo de ejecución crece factorialmente. El desafío en la ingeniería de software moderna es encontrar soluciones *suficientemente buenas* (casi óptimas) en un tiempo razonable, lo cual requiere el uso de **metaheurísticas avanzadas**.
+Intentar resolver estos problemas evaluando todas las combinaciones posibles (fuerza bruta) es computacionalmente imposible para entradas grandes, ya que el tiempo de ejecución crece factorialmente. El desafío en la ingeniería de software moderna es encontrar soluciones _suficientemente buenas_ (casi óptimas) en un tiempo razonable, lo cual requiere el uso de **metaheurísticas avanzadas**.
 
 ## El Enfoque y Algoritmos Implementados
 
 Para abordar estos retos de optimización combinatoria, desarrollé este proyecto estructurado íntegramente en **Java**, implementando desde cero dos de los algoritmos de búsqueda más potentes del sector:
 
 ### 1. Simulated Annealing (Recocido Simulado)
-Inspirado en el proceso físico de enfriamiento y cristalización de los metales, este algoritmo probabilístico está diseñado para escapar de los *mínimos locales*. 
+
+Inspirado en el proceso físico de enfriamiento y cristalización de los metales, este algoritmo probabilístico está diseñado para escapar de los _mínimos locales_.
+
 - **Mecanismo:** Al principio de la ejecución (cuando la "temperatura" es alta), el algoritmo acepta soluciones peores con alta probabilidad, permitiéndole explorar ampliamente el espacio de búsqueda. A medida que la temperatura desciende, el sistema se estabiliza convergiendo hacia el óptimo global.
 
 ### 2. Tabu Search (Búsqueda Tabú)
+
 A diferencia del recocido simulado, la Búsqueda Tabú es un algoritmo determinista que utiliza el concepto de **memoria a corto plazo**.
-- **Mecanismo:** Mientras el algoritmo explora iterativamente las soluciones vecinas, guarda los movimientos recientes en una *lista tabú*. Esto evita que el algoritmo se quede atascado en bucles infinitos (ciclos) y lo fuerza a explorar nuevas áreas prometedoras del espacio de soluciones.
+
+- **Mecanismo:** Mientras el algoritmo explora iterativamente las soluciones vecinas, guarda los movimientos recientes en una _lista tabú_. Esto evita que el algoritmo se quede atascado en bucles infinitos (ciclos) y lo fuerza a explorar nuevas áreas prometedoras del espacio de soluciones.
 
 ## Estructura y Fundamentos Teóricos
 
