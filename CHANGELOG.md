@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Promoted project version from `0.0.1` (Beta) to `1.0.0` (Production).
+- Promoted project version from `1.0.6` (Beta) to `1.2.0` (Production).
 - Upgraded the codebase formatting universally using Prettier.
 - Refactored Data Source querying logic for Notion to support the v5 SDK specification.
 
