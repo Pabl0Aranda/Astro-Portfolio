@@ -1,5 +1,6 @@
 ---
 import { getLangFromUrl, useTranslations } from "../i18n/ui";
+import Logo from "./Logo.astro";
 
 // 1. Obtenemos el idioma actual basado en la URL
 const lang = getLangFromUrl(Astro.url);
@@ -23,9 +24,9 @@ const prefix = lang === "es" ? "" : "/en";
   <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
     <a
       href={`${prefix}/`}
-      class="hover:text-albero dark:hover:text-albero text-xl font-bold tracking-tighter text-neutral-900 transition-colors duration-300 dark:text-white"
+      class="hover:text-albero dark:hover:text-albero transition-colors duration-300"
     >
-      Pablo<span class="text-albero">.</span>
+      <Logo />
     </a>
 
     <nav class="hidden lg:block">
@@ -175,9 +176,9 @@ const prefix = lang === "es" ? "" : "/en";
   >
     <a
       href={`${prefix}/`}
-      class="text-xl font-bold tracking-tighter text-neutral-900 dark:text-white"
+      class="hover:text-albero transition-colors"
     >
-      Pablo<span class="text-albero">.</span>
+      <Logo />
     </a>
     <button
       id="menu-close"

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://pabloaranda.netlify.app/sitemap-index.xml
+Sitemap: https://pabloaranda.net/sitemap-index.xml
