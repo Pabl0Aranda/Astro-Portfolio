@@ -5,6 +5,7 @@ import Header from "../components/Header.astro";
 import CommandPalette from "../components/CommandPalette.astro";
 import Search from "../components/Search.astro";
 import BackToTop from "../components/BackToTop.astro";
+import Chatbot from "../components/Chatbot.astro";
 import "katex/dist/katex.min.css";
 
 // 1. Añadimos 'image' como propiedad opcional
@@ -151,6 +152,7 @@ const gtmId = import.meta.env.PUBLIC_GTM_ID;
     </main>
 
     <BackToTop />
+    <Chatbot />
     <script>
       import VanillaTilt from "vanilla-tilt";
 

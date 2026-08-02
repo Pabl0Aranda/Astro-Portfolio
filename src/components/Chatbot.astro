@@ -1,0 +1,241 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<div
+  id="chatbot-container"
+  class="fixed bottom-4 left-4 z-50 flex flex-col items-start sm:bottom-6 sm:left-6"
+>
+  <!-- Chat Window -->
+  <div
+    id="chatbot-window"
+    class="pointer-events-none mb-4 flex h-[450px] max-h-[75vh] w-[calc(100vw-2rem)] origin-bottom-left scale-90 flex-col overflow-hidden rounded-2xl border border-white/20 bg-white/70 opacity-0 shadow-2xl backdrop-blur-xl transition-all duration-300 sm:w-[400px] dark:border-white/10 dark:bg-black/70"
+  >
+    <!-- Header -->
+    <div
+      class="flex items-center justify-between border-b border-neutral-200 bg-neutral-100/90 p-4 text-neutral-900 backdrop-blur-md dark:border-white/10 dark:bg-neutral-900/90 dark:text-white"
+    >
+      <div class="flex items-center gap-3">
+        <div
+          class="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full shadow-md ring-2 ring-neutral-200 dark:ring-white/10"
+        >
+          <img
+            src="/hermes-avatar.png"
+            alt="Hermes"
+            class="h-full w-full object-cover [image-rendering:crisp-edges]"
+          />
+        </div>
+        <div>
+          <h3 class="font-bold tracking-tight">Hermes</h3>
+          <p class="text-xs text-neutral-500 dark:text-neutral-400">
+            Asistente de Pablo Aranda
+          </p>
+        </div>
+      </div>
+      <button
+        id="chatbot-close"
+        class="rounded-full p-2 transition-colors hover:bg-white/20"
+      >
+        <Icon name="mdi:close" class="h-5 w-5" />
+      </button>
+    </div>
+
+    <!-- Messages Area -->
+    <div
+      id="chatbot-messages"
+      class="flex flex-1 flex-col space-y-4 overflow-y-auto scroll-smooth p-4 text-sm"
+    >
+      <!-- Initial Message -->
+      <div
+        class="max-w-[85%] self-start rounded-2xl rounded-tl-sm bg-gray-100 p-3 text-neutral-800 shadow-sm dark:bg-neutral-800 dark:text-neutral-200"
+      >
+        Hola!. Soy Hermes, el asistente virtual de Pablo. ¿En qué te puedo
+        ayudar hoy?
+      </div>
+    </div>
+
+    <!-- Input Area -->
+    <div class="border-t border-white/20 p-3 dark:border-white/10">
+      <form id="chatbot-form" class="relative flex items-center">
+        <input
+          type="text"
+          id="chatbot-input"
+          placeholder="Escribe un mensaje..."
+          class="focus:border-albero focus:ring-albero dark:focus:border-albero w-full rounded-full border border-neutral-200 bg-white/50 px-4 py-2 pr-12 text-sm backdrop-blur-sm transition-all outline-none focus:bg-white focus:ring-1 dark:border-white/10 dark:bg-black/50 dark:text-white dark:focus:bg-black"
+          autocomplete="off"
+        />
+        <button
+          type="submit"
+          class="bg-albero absolute right-2 flex h-8 w-8 items-center justify-center rounded-full text-black transition-transform hover:scale-110 disabled:opacity-50 disabled:hover:scale-100"
+          id="chatbot-submit"
+        >
+          <Icon name="mdi:send" class="h-4 w-4" />
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Floating Button -->
+  <button
+    id="chatbot-toggle"
+    class="magnetic-btn group ring-albero/30 bg-albero relative flex h-14 w-14 items-center justify-center rounded-full text-black shadow-[0_0_20px_rgba(229,177,58,0.6)] ring-4 transition-all duration-300 hover:scale-110 hover:shadow-[0_0_30px_rgba(229,177,58,0.8)] active:scale-95 dark:shadow-[0_8px_30px_rgba(255,255,255,0.1)]"
+    aria-label="Abrir chat"
+  >
+    <Icon
+      name="mdi:chat-processing-outline"
+      class="h-7 w-7 transition-transform group-hover:scale-110"
+    />
+  </button>
+</div>
+
+<script>
+  // Escuchar el evento astro:page-load para que funcione correctamente con las ViewTransitions
+  document.addEventListener("astro:page-load", () => {
+    let chatHistory: any[] = [];
+
+    const toggleBtn = document.getElementById("chatbot-toggle");
+    const closeBtn = document.getElementById("chatbot-close");
+    const chatWindow = document.getElementById("chatbot-window");
+    const chatForm = document.getElementById("chatbot-form") as HTMLFormElement;
+    const chatInput = document.getElementById(
+      "chatbot-input",
+    ) as HTMLInputElement;
+    const chatMessages = document.getElementById("chatbot-messages");
+    const submitBtn = document.getElementById(
+      "chatbot-submit",
+    ) as HTMLButtonElement;
+
+    if (!toggleBtn || !chatWindow) return; // Si no existen en la página, no hacer nada
+
+    let isOpen = false;
+
+    const toggleChat = () => {
+      isOpen = !isOpen;
+      if (isOpen) {
+        chatWindow.classList.remove(
+          "opacity-0",
+          "scale-90",
+          "pointer-events-none",
+        );
+        chatWindow.classList.add(
+          "opacity-100",
+          "scale-100",
+          "pointer-events-auto",
+        );
+        setTimeout(() => chatInput?.focus(), 300);
+      } else {
+        chatWindow.classList.remove(
+          "opacity-100",
+          "scale-100",
+          "pointer-events-auto",
+        );
+        chatWindow.classList.add(
+          "opacity-0",
+          "scale-90",
+          "pointer-events-none",
+        );
+      }
+    };
+
+    toggleBtn.addEventListener("click", toggleChat);
+    closeBtn?.addEventListener("click", toggleChat);
+
+    const addMessage = (text: string, isUser: boolean) => {
+      if (!chatMessages) return;
+
+      const msgDiv = document.createElement("div");
+      msgDiv.className = `max-w-[85%] rounded-2xl p-3 text-sm shadow-sm opacity-0 translate-y-2 transition-all duration-300 ${
+        isUser
+          ? "self-end rounded-tr-sm bg-albero text-black"
+          : "self-start rounded-tl-sm bg-gray-100 text-neutral-800 dark:bg-neutral-800 dark:text-neutral-200"
+      }`;
+
+      // Convertir saltos de línea y formatear un poco (Markdown simple)
+      let formattedText = text.replace(/\n/g, "<br/>");
+      formattedText = formattedText.replace(
+        /\*\*(.*?)\*\*/g,
+        "<strong>$1</strong>",
+      ); // Negritas
+
+      msgDiv.innerHTML = formattedText;
+      chatMessages.appendChild(msgDiv);
+
+      requestAnimationFrame(() => {
+        msgDiv.classList.remove("opacity-0", "translate-y-2");
+      });
+
+      chatMessages.scrollTo({
+        top: chatMessages.scrollHeight,
+        behavior: "smooth",
+      });
+    };
+
+    const addTypingIndicator = () => {
+      if (!chatMessages) return null;
+
+      const indicator = document.createElement("div");
+      indicator.className =
+        "self-start max-w-[85%] rounded-2xl rounded-tl-sm bg-gray-100 p-4 shadow-sm dark:bg-neutral-800 flex gap-1 items-center opacity-0 transition-opacity duration-300";
+      indicator.innerHTML = `
+        <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+        <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+        <div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></div>
+      `;
+      chatMessages.appendChild(indicator);
+
+      requestAnimationFrame(() => {
+        indicator.classList.remove("opacity-0");
+      });
+
+      chatMessages.scrollTo({
+        top: chatMessages.scrollHeight,
+        behavior: "smooth",
+      });
+      return indicator;
+    };
+
+    chatForm?.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const message = chatInput?.value.trim();
+      if (!message) return;
+
+      addMessage(message, true);
+      chatInput.value = "";
+      submitBtn.disabled = true;
+      chatInput.disabled = true;
+
+      const typingIndicator = addTypingIndicator();
+
+      try {
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message, history: chatHistory }),
+        });
+
+        const data = await res.json();
+
+        if (typingIndicator) typingIndicator.remove();
+        submitBtn.disabled = false;
+        chatInput.disabled = false;
+        chatInput.focus();
+
+        if (res.ok && data.reply) {
+          addMessage(data.reply, false);
+          chatHistory.push({ role: "user", parts: [{ text: message }] });
+          chatHistory.push({ role: "model", parts: [{ text: data.reply }] });
+        } else {
+          addMessage(
+            data.error || "Hubo un error de conexión. Inténtalo de nuevo.",
+            false,
+          );
+        }
+      } catch (error) {
+        if (typingIndicator) typingIndicator.remove();
+        submitBtn.disabled = false;
+        chatInput.disabled = false;
+        addMessage("Hubo un error de red. Inténtalo de nuevo.", false);
+      }
+    });
+  });
+</script>
