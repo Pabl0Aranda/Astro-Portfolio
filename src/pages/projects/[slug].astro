@@ -1,0 +1,223 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import { getLangFromUrl } from "../../i18n/ui";
+
+export async function getStaticPaths() {
+  const proyectosEntries = await getCollection("proyectos");
+  return proyectosEntries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+const lang = getLangFromUrl(Astro.url);
+const techArray = entry.data.tech
+  .split(/[,•]/)
+  .map((t) => t.trim())
+  .filter(Boolean);
+
+// Basic JSON-LD for the project
+const schema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  name: entry.data.title,
+  description: entry.data.description || "",
+  url: Astro.url.href,
+  author: {
+    "@type": "Person",
+    name: "Pablo Aranda",
+  },
+});
+---
+
+<Layout
+  title={`${entry.data.title} | Case Study`}
+  description={entry.data.description || `Case study for ${entry.data.title}`}
+  structuredData={schema}
+>
+  <div class="relative mx-auto flex w-full max-w-4xl flex-col py-10 md:py-32">
+    <a
+      href="/#proyectos"
+      class="text-albero mb-10 inline-flex w-fit items-center transition-colors duration-300 hover:text-neutral-900 dark:text-white"
+    >
+      <svg
+        class="mr-2 h-4 w-4"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+      </svg>
+      {lang === "es" ? "Volver a Proyectos" : "Back to Projects"}
+    </a>
+
+    <header class="mb-14">
+      <h1
+        class="mb-6 text-4xl font-bold tracking-tight text-neutral-900 md:text-6xl dark:text-white"
+      >
+        {entry.data.title}
+      </h1>
+
+      {
+        entry.data.description && (
+          <p class="mb-8 text-lg text-neutral-600 md:text-xl dark:text-neutral-400">
+            {entry.data.description}
+          </p>
+        )
+      }
+
+      <div class="mb-10 flex flex-wrap items-center gap-4">
+        {
+          techArray.map((t) => (
+            <span class="rounded-md border border-black/5 bg-neutral-200/50 px-3 py-1.5 text-sm font-semibold text-neutral-700 dark:border-white/5 dark:bg-white/10 dark:text-neutral-300">
+              {t}
+            </span>
+          ))
+        }
+      </div>
+
+      <div class="flex gap-4">
+        <a
+          href={entry.data.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="bg-albero/10 text-albero hover:bg-albero group inline-flex items-center rounded-xl px-6 py-3 font-bold transition-all duration-300 hover:text-neutral-900"
+        >
+          {lang === "es" ? "Visitar Proyecto" : "Visit Project"}
+          <svg
+            class="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+            ></path>
+          </svg>
+        </a>
+      </div>
+    </header>
+
+    <div class="mb-14 h-px w-full bg-neutral-200 dark:bg-white/10"></div>
+
+    <article class="prose-custom w-full max-w-full break-words">
+      <Content />
+    </article>
+  </div>
+</Layout>
+
+<script>
+  // Script para soporte nativo de Mermaid.js
+  document.addEventListener("astro:page-load", async () => {
+    // Buscamos si hay algún bloque de código etiquetado como "mermaid" (normalmente es <pre><code class="language-mermaid">)
+    const mermaidBlocks = document.querySelectorAll(
+      ".prose-custom pre code.language-mermaid",
+    );
+
+    if (mermaidBlocks.length > 0) {
+      // Importar mermaid de forma dinámica solo si es necesario
+      const mermaid = (
+        await import("https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs")
+      ).default;
+
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: document.documentElement.classList.contains("dark")
+          ? "dark"
+          : "default",
+      });
+
+      mermaidBlocks.forEach((codeBlock, index) => {
+        const pre = codeBlock.parentElement;
+        if (!pre) return;
+
+        const mermaidContent = codeBlock.textContent || "";
+        const container = document.createElement("div");
+        container.className = "mermaid-container flex justify-center py-6";
+        container.innerHTML = mermaidContent;
+
+        // Reemplazamos el <pre> original por nuestro div que mermaid va a procesar
+        pre.replaceWith(container);
+      });
+
+      await mermaid.run({
+        querySelector: ".mermaid-container",
+      });
+    }
+  });
+</script>
+
+<style is:global>
+  @reference "../../styles/global.css";
+
+  /* Importamos los mismos estilos base que usa el blog para coherencia */
+  .prose-custom {
+    @apply space-y-6 text-base leading-relaxed text-neutral-300;
+  }
+  @media (min-width: 768px) {
+    .prose-custom {
+      @apply text-lg;
+    }
+  }
+
+  .prose-custom h2 {
+    @apply mt-12 mb-6 text-2xl font-bold break-words text-neutral-900 dark:text-white;
+  }
+  @media (min-width: 768px) {
+    .prose-custom h2 {
+      @apply text-3xl;
+    }
+  }
+
+  .prose-custom h3 {
+    @apply mt-8 mb-4 text-xl font-bold break-words text-neutral-900 dark:text-white;
+  }
+  @media (min-width: 768px) {
+    .prose-custom h3 {
+      @apply text-2xl;
+    }
+  }
+
+  .prose-custom p {
+    @apply mb-6 text-neutral-600 dark:text-neutral-400;
+  }
+  .prose-custom ul {
+    @apply mb-6 list-inside list-disc space-y-2 text-neutral-600 dark:text-neutral-400;
+  }
+  .prose-custom ol {
+    @apply mb-6 list-inside list-decimal space-y-2 text-neutral-600 dark:text-neutral-400;
+  }
+
+  .prose-custom a {
+    @apply text-albero break-words underline decoration-white/30 underline-offset-4 transition-colors;
+  }
+  .prose-custom a:hover {
+    @apply decoration-albero;
+  }
+
+  .prose-custom blockquote {
+    @apply border-albero my-8 rounded-r-lg border-l-4 bg-neutral-50 py-2 pr-4 pl-4 text-neutral-600 italic dark:bg-white/5 dark:text-neutral-400;
+  }
+
+  .prose-custom pre {
+    @apply my-8 max-w-full overflow-x-auto rounded-xl border border-neutral-200 bg-[#1a1a1a] p-4 text-sm dark:border-white/10;
+  }
+
+  .prose-custom code {
+    @apply text-albero rounded bg-white/10 px-1.5 py-0.5 text-sm break-words;
+  }
+  .prose-custom pre code {
+    @apply rounded-none bg-transparent p-0 break-normal text-inherit;
+  }
+</style>

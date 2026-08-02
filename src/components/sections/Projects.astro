@@ -44,7 +44,7 @@ const getBentoConfig = (index: number) => {
               title={proyecto.data.title}
               description={proyecto.data.description}
               tech={proyecto.data.tech}
-              link={proyecto.data.link}
+              link={`/projects/${proyecto.slug}`}
               size={config.size}
               class="h-full"
             />

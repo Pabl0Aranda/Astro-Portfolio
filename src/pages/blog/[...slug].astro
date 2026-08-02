@@ -26,6 +26,13 @@ const prevPost =
   currentIndex < sortedPosts.length - 1 ? sortedPosts[currentIndex + 1] : null;
 const suggestedPost = nextPost || prevPost;
 
+// Obtener posts de la misma serie si existe
+const seriesPosts = entry.data.series
+  ? allPosts
+      .filter((p) => p.data.series === entry.data.series)
+      .sort((a, b) => (a.data.orderInSeries || 0) - (b.data.orderInSeries || 0))
+  : [];
+
 const { Content, remarkPluginFrontmatter, headings } = await entry.render();
 
 // Generar JSON-LD
@@ -151,6 +158,38 @@ const lang = getLangFromUrl(Astro.url);
         >
           {entry.data.title}
         </h1>
+
+        {
+          seriesPosts.length > 0 && (
+            <div class="mt-8 rounded-xl border border-neutral-200 bg-neutral-50 p-6 dark:border-white/10 dark:bg-white/5">
+              <h3 class="mb-4 text-sm font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
+                {lang === "es" ? "Serie:" : "Series:"}{" "}
+                <span class="text-albero">{entry.data.series}</span>
+              </h3>
+              <ul class="space-y-3">
+                {seriesPosts.map((post, i) => (
+                  <li class="flex items-start gap-3">
+                    <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-neutral-200 text-xs font-bold text-neutral-600 dark:bg-white/10 dark:text-neutral-400">
+                      {i + 1}
+                    </span>
+                    {post.slug === entry.slug ? (
+                      <span class="font-bold text-neutral-900 dark:text-white">
+                        {post.data.title}
+                      </span>
+                    ) : (
+                      <a
+                        href={`/blog/${post.slug}`}
+                        class="text-neutral-600 transition-colors hover:text-albero dark:text-neutral-400 dark:hover:text-albero"
+                      >
+                        {post.data.title}
+                      </a>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
       </header>
 
       {
