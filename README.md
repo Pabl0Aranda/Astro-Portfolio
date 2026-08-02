@@ -1,4 +1,4 @@
-# Portafolio Profesional & Blog Minimalista
+# Portafolio Profesional & Blog
 
 Un portafolio personal y blog de alto rendimiento construido con [Astro](https://astro.build/) y [Tailwind CSS v4](https://tailwindcss.com/). Diseñado con un enfoque minimalista y de alto contraste, utilizando una paleta cromática basada en Negro, Blanco y Albero (#E5B13A), enfocado en la mejor experiencia de usuario y rendimiento.
 
@@ -6,7 +6,7 @@ Un portafolio personal y blog de alto rendimiento construido con [Astro](https:/
 
 ## Características Principales
 
-- **Rendimiento Extremo:** Generación de sitios estáticos (SSG) por defecto gracias a Astro, logrando métricas perfectas en Core Web Vitals y tiempos de carga instantáneos gracias a Astro View Transitions.
+- **Rendimiento:** Generación de sitios estáticos (SSG) por defecto gracias a Astro, logrando métricas perfectas en Core Web Vitals y tiempos de carga instantáneos gracias a Astro View Transitions.
 - **Estilizado Moderno:** Construido con la nueva versión de Tailwind CSS (v4) para un diseño de utilidades sin archivos de configuración pesados, apoyado por `@tailwindcss/typography`.
 - **Tema Claro/Oscuro Fluido:** Sistema de temas robusto implementado mediante un script en línea para evitar parpadeos (_flicker_) durante la carga inicial y navegación entre páginas.
 - **Asistente Virtual Inteligente (Gemini AI):** Un Chatbot interactivo integrado con la API de Google Gemini, capaz de responder preguntas sobre la experiencia, habilidades y proyectos, guiando a los reclutadores de forma dinámica.
@@ -72,6 +72,7 @@ El proyecto sigue una estructura modular altamente escalable basada en component
 Si deseas clonar y ejecutar este proyecto en tu entorno local para explorarlo o modificarlo, sigue estos pasos:
 
 1. **Clona el repositorio:**
+
    ```bash
    git clone https://github.com/Pabl0Aranda/Astro-Portfolio.git
    cd Astro-Portfolio
@@ -79,17 +80,20 @@ Si deseas clonar y ejecutar este proyecto en tu entorno local para explorarlo o 
 
 2. **Instala las dependencias:**
    Se recomienda usar npm.
+
    ```bash
    npm install
    ```
 
 3. **Configura las variables de entorno:**
    Crea un archivo `.env` en la raíz del proyecto y añade tu clave API de Gemini para el Chatbot interactivo:
+
    ```env
    PUBLIC_GEMINI_API_KEY=tu_clave_api_aqui
    ```
 
 4. **Inicia el servidor de desarrollo:**
+
    ```bash
    npm run dev
    ```
@@ -98,7 +102,7 @@ Si deseas clonar y ejecutar este proyecto en tu entorno local para explorarlo o 
    ```bash
    npm run build
    ```
-   *Nota: La búsqueda de Pagefind opera sobre los archivos estáticos generados en `dist/`, por lo que se requiere construir el sitio para probar el buscador completamente.*
+   _Nota: La búsqueda de Pagefind opera sobre los archivos estáticos generados en `dist/`, por lo que se requiere construir el sitio para probar el buscador completamente._
 
 Abre `http://localhost:4321` en tu navegador para ver el resultado en vivo.
 
