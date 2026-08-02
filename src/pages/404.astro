@@ -5,33 +5,45 @@ import { getLangFromUrl } from "../i18n/ui";
 const lang = getLangFromUrl(Astro.url);
 ---
 
-<Layout
-  title="404 - Not Found | Pablo."
-  description="Página no encontrada"
->
-  <div class="mx-auto w-full max-w-3xl px-6 py-32 text-center text-neutral-900 md:px-0 dark:text-white min-h-[70vh] flex flex-col items-center justify-center">
-    <div class="relative mb-8">
-      <h1 class="text-9xl font-bold tracking-tighter text-neutral-100 dark:text-white/5">
+<Layout title="404 - Not Found | Pablo." description="Página no encontrada">
+  <div
+    class="relative flex min-h-[75vh] w-full flex-col items-center justify-center overflow-hidden"
+  >
+    <!-- Background Glow Effect -->
+    <div
+      class="bg-albero/20 dark:bg-albero/10 pointer-events-none absolute top-1/2 left-1/2 -z-10 h-[400px] w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-50 blur-[100px]"
+    >
+    </div>
+
+    <div class="reveal-text z-10 flex flex-col items-center px-6 text-center">
+      <h1
+        class="mb-4 bg-gradient-to-b from-neutral-900 to-neutral-400 bg-clip-text text-8xl leading-none font-black tracking-tighter text-transparent drop-shadow-sm md:text-[150px] dark:from-white dark:to-neutral-600"
+      >
         404
       </h1>
-      <div class="absolute inset-0 flex items-center justify-center">
-        <span class="text-3xl font-bold md:text-5xl text-neutral-900 dark:text-white">
-          Oops!
-        </span>
-      </div>
-    </div>
-    
-    <p class="mb-12 text-lg text-neutral-600 dark:text-neutral-400">
-      {lang === "es" ? "Parece que te has perdido. La página que buscas no existe o ha sido movida." : "Looks like you're lost. The page you are looking for doesn't exist or has been moved."}
-    </p>
 
-    <a
-      href={lang === "es" ? "/" : "/en/"}
-      class="group relative inline-flex items-center justify-center overflow-hidden rounded-full bg-neutral-900 px-8 py-4 font-medium text-white dark:bg-white dark:text-black transition-transform duration-300 hover:scale-105"
-    >
-      <span class="relative z-10 flex items-center group-hover:text-black">
+      <h2
+        class="mb-6 text-2xl font-bold tracking-tight text-neutral-800 md:text-3xl dark:text-neutral-200"
+      >
+        {lang === "es" ? "Página no encontrada" : "Page not found"}
+      </h2>
+
+      <p
+        class="mb-12 max-w-md text-base leading-relaxed text-neutral-600 dark:text-neutral-400"
+      >
+        {
+          lang === "es"
+            ? "Lo sentimos, la ruta que buscas no existe o ha sido movida. Comprueba la URL o vuelve al inicio."
+            : "Sorry, the path you are looking for doesn't exist or has been moved. Check the URL or return home."
+        }
+      </p>
+
+      <a
+        href={lang === "es" ? "/" : "/en/"}
+        class="magnetic-btn group hover:border-albero hover:text-albero dark:hover:border-albero dark:hover:text-albero flex items-center gap-2 rounded-full border border-neutral-200 bg-white/50 px-8 py-3 text-sm font-medium text-neutral-900 shadow-sm backdrop-blur-md transition-all duration-300 dark:border-white/10 dark:bg-white/5 dark:text-white"
+      >
         <svg
-          class="mr-2 h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1 group-hover:text-black"
+          class="h-4 w-4 transition-transform duration-300 group-hover:-translate-x-1"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -40,12 +52,10 @@ const lang = getLangFromUrl(Astro.url);
             stroke-linecap="round"
             stroke-linejoin="round"
             stroke-width="2"
-            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-          />
+            d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
         </svg>
         {lang === "es" ? "Volver al inicio" : "Back to home"}
-      </span>
-      <div class="absolute inset-0 z-0 h-full w-full bg-albero opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
-    </a>
+      </a>
+    </div>
   </div>
 </Layout>
