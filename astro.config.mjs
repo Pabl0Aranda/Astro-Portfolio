@@ -6,9 +6,11 @@ import sitemap from "@astrojs/sitemap";
 import mdx from "@astrojs/mdx";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
 
+import icon from "astro-icon";
+
 export default defineConfig({
   site: "https://pabloaranda.net", // Tu dominio real
-  integrations: [sitemap(), mdx()],
+  integrations: [sitemap(), mdx(), icon()],
 
   // Configuración de Tailwind v4 mediante Vite
   vite: {
