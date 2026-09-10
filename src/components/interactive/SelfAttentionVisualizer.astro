@@ -1,0 +1,415 @@
+---
+// SelfAttentionVisualizer.astro
+---
+
+<div
+  class="attention-container my-8 w-full rounded-2xl border border-neutral-200 bg-white p-4 font-sans shadow-xl md:p-6 dark:border-white/10 dark:bg-[#151515]"
+>
+  <div class="flex flex-col gap-6">
+    <div>
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center rounded-full bg-albero/20 px-2.5 py-0.5 text-xs font-semibold text-neutral-900 dark:text-albero">
+          Simulador Interactivo
+        </span>
+        <span class="text-xs text-neutral-500">Mecanismo Q, K, V</span>
+      </div>
+      <h3 class="mt-2 text-xl font-bold text-neutral-900 dark:text-white">
+        Laboratorio de Scaled Dot-Product Attention
+      </h3>
+      <p class="text-sm text-neutral-600 dark:text-neutral-400">
+        Haz clic en cualquier palabra (Token Query $q$) para inspeccionar cómo calcula su afinidad con las demás palabras (Keys $k$), la normalización softmax y la combinación de valores contextualizados.
+      </p>
+    </div>
+
+    <!-- Controles de frase y modo -->
+    <div class="flex flex-wrap items-center justify-between gap-3 border-b border-neutral-100 pb-4 dark:border-white/5">
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="text-xs font-semibold text-neutral-500 uppercase">Ejemplo:</span>
+        <button
+          type="button"
+          data-preset="0"
+          class="preset-btn active rounded-lg border border-neutral-200 bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-800 transition hover:bg-neutral-200 dark:border-white/10 dark:bg-white/5 dark:text-neutral-200 dark:hover:bg-white/10"
+        >
+          Co-referencia ("cansado")
+        </button>
+        <button
+          type="button"
+          data-preset="1"
+          class="preset-btn rounded-lg border border-neutral-200 bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-800 transition hover:bg-neutral-200 dark:border-white/10 dark:bg-white/5 dark:text-neutral-200 dark:hover:bg-white/10"
+        >
+          Sintaxis Verbo-Objeto
+        </button>
+        <button
+          type="button"
+          data-preset="2"
+          class="preset-btn rounded-lg border border-neutral-200 bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-800 transition hover:bg-neutral-200 dark:border-white/10 dark:bg-white/5 dark:text-neutral-200 dark:hover:bg-white/10"
+        >
+          Cálculo Científico
+        </button>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <label for="head-selector" class="text-xs font-semibold text-neutral-500 uppercase">Cabezal (Head):</label>
+        <select
+          id="head-selector"
+          class="rounded-lg border border-neutral-200 bg-neutral-50 px-2.5 py-1 text-xs font-medium text-neutral-800 focus:outline-none dark:border-white/10 dark:bg-neutral-900 dark:text-neutral-200"
+        >
+          <option value="0">Head 1 (Semántico / Referencia)</option>
+          <option value="1">Head 2 (Sintáctico / Estructural)</option>
+          <option value="2">Head 3 (Proximidad Local)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Tokens interactivos -->
+    <div>
+      <div class="mb-2 flex items-center justify-between">
+        <span class="text-xs font-bold tracking-wider text-neutral-500 uppercase">Tokens de Entrada (Haz clic para seleccionar el Query):</span>
+        <span id="selected-query-label" class="text-xs font-semibold text-albero">Query actual: [cansado]</span>
+      </div>
+      <div id="tokens-container" class="flex flex-wrap gap-2">
+        <!-- Generados dinámicamente -->
+      </div>
+    </div>
+
+    <!-- Visualizador gráfico: Pesos de atención (Softmax) -->
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-12">
+      <!-- Barras de atención -->
+      <div class="rounded-xl border border-neutral-100 bg-neutral-50 p-4 lg:col-span-7 dark:border-white/5 dark:bg-black/30">
+        <div class="mb-3 flex items-center justify-between">
+          <h4 class="text-xs font-bold tracking-wider text-neutral-500 uppercase">
+            Distribución de Atención: Softmax((Q · Kᵀ) / √dₖ)
+          </h4>
+          <span class="text-xs text-neutral-400">Σ α = 1.0</span>
+        </div>
+        <div id="attention-bars" class="flex flex-col gap-2.5">
+          <!-- Generado dinámicamente -->
+        </div>
+      </div>
+
+      <!-- Detalle matemático paso a paso del token seleccionado -->
+      <div class="flex flex-col justify-between rounded-xl border border-neutral-100 bg-neutral-50 p-4 lg:col-span-5 dark:border-white/5 dark:bg-black/30">
+        <div>
+          <h4 class="mb-3 text-xs font-bold tracking-wider text-neutral-500 uppercase">
+            Traza de Operaciones Tensoriales
+          </h4>
+
+          <div class="space-y-3 text-xs">
+            <div class="rounded-lg border border-neutral-200/60 bg-white p-2.5 dark:border-white/5 dark:bg-neutral-900">
+              <span class="font-mono text-neutral-400">1. Vector Query (qᵢ ∈ ℝᵈᵏ):</span>
+              <p id="math-query-vec" class="mt-1 font-mono text-neutral-700 dark:text-neutral-300 truncate">
+                [-0.42, 1.18, 0.85, ...]
+              </p>
+            </div>
+
+            <div class="rounded-lg border border-neutral-200/60 bg-white p-2.5 dark:border-white/5 dark:bg-neutral-900">
+              <span class="font-mono text-neutral-400">2. Mayor Afinidad (Top Key kⱼ):</span>
+              <p id="math-top-key" class="mt-1 font-semibold text-neutral-800 dark:text-neutral-200">
+                Token "animal" (Producto q · kᵀ = 18.4)
+              </p>
+              <p id="math-scaled-score" class="font-mono text-[11px] text-neutral-500">
+                Escalado: 18.4 / √64 = 2.30
+              </p>
+            </div>
+
+            <div class="rounded-lg border border-neutral-200/60 bg-white p-2.5 dark:border-white/5 dark:bg-neutral-900">
+              <span class="font-mono text-neutral-400">3. Vector Contextualizado (zᵢ = Σ αᵢⱼ · vⱼ):</span>
+              <p id="math-output-vec" class="mt-1 font-mono text-neutral-700 dark:text-neutral-300 truncate">
+                [0.72, -0.14, 1.45, ...]
+              </p>
+              <p class="mt-1 text-[11px] text-neutral-500">
+                La representación de "cansado" ahora absorbe la información semántica de "animal".
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 rounded-lg bg-albero/10 p-3 text-xs text-neutral-800 dark:text-neutral-200 border border-albero/20">
+          <strong class="font-semibold text-neutral-900 dark:text-white">💡 Intuición clave:</strong>
+          <span id="math-insight">
+            El Transformer no necesita procesar palabra por palabra secuencialmente. En una sola multiplicación de matrices, calcula la relación entre todos los pares de tokens en tiempo $O(1)$ secuencial.
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .preset-btn.active {
+    background-color: var(--color-albero, #ccff00);
+    color: #000;
+    border-color: transparent;
+    font-weight: 600;
+  }
+</style>
+
+<script>
+  // Datos interactivos para los ejemplos
+  const PRESETS = [
+    {
+      tokens: ["El", "animal", "no", "cruzó", "la", "calle", "porque", "estaba", "muy", "cansado"],
+      defaultIndex: 9, // "cansado"
+      heads: [
+        // Head 1: Co-referencia ("cansado" mira a "animal")
+        {
+          target: "animal",
+          distribution: {
+            "cansado": [0.03, 0.62, 0.01, 0.04, 0.02, 0.03, 0.05, 0.12, 0.02, 0.06],
+            "animal": [0.35, 0.15, 0.02, 0.22, 0.03, 0.08, 0.02, 0.05, 0.01, 0.07],
+            "calle": [0.02, 0.05, 0.01, 0.18, 0.42, 0.22, 0.03, 0.02, 0.01, 0.04],
+            "estaba": [0.02, 0.48, 0.01, 0.08, 0.02, 0.03, 0.06, 0.18, 0.04, 0.08]
+          },
+          insight: 'En este cabezal semántico, "cansado" asigna el 62% de su atención a "animal", resolviendo con éxito a qué sujeto hace referencia el adjetivo a pesar de la distancia en la frase.'
+        },
+        // Head 2: Sintáctico / Estructural (mira al verbo "estaba" / "cruzó")
+        {
+          distribution: {
+            "cansado": [0.01, 0.05, 0.02, 0.12, 0.01, 0.02, 0.08, 0.58, 0.09, 0.02],
+            "animal": [0.08, 0.08, 0.06, 0.64, 0.02, 0.04, 0.02, 0.03, 0.01, 0.02],
+            "calle": [0.01, 0.03, 0.02, 0.68, 0.14, 0.06, 0.02, 0.01, 0.01, 0.02],
+            "estaba": [0.02, 0.11, 0.04, 0.35, 0.03, 0.04, 0.22, 0.10, 0.04, 0.05]
+          },
+          insight: 'Este cabezal captura la relación predicativa: "cansado" asocia fuertemente su peso al verbo copulativo "estaba" (58%) que modula el estado.'
+        },
+        // Head 3: Proximidad local
+        {
+          distribution: {
+            "cansado": [0.01, 0.01, 0.01, 0.02, 0.01, 0.01, 0.02, 0.08, 0.72, 0.11],
+            "animal": [0.55, 0.32, 0.08, 0.02, 0.01, 0.01, 0.00, 0.00, 0.00, 0.01],
+            "calle": [0.01, 0.02, 0.01, 0.08, 0.61, 0.23, 0.02, 0.01, 0.00, 0.01],
+            "estaba": [0.01, 0.02, 0.01, 0.03, 0.02, 0.04, 0.44, 0.25, 0.15, 0.03]
+          },
+          insight: 'El cabezal de proximidad local replica el sesgo inductivo de una ventana convolucional: "cansado" presta un 72% de atención a su adverbio directo "muy".'
+        }
+      ]
+    },
+    {
+      tokens: ["El", "compilador", "detectó", "un", "error", "crítico", "de", "memoria"],
+      defaultIndex: 2, // "detectó"
+      heads: [
+        {
+          distribution: {
+            "detectó": [0.04, 0.38, 0.10, 0.04, 0.34, 0.06, 0.01, 0.03],
+            "compilador": [0.28, 0.22, 0.36, 0.02, 0.06, 0.02, 0.01, 0.03],
+            "error": [0.02, 0.08, 0.26, 0.08, 0.18, 0.24, 0.02, 0.12],
+            "memoria": [0.02, 0.05, 0.11, 0.03, 0.52, 0.12, 0.06, 0.09]
+          },
+          insight: 'El verbo "detectó" enlaza simultáneamente su Sujeto ("compilador", 38%) y su Objeto Directo ("error", 34%), extrayendo la acción nuclear de la proposición.'
+        },
+        {
+          distribution: {
+            "detectó": [0.02, 0.06, 0.15, 0.05, 0.62, 0.06, 0.01, 0.03],
+            "compilador": [0.12, 0.15, 0.65, 0.01, 0.04, 0.01, 0.01, 0.01],
+            "error": [0.01, 0.04, 0.12, 0.05, 0.22, 0.48, 0.02, 0.06],
+            "memoria": [0.01, 0.02, 0.05, 0.02, 0.74, 0.08, 0.04, 0.04]
+          },
+          insight: 'Enfoque directo al complemento: el foco se concentra de manera casi exclusiva en el nodo nominal "error" (62%).'
+        },
+        {
+          distribution: {
+            "detectó": [0.05, 0.45, 0.20, 0.25, 0.03, 0.01, 0.00, 0.01],
+            "compilador": [0.55, 0.30, 0.12, 0.01, 0.01, 0.00, 0.00, 0.01],
+            "error": [0.01, 0.02, 0.15, 0.28, 0.22, 0.26, 0.04, 0.02],
+            "memoria": [0.01, 0.01, 0.02, 0.01, 0.12, 0.22, 0.42, 0.19]
+          },
+          insight: 'Interacción de n-gramas inmediatos adyacentes: "detectó" mira al sujeto precedente "compilador" y al artículo indeterminado "un".'
+        }
+      ]
+    },
+    {
+      tokens: ["Los", "modelos", "resuelven", "las", "ecuaciones", "de", "Navier-Stokes"],
+      defaultIndex: 6, // "Navier-Stokes"
+      heads: [
+        {
+          distribution: {
+            "Navier-Stokes": [0.01, 0.03, 0.08, 0.02, 0.76, 0.04, 0.06],
+            "ecuaciones": [0.02, 0.05, 0.22, 0.08, 0.15, 0.03, 0.45],
+            "resuelven": [0.04, 0.32, 0.12, 0.05, 0.39, 0.01, 0.07],
+            "modelos": [0.24, 0.20, 0.42, 0.02, 0.08, 0.01, 0.03]
+          },
+          insight: '"Navier-Stokes" ancla su contexto al término físico-matemático rector "ecuaciones" (76%), reconociendo la entidad compuesta y su naturaleza científica.'
+        },
+        {
+          distribution: {
+            "Navier-Stokes": [0.02, 0.12, 0.38, 0.03, 0.35, 0.02, 0.08],
+            "ecuaciones": [0.01, 0.04, 0.52, 0.05, 0.18, 0.02, 0.18],
+            "resuelven": [0.05, 0.45, 0.15, 0.04, 0.22, 0.01, 0.08],
+            "modelos": [0.18, 0.15, 0.55, 0.02, 0.06, 0.01, 0.03]
+          },
+          insight: 'Conexión global del problema: relaciona la entidad del fluido con la acción predictiva y resolutiva expresada en el predicado "resuelven" (38%).'
+        },
+        {
+          distribution: {
+            "Navier-Stokes": [0.01, 0.02, 0.03, 0.01, 0.12, 0.65, 0.16],
+            "ecuaciones": [0.02, 0.04, 0.08, 0.34, 0.28, 0.22, 0.02],
+            "resuelven": [0.04, 0.42, 0.26, 0.22, 0.05, 0.00, 0.01],
+            "modelos": [0.62, 0.24, 0.11, 0.01, 0.01, 0.00, 0.01]
+          },
+          insight: 'Atención posicional directa a la partícula gramatical preposicional "de" (65%) que articula el modificador del nombre.'
+        }
+      ]
+    }
+  ];
+
+  let currentPresetIdx = 0;
+  let currentHeadIdx = 0;
+  let selectedTokenIdx = PRESETS[0].defaultIndex;
+
+  function initAttentionVisualizer() {
+    const tokensContainer = document.getElementById("tokens-container");
+    const attentionBars = document.getElementById("attention-bars");
+    const selectedQueryLabel = document.getElementById("selected-query-label");
+    const mathTopKey = document.getElementById("math-top-key");
+    const mathScaledScore = document.getElementById("math-scaled-score");
+    const mathInsight = document.getElementById("math-insight");
+    const headSelector = document.getElementById("head-selector") as HTMLSelectElement | null;
+    const presetButtons = document.querySelectorAll(".preset-btn");
+
+    if (!tokensContainer || !attentionBars) return;
+
+    function renderTokens() {
+      const preset = PRESETS[currentPresetIdx];
+      tokensContainer.innerHTML = "";
+
+      preset.tokens.forEach((token, idx) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        const isSelected = idx === selectedTokenIdx;
+        btn.className = `rounded-lg px-3 py-1.5 font-mono text-sm font-semibold transition-all ${
+          isSelected
+            ? "bg-albero text-black shadow-[0_0_12px_rgba(204,255,0,0.4)] scale-105"
+            : "bg-neutral-100 text-neutral-800 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
+        }`;
+        btn.textContent = token;
+        btn.addEventListener("click", () => {
+          selectedTokenIdx = idx;
+          updateView();
+        });
+        tokensContainer.appendChild(btn);
+      });
+
+      if (selectedQueryLabel) {
+        selectedQueryLabel.textContent = `Query actual: [${preset.tokens[selectedTokenIdx]}]`;
+      }
+    }
+
+    function renderBars() {
+      const preset = PRESETS[currentPresetIdx];
+      const head = preset.heads[currentHeadIdx];
+      const queryToken = preset.tokens[selectedTokenIdx];
+
+      // Obtener o simular distribución de atención
+      let weights = head.distribution[queryToken];
+      if (!weights) {
+        // Generar distribución pseudo-realista con softmax suavizado hacia el propio token y el inicio
+        const raw = preset.tokens.map((_, i) => {
+          if (i === selectedTokenIdx) return 2.2;
+          if (Math.abs(i - selectedTokenIdx) === 1) return 1.5;
+          return 0.5 + Math.sin(i * 1.7) * 0.4;
+        });
+        const exp = raw.map(Math.exp);
+        const sumExp = exp.reduce((a, b) => a + b, 0);
+        weights = exp.map(v => Number((v / sumExp).toFixed(2)));
+      }
+
+      attentionBars.innerHTML = "";
+
+      let maxWeight = -1;
+      let maxIdx = -1;
+
+      preset.tokens.forEach((token, idx) => {
+        const w = weights[idx] ?? (1 / preset.tokens.length);
+        if (w > maxWeight) {
+          maxWeight = w;
+          maxIdx = idx;
+        }
+
+        const percentage = Math.round(w * 100);
+        const isSelf = idx === selectedTokenIdx;
+
+        const row = document.createElement("div");
+        row.className = "flex items-center gap-2 text-xs";
+
+        const label = document.createElement("span");
+        label.className = `w-24 shrink-0 font-mono truncate ${isSelf ? "font-bold text-albero" : "text-neutral-700 dark:text-neutral-300"}`;
+        label.textContent = `${token} (k_${idx})`;
+
+        const barWrapper = document.createElement("div");
+        barWrapper.className = "relative h-5 flex-1 overflow-hidden rounded-md bg-neutral-200/60 dark:bg-neutral-800";
+
+        const barFill = document.createElement("div");
+        barFill.className = `h-full rounded-md transition-all duration-300 ${
+          isSelf
+            ? "bg-neutral-400 dark:bg-neutral-600"
+            : percentage > 25
+              ? "bg-albero text-black font-semibold"
+              : "bg-blue-500/80 dark:bg-blue-400/80"
+        }`;
+        barFill.style.width = `${Math.max(percentage, 3)}%`;
+
+        barWrapper.appendChild(barFill);
+
+        const val = document.createElement("span");
+        val.className = "w-12 text-right font-mono font-medium text-neutral-600 dark:text-neutral-400";
+        val.textContent = `${(w * 100).toFixed(1)}%`;
+
+        row.appendChild(label);
+        row.appendChild(barWrapper);
+        row.appendChild(val);
+        attentionBars.appendChild(row);
+      });
+
+      // Actualizar traza matemática
+      if (mathTopKey && maxIdx !== -1) {
+        const topToken = preset.tokens[maxIdx];
+        const rawDot = (maxWeight * 24.5).toFixed(1);
+        const scaledScore = (Number(rawDot) / 8.0).toFixed(2);
+        mathTopKey.textContent = `Token "${topToken}" (Afinidad: ${percentage(maxWeight)})`;
+        if (mathScaledScore) {
+          mathScaledScore.textContent = `Producto $q \\cdot k^T = ${rawDot}$ | Escalado: ${rawDot} / \\sqrt{64} = ${scaledScore}`;
+        }
+      }
+
+      if (mathInsight) {
+        mathInsight.textContent = head.insight;
+      }
+    }
+
+    function percentage(val: number) {
+      return `${(val * 100).toFixed(1)}%`;
+    }
+
+    function updateView() {
+      renderTokens();
+      renderBars();
+    }
+
+    presetButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        presetButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentPresetIdx = parseInt(btn.getAttribute("data-preset") || "0", 10);
+        selectedTokenIdx = PRESETS[currentPresetIdx].defaultIndex;
+        updateView();
+      });
+    });
+
+    if (headSelector) {
+      headSelector.addEventListener("change", (e) => {
+        currentHeadIdx = parseInt((e.target as HTMLSelectElement).value, 10);
+        renderBars();
+      });
+    }
+
+    updateView();
+  }
+
+  // Soporte para transiciones de Astro (View Transitions)
+  document.addEventListener("astro:page-load", initAttentionVisualizer);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initAttentionVisualizer);
+  } else {
+    initAttentionVisualizer();
+  }
+</script>
