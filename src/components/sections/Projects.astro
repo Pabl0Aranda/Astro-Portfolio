@@ -40,11 +40,32 @@ const getBentoConfig = (index: number) => {
   id="proyectos"
   class="border-t border-neutral-200 py-20 dark:border-white/10"
 >
-  <h2
-    class="reveal-text mb-10 text-3xl font-bold text-neutral-900 dark:text-white"
+  <div
+    class="reveal-text mb-10 flex flex-wrap items-center justify-between gap-4"
   >
-    {t("projects.title")}
-  </h2>
+    <h2 class="text-3xl font-bold text-neutral-900 dark:text-white">
+      {t("projects.title")}
+    </h2>
+    <a
+      href={lang === "es" ? "/projects" : "/en/projects"}
+      class="hover:text-albero dark:hover:text-albero group inline-flex items-center text-sm font-semibold text-neutral-600 transition-colors dark:text-neutral-400"
+    >
+      {lang === "es" ? "Ver todos los proyectos" : "View all projects"}
+      <svg
+        class="ml-1.5 h-4 w-4 transition-transform group-hover:translate-x-1"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 5l7 7-7 7"
+        />
+      </svg>
+    </a>
+  </div>
 
   <div class="grid auto-rows-fr grid-cols-1 gap-6 md:grid-cols-4">
     {
@@ -59,6 +80,7 @@ const getBentoConfig = (index: number) => {
               description={proyecto.data.description}
               tech={proyecto.data.tech}
               link={`/projects/${proyecto.slug}`}
+              repoUrl={proyecto.data.link}
               size={config.size}
               class="h-full"
             />

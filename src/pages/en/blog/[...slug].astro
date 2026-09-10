@@ -114,6 +114,8 @@ const schema = JSON.stringify({
             <img
               src={entry.data.heroImage}
               alt={`Header image for ${entry.data.title}`}
+              loading="lazy"
+              decoding="async"
               class="mb-10 max-h-[400px] w-full rounded-2xl border border-neutral-200 object-cover shadow-xl dark:border-white/10"
             />
           )

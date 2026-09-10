@@ -22,6 +22,10 @@ import { Icon } from "astro-icon/components";
           <img
             src="/hermes-avatar.png"
             alt="Hermes"
+            width="44"
+            height="44"
+            loading="lazy"
+            decoding="async"
             class="h-full w-full object-cover [image-rendering:crisp-edges]"
           />
         </div>
@@ -165,12 +169,18 @@ import { Icon } from "astro-icon/components";
 
       const safeText = escapeHTML(text);
 
-      // Convertir saltos de línea y formatear negritas de forma segura
+      // Convertir saltos de línea y formatear negritas y enlaces de forma segura
       let formattedText = safeText.replace(/\n/g, "<br/>");
       formattedText = formattedText.replace(
         /\*\*(.*?)\*\*/g,
         "<strong>$1</strong>",
       ); // Negritas
+
+      // Convertir enlaces Markdown seguros [texto](url)
+      formattedText = formattedText.replace(
+        /\[(.*?)\]\(((?:https?:\/\/|\/)[^\s"'>]+)\)/g,
+        '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-albero underline hover:text-amber-400 font-semibold">$1</a>',
+      );
 
       msgDiv.innerHTML = formattedText;
       chatMessages.appendChild(msgDiv);

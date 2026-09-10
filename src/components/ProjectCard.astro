@@ -1,11 +1,14 @@
 ---
 import { getLangFromUrl } from "../i18n/ui";
+import { getGitHubStats, type GitHubRepoStats } from "../utils/github";
 
 interface Props {
   title: string;
   description?: string;
   tech: string;
   link: string;
+  repoUrl?: string;
+  stats?: GitHubRepoStats | null;
   class?: string;
   size?: "large" | "medium" | "wide";
 }
@@ -15,10 +18,19 @@ const {
   description,
   tech,
   link,
+  repoUrl,
+  stats: initialStats,
   class: className = "",
   size = "medium",
 } = Astro.props;
 const lang = getLangFromUrl(Astro.url);
+
+const githubStats =
+  initialStats !== undefined
+    ? initialStats
+    : repoUrl
+      ? await getGitHubStats(repoUrl)
+      : null;
 
 // Split tech stack into array, supporting both commas and bullets
 const techArray = tech
@@ -86,6 +98,32 @@ const isLarge = size === "large";
         <p class="mb-6 line-clamp-3 text-sm leading-relaxed text-neutral-600 md:text-base dark:text-neutral-400">
           {description}
         </p>
+      )
+    }
+
+    {
+      githubStats && (
+        <div class="mb-4 flex items-center gap-3 text-xs text-neutral-500 dark:text-neutral-400">
+          <span class="inline-flex items-center gap-1 font-medium text-neutral-700 dark:text-neutral-300">
+            <svg
+              class="h-3.5 w-3.5 text-amber-500"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+            </svg>
+            <span>
+              {githubStats.stars} {githubStats.stars === 1 ? "star" : "stars"}
+            </span>
+          </span>
+          {githubStats.language && (
+            <span class="inline-flex items-center gap-1.5 font-medium">
+              <span class="bg-albero h-2 w-2 rounded-full" />
+              <span>{githubStats.language}</span>
+            </span>
+          )}
+        </div>
       )
     }
 

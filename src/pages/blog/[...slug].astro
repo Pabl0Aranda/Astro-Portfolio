@@ -207,6 +207,8 @@ const lang = getLangFromUrl(Astro.url);
             <img
               src={entry.heroImage}
               alt={`Imagen de cabecera para ${entry.title}`}
+              loading="lazy"
+              decoding="async"
               class="mb-10 max-h-[400px] w-full rounded-2xl border border-neutral-200 object-cover shadow-xl dark:border-white/10"
             />
           )

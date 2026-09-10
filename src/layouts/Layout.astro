@@ -6,6 +6,7 @@ import CommandPalette from "../components/CommandPalette.astro";
 import Search from "../components/Search.astro";
 import BackToTop from "../components/BackToTop.astro";
 import Chatbot from "../components/Chatbot.astro";
+import TerminalModal from "../components/TerminalModal.astro";
 import "katex/dist/katex.min.css";
 
 import { getLangFromUrl } from "../i18n/ui";
@@ -86,6 +87,14 @@ const enUrl = new URL(cleanPath === "/" ? "/en" : `/en${cleanPath.replace(/\/$/,
     <link rel="alternate" hreflang="es" href={esUrl} />
     <link rel="alternate" hreflang="en" href={enUrl} />
     <link rel="alternate" hreflang="x-default" href={esUrl} />
+
+    <!-- RSS Feed Autodiscovery -->
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Pablo Aranda | Blog"
+      href={lang === "es" ? "/rss.xml" : "/en/rss.xml"}
+    />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -191,6 +200,7 @@ const enUrl = new URL(cleanPath === "/" ? "/en" : `/en${cleanPath.replace(/\/$/,
 
     <BackToTop />
     <Chatbot />
+    <TerminalModal />
     <script>
       import VanillaTilt from "vanilla-tilt";
 
