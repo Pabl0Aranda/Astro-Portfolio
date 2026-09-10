@@ -10,7 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Disparar Netlify Build Hook
+        env:
+          NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
         run: |
           echo "Llamando al hook de Netlify..."
-          curl -X POST -d "" ${{ secrets.NETLIFY_BUILD_HOOK }}
+          curl -fsS -X POST -d "" "$NETLIFY_BUILD_HOOK"
           echo "¡Petición enviada!"

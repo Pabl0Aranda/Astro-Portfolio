@@ -93,10 +93,16 @@ const t = useTranslations(lang);
       method="POST"
       action={lang === "es" ? "/" : "/en/"}
       data-netlify="true"
+      netlify-honeypot="bot-field"
       data-astro-reload
       class="flex w-full max-w-lg flex-col gap-6 lg:ml-auto"
     >
       <input type="hidden" name="form-name" value="contacto" />
+      <p class="hidden">
+        <label>
+          Don't fill this out if you're human: <input name="bot-field" />
+        </label>
+      </p>
 
       <div>
         <label

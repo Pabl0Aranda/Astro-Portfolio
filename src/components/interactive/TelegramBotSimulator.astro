@@ -199,10 +199,16 @@
             "bg-[#182533] text-neutral-200 p-3 rounded-2xl rounded-tl-sm max-w-[85%] text-sm shadow-sm";
         }
 
-        bubble.innerHTML = `
-        <p class="whitespace-pre-wrap">${text}</p>
-        <span class="text-[10px] ${isUser ? "text-blue-200" : "text-neutral-400"} float-right mt-1 ml-2">${getTime()}</span>
-      `;
+        const p = document.createElement("p");
+        p.className = "whitespace-pre-wrap";
+        p.textContent = text;
+
+        const timeSpan = document.createElement("span");
+        timeSpan.className = `text-[10px] ${isUser ? "text-blue-200" : "text-neutral-400"} float-right mt-1 ml-2`;
+        timeSpan.textContent = getTime();
+
+        bubble.appendChild(p);
+        bubble.appendChild(timeSpan);
 
         div.appendChild(bubble);
         history.appendChild(div);

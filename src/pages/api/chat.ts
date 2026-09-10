@@ -2,34 +2,76 @@ export const prerender = false;
 
 import type { APIRoute } from "astro";
 
-// Rate Limit in-memory store (básico)
+// Dominios autorizados para consumir este endpoint
+const ALLOWED_ORIGINS = [
+  "https://pabloaranda.net",
+  "https://www.pabloaranda.net",
+  "https://pabloaranda.netlify.app",
+];
+
+const checkOrigin = (req: Request): boolean => {
+  const origin = req.headers.get("origin");
+  const referer = req.headers.get("referer");
+
+  // En entorno de desarrollo local permitimos localhost y 127.0.0.1
+  if (import.meta.env.DEV) {
+    if (!origin && !referer) return true;
+    const devHosts = ["localhost", "127.0.0.1"];
+    const isDevOrigin = origin && devHosts.some((h) => origin.includes(h));
+    const isDevReferer = referer && devHosts.some((h) => referer.includes(h));
+    if (isDevOrigin || isDevReferer) return true;
+  }
+
+  // En producción se requiere que origin o referer pertenezcan a los dominios autorizados
+  if (origin) {
+    return ALLOWED_ORIGINS.includes(origin);
+  }
+  if (referer) {
+    try {
+      const refererUrl = new URL(referer);
+      return ALLOWED_ORIGINS.includes(refererUrl.origin);
+    } catch {
+      return false;
+    }
+  }
+  return false;
+};
+
+// Rate Limit in-memory store con mitigación de fugas de memoria
 const ipRateLimit = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMIT_MAX = 15; // 15 peticiones
 const RATE_LIMIT_WINDOW_MS = 60 * 1000; // por minuto
 
 export const POST: APIRoute = async ({ request }) => {
   try {
-    // 1. Verificación de Origen (CORS simplificado)
-    const origin = request.headers.get("origin");
-    const referer = request.headers.get("referer");
-    const isLocal =
-      origin?.includes("localhost") ||
-      referer?.includes("localhost") ||
-      origin?.includes("127.0.0.1");
-    const isProduction =
-      origin?.includes("pabloaranda") || referer?.includes("pabloaranda");
-
-    if (origin && !isLocal && !isProduction) {
+    // 1. Verificación Estricta de Origen
+    if (!checkOrigin(request)) {
       return new Response(JSON.stringify({ error: "No autorizado" }), {
         status: 403,
       });
     }
 
     // 2. Rate Limiting por IP
-    const ip = request.headers.get("x-forwarded-for") || "unknown-ip";
-    const now = Date.now();
-    const rateData = ipRateLimit.get(ip);
+    const forwardedFor = request.headers.get("x-forwarded-for");
+    const clientIp =
+      request.headers.get("client-ip") ||
+      request.headers.get("x-nf-client-connection-ip");
+    const ip =
+      clientIp ||
+      (forwardedFor ? forwardedFor.split(",")[0].trim() : "unknown-ip");
 
+    const now = Date.now();
+
+    // Limpieza periódica de entradas antiguas para no acumular memoria en lambdas
+    if (ipRateLimit.size > 500) {
+      for (const [key, value] of ipRateLimit.entries()) {
+        if (now > value.resetTime) {
+          ipRateLimit.delete(key);
+        }
+      }
+    }
+
+    const rateData = ipRateLimit.get(ip);
     if (rateData) {
       if (now > rateData.resetTime) {
         ipRateLimit.set(ip, {
@@ -53,7 +95,7 @@ export const POST: APIRoute = async ({ request }) => {
 
     const data = await request.json();
     const userMessage = data.message;
-    let history = data.history || [];
+    const rawHistory = data.history;
 
     // 3. Validación de Entrada
     if (!userMessage || typeof userMessage !== "string") {
@@ -62,16 +104,42 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    if (userMessage.length > 500) {
+    const trimmedMessage = userMessage.trim();
+    if (!trimmedMessage || trimmedMessage.length > 500) {
       return new Response(
-        JSON.stringify({ error: "El mensaje excede los 500 caracteres" }),
+        JSON.stringify({
+          error: "El mensaje debe contener entre 1 y 500 caracteres",
+        }),
         { status: 400 },
       );
     }
 
-    // 4. Limitar historial (máximo 10 mensajes) para no desbordar tokens
-    if (Array.isArray(history) && history.length > 10) {
-      history = history.slice(-10);
+    // 4. Validación y sanitización estricta del historial (máximo 10 mensajes)
+    interface HistoryMessage {
+      role: "user" | "model";
+      parts: { text: string }[];
+    }
+
+    const sanitizedHistory: HistoryMessage[] = [];
+    if (Array.isArray(rawHistory)) {
+      const recentHistory = rawHistory.slice(-10);
+      for (const item of recentHistory) {
+        if (
+          item &&
+          (item.role === "user" || item.role === "model") &&
+          Array.isArray(item.parts) &&
+          item.parts.length > 0 &&
+          typeof item.parts[0]?.text === "string"
+        ) {
+          const text = item.parts[0].text.trim().slice(0, 500);
+          if (text) {
+            sanitizedHistory.push({
+              role: item.role,
+              parts: [{ text }],
+            });
+          }
+        }
+      }
     }
 
     const apiKey = import.meta.env.GEMINI_API_KEY;
@@ -117,10 +185,10 @@ Eres el asistente virtual interactivo del portafolio de Pablo Aranda Cortés, un
         parts: [{ text: systemInstruction.trim() }],
       },
       contents: [
-        ...history,
+        ...sanitizedHistory,
         {
           role: "user",
-          parts: [{ text: userMessage }],
+          parts: [{ text: trimmedMessage }],
         },
       ],
       generationConfig: {

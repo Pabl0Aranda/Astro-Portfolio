@@ -86,10 +86,13 @@ Si deseas clonar y ejecutar este proyecto en tu entorno local para explorarlo o 
    ```
 
 3. **Configura las variables de entorno:**
-   Crea un archivo `.env` en la raíz del proyecto y añade tu clave API de Gemini para el Chatbot interactivo:
+   Copia el archivo `.env.example` a `.env` y añade tus credenciales (asegurándote de que las claves privadas como `GEMINI_API_KEY` o `NOTION_TOKEN` no lleven el prefijo `PUBLIC_` para evitar exponerlas en el navegador):
 
    ```env
-   PUBLIC_GEMINI_API_KEY=tu_clave_api_aqui
+   PUBLIC_GTM_ID="tu_gtm_id"
+   GEMINI_API_KEY="tu_clave_api_gemini"
+   NOTION_TOKEN="tu_notion_token"
+   NOTION_DATABASE_ID="tu_notion_database_id"
    ```
 
 4. **Inicia el servidor de desarrollo:**
