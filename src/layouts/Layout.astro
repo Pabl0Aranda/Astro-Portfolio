@@ -8,6 +8,8 @@ import BackToTop from "../components/BackToTop.astro";
 import Chatbot from "../components/Chatbot.astro";
 import "katex/dist/katex.min.css";
 
+import { getLangFromUrl } from "../i18n/ui";
+
 // 1. Añadimos 'image' como propiedad opcional
 interface Props {
   title: string;
@@ -24,14 +26,23 @@ const {
   structuredData,
 } = Astro.props;
 
+const lang = getLangFromUrl(Astro.url);
+const siteUrl = Astro.site ? Astro.site.origin : "https://pabloaranda.net";
+
 // 3. Construimos las URLs absolutas necesarias para el SEO
 const canonicalURL = new URL(Astro.url.pathname, Astro.site || Astro.url);
 const socialImageURL = new URL(image, canonicalURL);
 const gtmId = import.meta.env.PUBLIC_GTM_ID;
+
+// 4. Alternativas de idioma para indexación multilingüe (hreflang)
+const pathname = Astro.url.pathname;
+const cleanPath = pathname.replace(/^\/en(\/|$)/, "/");
+const esUrl = new URL(cleanPath === "/" ? "/" : cleanPath, siteUrl).href;
+const enUrl = new URL(cleanPath === "/" ? "/en" : `/en${cleanPath.replace(/\/$/, "")}`, siteUrl).href;
 ---
 
 <!doctype html>
-<html lang="es" class="scroll-smooth md:cursor-none">
+<html lang={lang} class="scroll-smooth md:cursor-none">
   <head>
     <!-- Google Tag Manager -->
     {
@@ -62,15 +73,31 @@ const gtmId = import.meta.env.PUBLIC_GTM_ID;
 
     <title>{title}</title>
     <meta name="title" content={title} />
+    <meta
+      name="google-site-verification"
+      content="z_DkQ-AXfUfscU36Wc3PUXgKbBhRDnLelraLQ6R53gc"
+    />
     <meta name="description" content={description} />
+    <meta name="author" content="Pablo Aranda" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <link rel="canonical" href={canonicalURL} />
 
+    <!-- Multilingual Alternate Links (hreflang) -->
+    <link rel="alternate" hreflang="es" href={esUrl} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="x-default" href={esUrl} />
+
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL} />
+    <meta property="og:site_name" content="Pablo Aranda" />
+    <meta property="og:locale" content={lang === "es" ? "es_ES" : "en_US"} />
+    <meta property="og:locale:alternate" content={lang === "es" ? "en_US" : "es_ES"} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={socialImageURL} />
 
+    <!-- Twitter Card -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={canonicalURL} />
     <meta property="twitter:title" content={title} />

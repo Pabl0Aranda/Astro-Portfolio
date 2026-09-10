@@ -31,23 +31,47 @@ const { Content, remarkPluginFrontmatter, headings } = await entry.render();
 // Obtener el idioma de la URL
 const lang = getLangFromUrl(Astro.url);
 
+const articleUrl = new URL(Astro.url.pathname, Astro.site || Astro.url).href;
+const articleImage = entry.data.heroImage
+  ? new URL(entry.data.heroImage, Astro.site || Astro.url).href
+  : new URL("/og-image.jpg", Astro.site || Astro.url).href;
+
 // Generar JSON-LD
 const schema = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "BlogPosting",
+  mainEntityOfPage: {
+    "@type": "WebPage",
+    "@id": articleUrl,
+  },
   headline: entry.data.title,
   description: entry.data.description,
+  image: [articleImage],
   datePublished: entry.data.date.toISOString(),
+  dateModified: entry.data.date.toISOString(),
   author: {
     "@type": "Person",
+    "@id": "https://pabloaranda.net/#person",
     name: "Pablo Aranda",
+    url: "https://pabloaranda.net",
+    sameAs: [
+      "https://github.com/Pabl0Aranda",
+      "https://www.linkedin.com/in/pablo-aranda-cort%C3%A9s-348783350/",
+    ],
+  },
+  publisher: {
+    "@type": "Person",
+    "@id": "https://pabloaranda.net/#person",
+    name: "Pablo Aranda",
+    url: "https://pabloaranda.net",
   },
 });
 ---
 
 <Layout
-  title={`${entry.data.title} | Pablo.`}
+  title={`${entry.data.title} | Pablo Aranda`}
   description={entry.data.description}
+  image={entry.data.heroImage}
   structuredData={schema}
 >
   <div

@@ -9,11 +9,56 @@ import Projects from "../../components/sections/Projects.astro";
 import Others from "../../components/sections/Others.astro";
 import Contact from "../../components/sections/Contact.astro";
 import Footer from "../../components/Footer.astro";
+
+const structuredData = JSON.stringify({
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://pabloaranda.net/#person",
+      "name": "Pablo Aranda",
+      "alternateName": ["Pablo Aranda Cortés", "Pabl0Aranda"],
+      "url": "https://pabloaranda.net",
+      "image": "https://pabloaranda.net/og-image.jpg",
+      "jobTitle": "Software Engineer & Machine Learning Specialist",
+      "alumniOf": {
+        "@type": "CollegeOrUniversity",
+        "name": "Universidad Pablo de Olavide"
+      },
+      "sameAs": [
+        "https://github.com/Pabl0Aranda",
+        "https://www.linkedin.com/in/pablo-aranda-cort%C3%A9s-348783350/"
+      ],
+      "knowsAbout": [
+        "Machine Learning",
+        "Deep Learning",
+        "Software Engineering",
+        "Algorithms",
+        "Artificial Intelligence",
+        "Python",
+        "Java",
+        "Astro"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://pabloaranda.net/#website",
+      "url": "https://pabloaranda.net/en",
+      "name": "Pablo Aranda",
+      "description": "Software Engineering and Machine Learning portfolio and blog by Pablo Aranda.",
+      "publisher": {
+        "@id": "https://pabloaranda.net/#person"
+      },
+      "inLanguage": "en"
+    }
+  ]
+});
 ---
 
 <Layout
-  title="Pablo Aranda | Portfolio"
-  description="Desarrollador interesado en Machine Learning y algoritmia."
+  title="Pablo Aranda | Software Engineer & Machine Learning"
+  description="Pablo Aranda — Software Engineer specializing in Machine Learning, algorithms, and distributed systems. Engineering portfolio, projects, and technical blog."
+  structuredData={structuredData}
 >
   <Hero />
   <Education />

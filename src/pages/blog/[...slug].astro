@@ -122,16 +122,39 @@ if (post.sourceType === "mdx" && post.renderMdx) {
   remarkPluginFrontmatter.minutesRead = Math.max(1, Math.ceil(words / 200));
 }
 
+const articleUrl = new URL(Astro.url.pathname, Astro.site || Astro.url).href;
+const articleImage = entry.heroImage
+  ? new URL(entry.heroImage, Astro.site || Astro.url).href
+  : new URL("/og-image.jpg", Astro.site || Astro.url).href;
+
 // Generar JSON-LD
 const schema = JSON.stringify({
   "@context": "https://schema.org",
   "@type": "BlogPosting",
+  mainEntityOfPage: {
+    "@type": "WebPage",
+    "@id": articleUrl,
+  },
   headline: entry.title,
   description: entry.description,
+  image: [articleImage],
   datePublished: entry.date.toISOString(),
+  dateModified: entry.date.toISOString(),
   author: {
     "@type": "Person",
+    "@id": "https://pabloaranda.net/#person",
     name: "Pablo Aranda",
+    url: "https://pabloaranda.net",
+    sameAs: [
+      "https://github.com/Pabl0Aranda",
+      "https://www.linkedin.com/in/pablo-aranda-cort%C3%A9s-348783350/",
+    ],
+  },
+  publisher: {
+    "@type": "Person",
+    "@id": "https://pabloaranda.net/#person",
+    name: "Pablo Aranda",
+    url: "https://pabloaranda.net",
   },
 });
 
@@ -139,8 +162,9 @@ const lang = getLangFromUrl(Astro.url);
 ---
 
 <Layout
-  title={`${entry.title} | Pablo.`}
+  title={`${entry.title} | Pablo Aranda`}
   description={entry.description}
+  image={entry.heroImage}
   structuredData={schema}
 >
   <div

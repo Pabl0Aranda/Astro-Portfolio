@@ -29,14 +29,20 @@ const schema = JSON.stringify({
   url: Astro.url.href,
   author: {
     "@type": "Person",
+    "@id": "https://pabloaranda.net/#person",
     name: "Pablo Aranda",
+    url: "https://pabloaranda.net",
+    sameAs: [
+      "https://github.com/Pabl0Aranda",
+      "https://www.linkedin.com/in/pablo-aranda-cort%C3%A9s-348783350/",
+    ],
   },
 });
 ---
 
 <Layout
-  title={`${entry.data.title} | Case Study`}
-  description={entry.data.description || `Case study for ${entry.data.title}`}
+  title={`${entry.data.title} | Pablo Aranda`}
+  description={entry.data.description || `Case study for ${entry.data.title} by Pablo Aranda`}
   structuredData={schema}
 >
   <div class="relative mx-auto flex w-full max-w-4xl flex-col py-10 md:py-32">
