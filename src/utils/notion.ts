@@ -23,8 +23,13 @@ const n2m = new NotionToMarkdown({ notionClient: notion });
 // Función 1: Obtener los metadatos de los artículos publicados
 export async function getPublishedPosts(): Promise<UnifiedPost[]> {
   const databaseId = import.meta.env.NOTION_DATABASE_ID;
-  if (!databaseId) {
-    throw new Error("NOTION_DATABASE_ID is missing in environment variables.");
+  const token = import.meta.env.NOTION_TOKEN;
+
+  if (!databaseId || !token) {
+    console.warn(
+      "⚠️ NOTION_DATABASE_ID o NOTION_TOKEN no configurados. Omitiendo posts remotos de Notion.",
+    );
+    return [];
   }
 
   // En la versión 5.x.x del SDK de Notion, 'databases' ha sido renombrado a 'dataSources'
